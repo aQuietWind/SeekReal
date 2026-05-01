@@ -19,13 +19,13 @@ spring:
           default-filters:
             # 给所有响应添加统一请求头标识
             - AddRequestHeader=origin,gateway
+            - StripPrefix=1   #去除掉第一段路径
           routes:
-            - id: demo1   #路由标识,必须唯一
-              uri: lb://demo1   #路由地址，lb代表负载均衡，demo1代表模块服务名。该项可以直接用ip地址代替
+            - id: user   #路由标识,必须唯一
+              uri: lb://user   #路由地址，lb代表负载均衡，user代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
-                - Path=/1/**    #路径断言，代表将路径为1的都转发
-            - id: demo2   #路由标识,必须唯一
-              uri: lb://demo2   #路由地址，lb代表负载均衡，demo2代表模块服务名。该项可以直接用ip地址代替
+                - Path=/user/**    #路径断言，代表将路径为user的都转发
+            - id: KnowAsk   #路由标识,必须唯一
+              uri: lb://KnowAsk   #路由地址，lb代表负载均衡，KnowAsk代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
-                - Path=/2/**    #路径断言，代表将路径为2的都转发
-                - After=2026-04-01T00:00:00+08:00
+                - Path=/KnowAsk/**    #路径断言，代表将路径为KnowAsk的都转发

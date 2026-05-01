@@ -31,7 +31,6 @@ public class TokenFilter implements GlobalFilter {      //实现接口
         //检查token成功
         String userId=checkToken(token);
         if (!userId.equals("0")){
-            request.getHeaders().add("ownUserId", userId);
             return chain.filter(exchange);      //放行，或者自动交由下一个全局过滤器
         }
         //检查token失败

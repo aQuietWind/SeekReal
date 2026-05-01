@@ -3,8 +3,8 @@ package pojo.GateWay;
 import java.time.LocalDateTime;
 
 public class IpPrevent {
-    Integer count;
-    Long time;
+    Integer count;          //代表被封禁了几次
+    Long time;              //代表解封的对应时间戳
 
     public IpPrevent() {
     }

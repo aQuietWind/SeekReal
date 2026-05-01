@@ -7,7 +7,7 @@ spring:
     password: 439176
   #服务名设置
   application:
-    name: User
+    name: user
   #微服务的配置
   cloud:
     #nacos的配置

@@ -20,18 +20,21 @@ public class RegisterMQ {
     private final static Logger logger = LoggerFactory.getLogger(RegisterMQ.class);
     @RabbitListener(queues = "registerQueue")
     public void registerToEs(User user , Channel channel, Message message){
+        //转为下划线形式的实体类
         ESUser esUser = new ESUser(user.getUserId(), user.getUsername(), user.getFollowerAmount(), "");
+        //尝试写入es
         try {
             esClient.index(i -> i.index("user")
                     .id(""+user.getUserId())
                     .document(esUser));
+            //确认消息
             channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
         } catch (IOException e) {
+            //报错时写入日志
             logger.error("注册用户:{}在mq写入es时异常",user.getUserId());
             logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
-        System.out.println(esUser.toString());
     }
 
 }

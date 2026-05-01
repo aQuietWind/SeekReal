@@ -2,8 +2,9 @@ package main;
 
 public class PathCheck {
     private static final String[] pathArray={
-            "/1",
-            "/32"
+            "/user/login/register",
+            "/user/login/phone",
+            "/user/login",
     };
     public static boolean checkPath(String path){
         for (int i = 0; i < pathArray.length; i++) {

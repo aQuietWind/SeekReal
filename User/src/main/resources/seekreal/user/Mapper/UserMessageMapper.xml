@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.user.Mapper.UserMessageMapper">
+    <!--    除了密码全部获取-->
+    <select id="getDetailedMessage" resultType="pojo.User.User">
+        select
+        user_id,
+        username,
+        personal_signature,
+        header_image_adder,
+        sex,
+        birthday,
+        phone_number,
+        follower_amount,
+        liker_amount,
+        writing_amount,
+        like_amount,
+        collect_amount,
+        message_power,
+        create_time
+        from User where user_id=#{userId}
+    </select>
+</mapper>

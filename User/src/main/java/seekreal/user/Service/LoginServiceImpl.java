@@ -90,6 +90,23 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    //发送消息至registerMQ
+    private void registerToMQ(User user){
+        //生成一个带有随机id的correlationData
+        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        //设置回调函数
+        correlationData.getFuture().whenComplete((r,e)->{
+            if (e!=null){
+                logger.error(e.getMessage());
+                logger.error("registerMQ发送消息中间发生异常");
+            }
+            if (!r.isAck()){
+                logger.error("registerMQ发送消息未能成功到达交换机");
+            }
+        });
+        rabbitTemplate.convertAndSend("registerQueue",user,correlationData);
+    }
+
     @Override
     //获取登录所需的验证码
     public String loginOpt(String phoneNumber){
@@ -162,23 +179,6 @@ public class LoginServiceImpl implements LoginService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
-
-    //发送消息至MQ
-    private void registerToMQ(User user){
-        //生成一个带有随机id的correlationData
-        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        //设置回调函数
-        correlationData.getFuture().whenComplete((r,e)->{
-            if (e!=null){
-                logger.error(e.getMessage());
-                logger.error("registerMQ发送消息中间发生异常");
-            }
-            if (!r.isAck()){
-                logger.error("registerMQ发送消息未能成功到达交换机");
-            }
-        });
-        rabbitTemplate.convertAndSend("registerQueue",user,correlationData);
     }
 }
 
