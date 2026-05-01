@@ -72,6 +72,12 @@
             <groupId>SeekReal</groupId>
             <artifactId>Pojo</artifactId>
         </dependency>
+<!--        自己的工具类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Util</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

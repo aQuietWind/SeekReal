@@ -7,12 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class IdGenerate {
+public class UserIdGenerate {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     private static final long DECREASE_STAMP = 4391761234L;        //用于时间戳减小

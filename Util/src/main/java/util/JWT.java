@@ -1,4 +1,4 @@
-package main;
+package util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -17,7 +17,7 @@ public class JWT {
     private static final String sercetKey="my-32byte-secret-key-12345678901234567890";
 
     //生成令牌的方法
-    public static String ObtainJwt(String userId){
+    public static String obtainJwt(String userId){
         Map<String,String> dataMap = new HashMap<>();
         dataMap.put("userId",userId);
         //根据字符串密钥来生成HS256形式的密钥
@@ -46,5 +46,13 @@ public class JWT {
                 .build()                            //根据上述建立一个解析器
                 .parseSignedClaims(token);          //通过解析器获取指定令牌的破解版
         return (String) data.getPayload().get("userId");       //返回载荷存储的userId
+    }
+
+    public static long jwtCheckToLong(String token){
+        return Long.parseLong(jwtCheck(token));
+    }
+
+    public static String obtainJwtByLong(long userId){
+        return obtainJwt(""+userId);
     }
 }

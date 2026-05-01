@@ -7,4 +7,7 @@ public class RedisEnum {
     public static String register(String phoneNumber){
         return Register+phoneNumber;
     }
+    public static String login(String phoneNumber){
+        return Login+phoneNumber;
+    }
 }

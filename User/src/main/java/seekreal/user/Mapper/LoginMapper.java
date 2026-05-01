@@ -6,6 +6,7 @@ import pojo.User.User;
 
 @Mapper
 public interface LoginMapper {
-
     public void insertNewUser(User user);
+    public User loginUserByPhone(String phoneNumber);
+    public User loginUserByPassword(String phoneNumber,String password);
 }
