@@ -1,0 +1,18 @@
+create database User
+use User
+CREATE TABLE user_table (
+    `user_id` bigint PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    `username` varchar(30) NOT NULL COMMENT '用户名',
+    `personal_signature` varchar(60) COMMENT '个性签名',
+    `header_image_adder` varchar(50) COMMENT '头像地址',
+    `sex` int COMMENT '性别',
+    `phone_number` varchar(11) COMMENT '手机号',
+    `follower_amount` int DEFAULT 0 COMMENT '粉丝数',
+    `liker_amount` int DEFAULT 0 COMMENT '关注数',
+    `writing_amount` int DEFAULT 0 COMMENT '文章数',
+    `like_amount` int DEFAULT 0 COMMENT '点赞数',
+    `collect_amount` int DEFAULT 0 COMMENT '收藏数',
+    `message_power` int DEFAULT 1 COMMENT '信息展示权限',
+    `is_exist` int DEFAULT 1 COMMENT '是否删除：1存在 0删除'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
+create unique index phoneIndex on user_table (phone_number)
