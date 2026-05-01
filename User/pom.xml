@@ -78,12 +78,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-        <!-- es核心客户端依赖 -->
+<!--        es核心客户端依赖 -->
         <dependency>
             <groupId>co.elastic.clients</groupId>
             <artifactId>elasticsearch-java</artifactId>
         </dependency>
-        <!-- es传输层依赖（底层 HTTP 通信） -->
+<!--        es传输层依赖（底层 HTTP 通信） -->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-client</artifactId>
@@ -93,12 +93,27 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
-        <!-- mysql连接依赖-->
+<!--        mysql连接依赖-->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+<!--        seata托管依赖-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+<!--        </dependency>-->
+<!--        自己的实体类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Pojo</artifactId>
+        </dependency>
+<!--        自己的工具类依赖--><!--
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Util</artifactId>
+        </dependency>-->
     </dependencies>
 
     <build>

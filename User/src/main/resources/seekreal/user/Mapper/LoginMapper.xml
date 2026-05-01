@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.user.Mapper.LoginMapper">
+<!--    新增用户-->
+    <insert id="insertNewUser">
+        insert into User (
+        user_id
+        ,username
+        ,password
+        ,phone_number
+        ,birthday
+        ,create_time
+        ) values(
+        #{userId},
+        #{username},
+        #{password},
+        #{phoneNumber},
+        #{birthday},
+        #{createTime})
+    </insert>
+</mapper>

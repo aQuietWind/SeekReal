@@ -71,7 +71,6 @@
         <dependency>
             <groupId>SeekReal</groupId>
             <artifactId>Pojo</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
