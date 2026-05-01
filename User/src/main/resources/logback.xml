@@ -26,7 +26,7 @@
 
     <!-- 日志输出级别-->
     <!-- 可以调为All,trace,info,warn,error,debug等日志级别，使其只有对应的等级及更高等级日志才可以输出 -->
-    <root level="info">
+    <root level="warn">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>

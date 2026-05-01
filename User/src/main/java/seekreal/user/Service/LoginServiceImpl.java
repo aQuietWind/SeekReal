@@ -2,6 +2,8 @@ package seekreal.user.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import seekreal.user.Util.RedisEnum;
 import util.JWT;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -25,6 +28,8 @@ public class LoginServiceImpl implements LoginService {
     private LoginMapper loginMapper;
     @Autowired
     private UserIdGenerate userIdGenerate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     //验证格式，并且生成验证码
     @Override
     public String registerOPT(String phoneNumber){
@@ -73,6 +78,8 @@ public class LoginServiceImpl implements LoginService {
             try {
                 loginMapper.insertNewUser(user);
                 logger.trace("手机号:{}成功注册用户{}!!!",phoneNumber,userId);
+                //写入MQ，准备写入es
+                registerToMQ(user);
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -157,6 +164,22 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    //发送消息至MQ
+    private void registerToMQ(User user){
+        //生成一个带有随机id的correlationData
+        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        //设置回调函数
+        correlationData.getFuture().whenComplete((r,e)->{
+            if (e!=null){
+                logger.error(e.getMessage());
+                logger.error("registerMQ发送消息中间发生异常");
+            }
+            if (!r.isAck()){
+                logger.error("registerMQ发送消息未能成功到达交换机");
+            }
+        });
+        rabbitTemplate.convertAndSend("registerQueue",user,correlationData);
+    }
 }
 
 

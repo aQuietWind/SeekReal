@@ -1,4 +1,4 @@
-用户库
+mysql的用户库
 create database User
 use User
 CREATE TABLE User (
@@ -19,6 +19,7 @@ CREATE TABLE User (
     `create_time` DATETIME not null COMMENT '创建时间',
     `is_exist` int DEFAULT 1 COMMENT '是否删除：1存在 0删除'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
+create unique index phoneIndex on User (phone_number)
 
 CREATE TABLE `undo_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -34,4 +35,56 @@ CREATE TABLE `undo_log` (
   UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-create unique index phoneIndex on User (phone_number)
+
+Es建表语句
+                 {
+                   "settings": {
+                     "number_of_shards": 1,
+                     "number_of_replicas": 1,
+                     "analysis": {
+                       "tokenizer": {
+                         "ngram_tokenizer": {
+                           "type": "ngram",
+                           "min_gram": 1,
+                           "max_gram": 2,
+                           "token_chars": ["letter", "digit"]
+                         }
+                       },
+                       "analyzer": {
+                         "ngram_analyzer": {
+                           "tokenizer": "ngram_tokenizer"
+                         }
+                       }
+                     }
+                   },
+                   "mappings": {
+                     "properties": {
+                       "user_id":{
+                         "type":"long"
+                       },
+                       "username": {
+                         "type": "text",
+                         "analyzer": "ngram_analyzer"
+                       },
+                       "follower_amount": {
+                         "type": "integer"
+                       },
+                       "header_image_adder":{
+                         "type":"keyword"
+                       }
+                     }
+                   }
+                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
