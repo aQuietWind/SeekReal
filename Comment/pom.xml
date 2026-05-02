@@ -96,6 +96,21 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--        seata托管依赖-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+        <!--        </dependency>-->
+        <!--        自己的实体类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Pojo</artifactId>
+        </dependency>
+        <!--        自己的工具类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Util</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

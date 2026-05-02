@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>User</artifactId>
-    <name>User</name>
+    <artifactId>Social</artifactId>
+    <name>Social</name>
     <parent>
         <groupId>SeekReal</groupId>
         <artifactId>SeekReal</artifactId>
@@ -94,6 +94,21 @@
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <!--        seata托管依赖-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+        <!--        </dependency>-->
+        <!--        自己的实体类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Pojo</artifactId>
+        </dependency>
+        <!--        自己的工具类依赖-->
+        <dependency>
+            <groupId>SeekReal</groupId>
+            <artifactId>Util</artifactId>
         </dependency>
     </dependencies>
 

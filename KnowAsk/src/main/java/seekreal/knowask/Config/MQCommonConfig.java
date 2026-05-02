@@ -23,11 +23,11 @@ public class MQCommonConfig implements ApplicationContextAware {
         RabbitTemplate rabbitTemplate = applicationContext.getBean(RabbitTemplate.class);
         //当交换机无法将消息发送给队列时触发
         rabbitTemplate.setReturnsCallback(all->{
-            log.error("消息从交换机发送给队列失败！！！"+
-                    all.getMessage() +
-                    all.getExchange() +
-                    all.getRoutingKey() +
-                    all.getReplyText() +
+            log.error("消息{}从交换机{}通过路由key:{}发送给队列{}失败！！！（code:{}）",
+                    all.getMessage(),
+                    all.getExchange(),
+                    all.getRoutingKey(),
+                    all.getReplyText(),
                     all.getReplyCode());
         });
     }
