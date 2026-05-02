@@ -19,7 +19,7 @@ spring:
           default-filters:
             # 给所有响应添加统一请求头标识
             - AddRequestHeader=origin,gateway
-            - StripPrefix=1   #去除掉第一段路径
+#            - StripPrefix=1   #去除掉第一段路径
           routes:
             - id: user   #路由标识,必须唯一
               uri: lb://user   #路由地址，lb代表负载均衡，user代表模块服务名。该项可以直接用ip地址代替
@@ -29,3 +29,15 @@ spring:
               uri: lb://KnowAsk   #路由地址，lb代表负载均衡，KnowAsk代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
                 - Path=/KnowAsk/**    #路径断言，代表将路径为KnowAsk的都转发
+            - id: Appreciation   #路由标识,必须唯一
+              uri: lb://Appreciation   #路由地址，lb代表负载均衡，Appreciation代表模块服务名。该项可以直接用ip地址代替
+              predicates:       #断言，判断是否转发给该路由
+                - Path=/Appreciation/**    #路径断言，代表将路径为Appreciation的都转发
+            - id: Comment   #路由标识,必须唯一
+              uri: lb://Comment   #路由地址，lb代表负载均衡，Comment代表模块服务名。该项可以直接用ip地址代替
+              predicates:       #断言，判断是否转发给该路由
+                - Path=/Comment/**    #路径断言，代表将路径为Comment的都转发
+            - id: Social   #路由标识,必须唯一
+              uri: lb://Social   #路由地址，lb代表负载均衡，Social代表模块服务名。该项可以直接用ip地址代替
+              predicates:       #断言，判断是否转发给该路由
+                - Path=/Social/**    #路径断言，代表将路径为Social的都转发

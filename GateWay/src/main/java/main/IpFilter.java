@@ -36,7 +36,6 @@ public class IpFilter implements GlobalFilter, ApplicationContextAware {      //
         ServerHttpRequest request = exchange.getRequest();
         //获取ip
         String ip=request.getHeaders().getFirst("X-Forwarded-For");
-        ip="321.32.43.54";
         if(ip==null||ip.equals("unknown")||ip.isBlank()){
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);      //设置状态码
             return exchange.getResponse().setComplete();        //拒绝请求
@@ -79,7 +78,7 @@ public class IpFilter implements GlobalFilter, ApplicationContextAware {      //
             //不是第一次请求，则自增
             long count=stringRedisTemplate.opsForValue().increment("gateway:ip:"+ip);
             //如果该一分钟内请求次数非常多
-            if (count>5) {
+            if (count>100) {
                 try {
                     toBlockIp(ipPrevent,ip);
                 }catch (Exception e){

@@ -1,5 +1,10 @@
 package seekreal.user.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -8,10 +13,15 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.UserMessageMapper;
+import seekreal.user.Util.MQUtil;
 import seekreal.user.Util.RedisEnum;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,6 +36,8 @@ public class UserMessageServiceImpl implements UserMessageService {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ElasticsearchClient esClient;
 
     //获取单个用户的详细信息
     @Override
@@ -60,4 +72,99 @@ public class UserMessageServiceImpl implements UserMessageService {
         logger.warn("有人请求了获取空数据的用户详细数据");
         return null;
     }
+
+    //从Es获取多个用户的简单信息
+    @Override
+    public List<ESUser> getSimpleMessage(List<Long> userId){
+        //检查数目的问题
+        if (userId.size()>15){
+            logger.warn("有人试图一次性请求很多的简单用户数据");
+            throw new RuntimeException("请求数目过大！！！");}
+        //构建terms匹配所需要的List
+        List<FieldValue> fvList=new ArrayList<>();
+        for(Long id:userId){
+            fvList.add(FieldValue.of(id));
+        }
+        //构建请求
+        SearchRequest request=new SearchRequest.Builder()
+                .index("user")      //索引库名
+                .query(q -> q.terms(t -> t
+                        .field("user_id")       //字段名
+                        .terms(ts -> ts.value( fvList ))    //同时匹配List内部的多个值
+                ))
+                .build();
+        SearchResponse<ESUser> response= null;
+        try {
+            //发送请求给es
+            response = esClient.search(request, ESUser.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //将结果封装进List
+        List<ESUser> result=new ArrayList<>();
+        for (Hit<ESUser> hit:response.hits().hits()) {
+            result.add(hit.source());
+        }
+        //返回结果
+        return result;
+    }
+
+    //更新用户的信息
+    @Override
+    public void updateUsername(String username,Long userId){
+        //检测新用户的信息
+        if ( username.matches("\\w{1,10}")){
+            logger.warn("用户{}试图更改用户名为错误格式的用户名",userId);
+            throw new RuntimeException("用户名格式不正确");
+        }
+        //更改名字
+        try {
+            //尝试去修改mysql数据
+            userMessageMapper.updateUsername(username,userId);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        User user=new User();
+        user.setUsername(username);
+        user.setUserId(userId);
+        //发送消息至MQ，然后同步至es
+        rabbitTemplate.convertAndSend("usernameQueue",user,
+                MQUtil.getCorrelation("username",logger));
+        return;
+    }
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

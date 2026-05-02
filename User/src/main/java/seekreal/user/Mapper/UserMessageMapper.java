@@ -6,4 +6,5 @@ import pojo.User.User;
 @Mapper
 public interface UserMessageMapper {
     public User getDetailedMessage(Long userId);
+    public void updateUsername(String username,Long userId);
 }

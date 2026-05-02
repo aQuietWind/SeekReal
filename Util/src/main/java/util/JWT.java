@@ -22,7 +22,7 @@ public class JWT {
         dataMap.put("userId",userId);
         //根据字符串密钥来生成HS256形式的密钥
         SecretKey key= Keys.hmacShaKeyFor( sercetKey.getBytes(StandardCharsets.UTF_8) );
-        Date usefulTime=new Date(System.currentTimeMillis()+3600*1000);             //设置最终过期时间点
+        Date usefulTime=new Date(System.currentTimeMillis()+3600*1000*24*20);             //设置最终过期时间点
         String token= Jwts.builder()                  //通过链式编程生成字符串令牌
                 .claims(dataMap)                    //设置Payload载荷数据
                 .subject("test")                  //设置主题，id，或者权限等等重要标识

@@ -19,7 +19,11 @@
         like_amount,
         collect_amount,
         message_power,
-        create_time
+        create_time,
+        is_exist
         from User where user_id=#{userId}
     </select>
+    <update id="updateUsername">
+        update User set username=#{username} where user_id=#{userId}
+    </update>
 </mapper>
