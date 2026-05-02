@@ -19,7 +19,5 @@ public interface UserMessageMapper {
     public void updateUserHeaderImage(String headerImageAdder, long userId);
     public void deleteUser( long userId);
 
-    //用于MQ进行Amount的增减操作
-    @Update("update User set question_amount=question_amount+#{step} where user_id=#{userId}")
-    public void updateUserQuestionAmount(long userId,int step);
+
 }

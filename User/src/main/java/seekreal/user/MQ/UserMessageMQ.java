@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import pojo.Common.AmountMqDTO;
 import pojo.User.ESUser;
 import pojo.User.User;
+import seekreal.user.Mapper.MQMapper;
 import seekreal.user.Mapper.UserMessageMapper;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class UserMessageMQ {
     @Autowired
     private ElasticsearchClient esClient;
     @Autowired
-    private UserMessageMapper userMessageMapper;
+    private MQMapper mqMapper;
     private final static Logger logger = LoggerFactory.getLogger(UserMessageMQ.class);
     //监听用户名的改名
     @RabbitListener(queues = "usernameQueue")
@@ -54,7 +55,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            userMessageMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
@@ -62,6 +63,93 @@ public class UserMessageMQ {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+
+    //监听文章的新增或者减少
+    @RabbitListener(queues = "userWritingQueue")
+    public void updateUserWritingAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "Writing")){
+            return;
+        }
+        try {
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    //监听点赞的新增或者减少
+    @RabbitListener(queues = "userLikeQueue")
+    public void updateUserLikeAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "Like")){
+            return;
+        }
+        try {
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    //监听收藏的新增或者减少
+    @RabbitListener(queues = "userCollectQueue")
+    public void updateUserCollectAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "Collect")){
+            return;
+        }
+        try {
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    //监听关注的新增或者减少
+    @RabbitListener(queues = "userLikerQueue")
+    public void updateUserLikerAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "Liker")){
+            return;
+        }
+        try {
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    //监听粉丝的新增或者减少
+    @RabbitListener(queues = "userFollowerQueue")
+    public void updateUserFollowerAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "Follower")){
+            return;
+        }
+        try {
+            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
 
 
 
