@@ -21,6 +21,7 @@ public class UserMessageMQ {
     @Autowired
     private ElasticsearchClient esClient;
     private final static Logger logger = LoggerFactory.getLogger(UserMessageMQ.class);
+    //监听用户名的改名
     @RabbitListener(queues = "usernameQueue")
     public void updateUsernameToEs(User user , Channel channel, Message message){
         //准备要更新的数据
@@ -40,4 +41,10 @@ public class UserMessageMQ {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    //监听提问的新增或者减少
+    
+
+
+
 }

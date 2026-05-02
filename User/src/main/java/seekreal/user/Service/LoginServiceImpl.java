@@ -54,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
     public void register(String phoneNumber, String password,String opt){
         //验证手机号，密码和验证码格式
         if (!phoneNumber.matches("\\d{11}")
-                ||!password.matches("\\w{8,20}")
+                ||!password.matches("(?-U)\\w{8,20}")
                 ||!opt.matches("\\d{6}")){
             logger.warn("有错误的手机号，密码或者验证码格式试图获取注册验证码!!!");
             throw new RuntimeException("手机号，密码或者验证码格式不对!!!");
@@ -166,7 +166,7 @@ public class LoginServiceImpl implements LoginService {
     public OwnUser loginByPassword(String phoneNumber, String password){
         //验证手机号，密码和验证码格式
         if (!phoneNumber.matches("\\d{11}")
-                ||!password.matches("\\w{8,20}")){
+                ||!password.matches("(?-U)\\w{8,20}")){
             logger.warn("有错误的手机号或者密码格式试图登录!!!");
             throw new RuntimeException("手机号或者密码格式不对!!!");
         }

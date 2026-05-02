@@ -114,11 +114,11 @@ public class UserMessageServiceImpl implements UserMessageService {
         return result;
     }
 
-    //更新用户的信息
+    //更新用户的用户名
     @Override
     public void updateUsername(String username,Long userId){
         //检测新用户的信息
-        if ( username.matches("\\w{1,10}")){
+        if ( username.length()>10){
             logger.warn("用户{}试图更改用户名为错误格式的用户名",userId);
             throw new RuntimeException("用户名格式不正确");
         }
@@ -146,7 +146,7 @@ public class UserMessageServiceImpl implements UserMessageService {
                                   Integer sex, LocalDate birthday,Integer messagePower, Long userId){
         //检测新用户的信息
         //检测个性签名
-        if (personalSignature!=null&&!personalSignature.matches("\\w{0,60}")){
+        if (personalSignature!=null&&!(personalSignature.length()<60)){
             logger.warn("用户{}试图更改错误格式的个性签名",userId);
             throw new RuntimeException("个性签名格式不正确");
         }
@@ -193,8 +193,8 @@ public class UserMessageServiceImpl implements UserMessageService {
     //更改密码
     @Override
     public void updateUserPassword(Long userId, String password,String opt){
-        //验证密码的格式
-        if (password==null||!password.matches("\\w{8,20}")){
+        //验证密码的格式,记得关闭正则的Unicode模式
+        if (password==null||!password.matches("(?-U)\\w{8,20}")){
             logger.warn("有人以用户{}的身份试图用错误的密码格式:{}来更改密码",userId,password);
             throw new RuntimeException("新密码的格式不正确！！！");
         }
