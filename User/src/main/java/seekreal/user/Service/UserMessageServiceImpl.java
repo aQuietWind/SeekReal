@@ -20,6 +20,7 @@ import seekreal.user.Util.MQUtil;
 import seekreal.user.Util.RedisEnum;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -123,6 +124,7 @@ public class UserMessageServiceImpl implements UserMessageService {
             userMessageMapper.updateUsername(username,userId);
         }
         catch (Exception e){
+            logger.error("用户{}在修改自身用户名时出现异常！！！",userId);
             throw new RuntimeException(e.getMessage());
         }
         User user=new User();
@@ -132,6 +134,43 @@ public class UserMessageServiceImpl implements UserMessageService {
         rabbitTemplate.convertAndSend("usernameQueue",user,
                 MQUtil.getCorrelation("username",logger));
         return;
+    }
+
+    //更新用户的信息,只更改不为null的信息
+    @Override
+    public void updateUserMessage(String personalSignature,
+                                  Integer sex, LocalDate birthday,Integer messagePower, Long userId){
+        //检测新用户的信息
+        //检测个性签名
+        if (personalSignature!=null&&!personalSignature.matches("\\w{0,60}")){
+            logger.warn("用户{}试图更改错误格式的个性签名",userId);
+            throw new RuntimeException("个性签名格式不正确");
+        }
+        //检测性别
+        if (sex!=null&&sex!=1&&sex!=0&&sex!=2){
+            logger.warn("用户{}试图更改错误格式的性别",userId);
+            throw new RuntimeException("性别格式不正确");
+        }
+        //检测生日日期
+        if (birthday!=null&& birthday.isAfter(LocalDate.now())){
+            logger.warn("用户{}试图更改错误格式的生日",userId);
+            throw new RuntimeException("生日格式不正确");
+        }
+        //检测展示权限
+        if (messagePower!=null&&messagePower!=0&&messagePower!=1){
+            logger.warn("用户{}试图更改错误格式的展示权限",userId);
+            throw new RuntimeException("展示权限格式不正确");
+        }
+        //更改信息
+        try {
+            //尝试去修改mysql数据
+            userMessageMapper.updateUserMessage(personalSignature,
+                    sex,birthday,messagePower,userId);
+        }
+        catch (Exception e){
+            logger.error("用户{}在更改自身详细信息时出现异常！！！",userId);
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 

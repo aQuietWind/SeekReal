@@ -26,4 +26,28 @@
     <update id="updateUsername">
         update User set username=#{username} where user_id=#{userId}
     </update>
+    <update id="updateUserMessage">
+        update User
+        <set>
+            <if test="personalSignature!=null">personal_signature=#{personalSignature},</if>
+            <if test="sex!=null">sex=#{sex},</if>
+            <if test="birthday!=null">birthday=#{birthday},</if>
+            <if test="messagePower!=null">message_power=#{messagePower},</if>
+        </set>  where user_id=#{userId}
+    </update>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -41,11 +41,15 @@ public class JWT {
     //解析并获取令牌内容的方法
     public static String jwtCheck(String token){
         SecretKey key= Keys.hmacShaKeyFor( sercetKey.getBytes(StandardCharsets.UTF_8) );    //根据字符串密钥生成HS256形式的密钥
-        Jws<Claims> data = Jwts.parser()           //开启解析器建立
-                .verifyWith(key)                    //设置解析的密钥
-                .build()                            //根据上述建立一个解析器
-                .parseSignedClaims(token);          //通过解析器获取指定令牌的破解版
-        return (String) data.getPayload().get("userId");       //返回载荷存储的userId
+        try {
+            Jws<Claims> data = Jwts.parser()           //开启解析器建立
+                    .verifyWith(key)                    //设置解析的密钥
+                    .build()                            //根据上述建立一个解析器
+                    .parseSignedClaims(token);          //通过解析器获取指定令牌的破解版
+            return (String) data.getPayload().get("userId");       //返回载荷存储的userId
+        }catch (Exception e){
+            throw new RuntimeException("令牌解析错误！！！");
+        }
     }
 
     public static long jwtCheckToLong(String token){

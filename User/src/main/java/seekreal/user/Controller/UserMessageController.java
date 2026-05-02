@@ -7,6 +7,7 @@ import pojo.User.User;
 import seekreal.user.Service.UserMessageService;
 import util.JWT;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequestMapping("/user")
@@ -46,7 +47,7 @@ public class UserMessageController {
         }
     }
 
-    //更新用户信息
+    //更新用户名
     @PutMapping("/username")
     public Result updateUserMessage(String username,String token) {
         try {
@@ -58,7 +59,19 @@ public class UserMessageController {
         }
     }
 
-
+    //更新用户个性签名
+    @PutMapping()
+    public Result updateUserSignature(String personalSignature,
+                                      Integer sex, LocalDate birthday,Integer messagePower,String token) {
+        try {
+            userMessageService.updateUserMessage(personalSignature
+                    ,sex, birthday,messagePower,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
 
 
 }
