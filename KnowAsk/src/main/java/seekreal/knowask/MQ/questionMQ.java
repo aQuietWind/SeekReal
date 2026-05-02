@@ -1,0 +1,39 @@
+package seekreal.knowask.MQ;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import pojo.KnowAsk.ESQuestion;
+import pojo.KnowAsk.Question;
+
+
+import java.time.LocalDateTime;
+
+
+@Component
+public class questionMQ {
+    @Autowired
+    private ElasticsearchClient esClient;
+    private static final Logger logger = LoggerFactory.getLogger(questionMQ.class);
+    @RabbitListener(queues = "questionAddQueue")
+    public void addQuestionToEs(Question question){
+        //构建一个符合下划线命名的es实体类，实体类有特殊需求
+        ESQuestion esQuestion = new ESQuestion(question.getQuestionId()
+                ,question.getUserId()
+                ,question.getQuestionTitle()
+                ,question.getQuestionDescription()
+                ,0,0, 0, LocalDateTime.now());
+        try {
+            //写入es
+            esClient.index(i -> i.index("question")
+                    .id(""+esQuestion.getQuestion_id())
+                    .document(esQuestion));
+        } catch (Exception e) {
+            logger.error("提问{}在MQ新增于ES的过程中发送异常:{}", question.getQuestionId(),e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+}

@@ -29,7 +29,7 @@ public class RegisterMQ {
                     .document(esUser));
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("注册用户:{}在mq写入es时异常",user.getUserId());
+            logger.error("注册用户:{}在mq写入es时发生异常:{}",user.getUserId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e);
         }

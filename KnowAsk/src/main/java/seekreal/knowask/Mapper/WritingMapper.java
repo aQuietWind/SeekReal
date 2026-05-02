@@ -1,4 +1,9 @@
 package seekreal.knowask.Mapper;
 
-public class WritingMapper {
+import org.apache.ibatis.annotations.Mapper;
+import pojo.KnowAsk.Writing;
+
+@Mapper
+public interface WritingMapper {
+    public void insertWriting(Writing writing);
 }

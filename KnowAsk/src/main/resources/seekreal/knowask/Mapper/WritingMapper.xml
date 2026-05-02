@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.knowask.Mapper.WritingMapper">
+    <!--    新增用户-->
+    <insert id="insertWriting">
+        insert into Writing (
+        writing_id
+        ,question_id
+        ,user_id
+        ,writing_title
+        ,writing_description
+        ) values(
+        #{writing_id}
+        ,#{questionId}
+        ,#{userId}
+        ,#{writingTitle}
+        ,#{writingDescription})
+    </insert>
+    <!--    除了密码和权限全部获取-->
+    <select id="loginUserByPhone" resultType="pojo.User.User">
+        select
+        user_id,
+        username,
+        personal_signature,
+        header_image_adder,
+        sex,
+        birthday,
+        phone_number,
+        follower_amount,
+        liker_amount,
+        writing_amount,
+        like_amount,
+        collect_amount,
+        create_time
+        from User where phone_number=#{phoneNumber}
+    </select>
+    <!--    除了密码和权限全部获取-->
+    <select id="loginUserByPassword" resultType="pojo.User.User">
+        select
+        user_id,
+        username,
+        personal_signature,
+        header_image_adder,
+        sex,
+        birthday,
+        phone_number,
+        follower_amount,
+        liker_amount,
+        writing_amount,
+        like_amount,
+        collect_amount,
+        create_time
+        from User where phone_number=#{phoneNumber} and password=#{password}
+    </select>
+</mapper>

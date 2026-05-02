@@ -27,7 +27,7 @@ public class QuestionServiceImpl implements QuestionService {
         if (questionTitle==null||!(questionTitle.length()<20)){
             throw new RuntimeException("提问的标题格式不对！！！");
         }
-        if (questionTitle==null||!(questionDescription.length()<15000)){
+        if (questionDescription==null||!(questionDescription.length()<15000)){
             throw new RuntimeException("提问的文本描述内容格式不对！！！");
         }
         Question question=new Question();
@@ -46,9 +46,15 @@ public class QuestionServiceImpl implements QuestionService {
         catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
-        //发送到mq
+        //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
+        question.setQuestionDescription(questionDescription.substring(0,
+                Math.min(questionDescription.length(),30)));
+        //发送到mq更新es
+        rabbitTemplate.convertAndSend("questionAddQueue",
+                question, MQUtil.getCorrelation("questionAdd",logger));
+        //发送到mq更新用户的提问数
         rabbitTemplate.convertAndSend("userAmountChangeExchange","question"
-        ,new AmountMqDTO(userId,"question",1), MQUtil.getCorrelation("question",logger));
+        ,new AmountMqDTO(userId,"question",1), MQUtil.getCorrelation("userQuestion",logger));
     }
 
 

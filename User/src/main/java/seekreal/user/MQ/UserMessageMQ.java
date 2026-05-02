@@ -29,7 +29,7 @@ public class UserMessageMQ {
     private final static Logger logger = LoggerFactory.getLogger(UserMessageMQ.class);
     //监听用户名的改名
     @RabbitListener(queues = "usernameQueue")
-    public void updateUsernameToEs(User user , Channel channel, Message message){
+    public void updateUsernameToEs(User user ){
         //准备要更新的数据
         Map<String, Object> updateFields = new HashMap<>();
         updateFields.put("username", user.getUsername() );
@@ -42,7 +42,7 @@ public class UserMessageMQ {
                     , ESUser.class);
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新用户名于es时异常",user.getUserId());
+            logger.error("用户{}在mq试图更新用户名于es时发生异常:{}",user.getUserId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -50,7 +50,7 @@ public class UserMessageMQ {
 
     //监听提问的新增或者减少
     @RabbitListener(queues = "userQuestionQueue")
-    public void updateUserQuestionAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserQuestionAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "question")){
             return;
         }
@@ -58,7 +58,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -67,7 +67,7 @@ public class UserMessageMQ {
 
     //监听文章的新增或者减少
     @RabbitListener(queues = "userWritingQueue")
-    public void updateUserWritingAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserWritingAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "Writing")){
             return;
         }
@@ -75,7 +75,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -84,7 +84,7 @@ public class UserMessageMQ {
 
     //监听点赞的新增或者减少
     @RabbitListener(queues = "userLikeQueue")
-    public void updateUserLikeAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserLikeAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "Like")){
             return;
         }
@@ -92,7 +92,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -101,7 +101,7 @@ public class UserMessageMQ {
 
     //监听收藏的新增或者减少
     @RabbitListener(queues = "userCollectQueue")
-    public void updateUserCollectAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserCollectAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "Collect")){
             return;
         }
@@ -109,7 +109,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -118,7 +118,7 @@ public class UserMessageMQ {
 
     //监听关注的新增或者减少
     @RabbitListener(queues = "userLikerQueue")
-    public void updateUserLikerAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserLikerAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "Liker")){
             return;
         }
@@ -126,7 +126,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -135,7 +135,7 @@ public class UserMessageMQ {
 
     //监听粉丝的新增或者减少
     @RabbitListener(queues = "userFollowerQueue")
-    public void updateUserFollowerAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+    public void updateUserFollowerAmountToMysql(AmountMqDTO dto){
         if (!Objects.equals(dto.getAmountType(), "Follower")){
             return;
         }
@@ -143,7 +143,7 @@ public class UserMessageMQ {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }

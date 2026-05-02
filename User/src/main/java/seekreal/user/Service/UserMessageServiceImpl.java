@@ -126,6 +126,8 @@ public class UserMessageServiceImpl implements UserMessageService {
         try {
             //尝试去修改mysql数据
             userMessageMapper.updateUsername(username,userId);
+            //删除缓存
+            stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
         }
         catch (Exception e){
             logger.error("用户{}在修改自身用户名时出现异常！！！",userId);
@@ -170,6 +172,8 @@ public class UserMessageServiceImpl implements UserMessageService {
             //尝试去修改mysql数据
             userMessageMapper.updateUserMessage(personalSignature,
                     sex,birthday,messagePower,userId);
+            //删除缓存
+            stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
         }
         catch (Exception e){
             logger.error("用户{}在更改自身详细信息时出现异常！！！",userId);
@@ -215,6 +219,8 @@ public class UserMessageServiceImpl implements UserMessageService {
         try {
             String fileName=FileSave.saveUserImage(file);
             userMessageMapper.updateUserHeaderImage(fileName,userId);
+            //删除缓存
+            stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -255,6 +261,8 @@ public class UserMessageServiceImpl implements UserMessageService {
         LocalDateTime date=LocalDateTime.now().plusDays(7);
         stringRedisTemplate.opsForValue().set(RedisEnum.userRemoveList(phoneNumber),
                 date.toString(),7,TimeUnit.DAYS);
+        //删除缓存
+        stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
         //删除用户于ES
         try {
             esClient.delete(d -> d

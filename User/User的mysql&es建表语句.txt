@@ -38,6 +38,7 @@ CREATE TABLE `undo_log` (
 
 
 Es建表语句
+Put http://localhost:9200/user
                  {
                    "settings": {
                      "number_of_shards": 1,
