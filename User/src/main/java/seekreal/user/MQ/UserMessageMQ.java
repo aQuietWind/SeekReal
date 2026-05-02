@@ -33,13 +33,11 @@ public class UserMessageMQ {
                             .id(""+user.getUserId())
                             .doc(updateFields) // 部分更新，不影响其他字段
                     , ESUser.class);
-            //确认消息
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-        } catch (IOException e) {
+        } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新用户名于es时异常",user.getUserId());
             logger.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

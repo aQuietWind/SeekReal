@@ -27,9 +27,7 @@ public class RegisterMQ {
             esClient.index(i -> i.index("user")
                     .id(""+user.getUserId())
                     .document(esUser));
-            //确认消息
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-        } catch (IOException e) {
+        } catch (Exception e) {
             //报错时写入日志
             logger.error("注册用户:{}在mq写入es时异常",user.getUserId());
             logger.error(e.getMessage());
