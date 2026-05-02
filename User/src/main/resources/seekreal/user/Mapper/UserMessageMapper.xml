@@ -35,6 +35,9 @@
             <if test="messagePower!=null">message_power=#{messagePower},</if>
         </set>  where user_id=#{userId}
     </update>
+    <select id="getUserPhoneNumber" resultType="java.lang.String">
+        select phone_number from User where user_id=#{userId}
+    </select>
 </mapper>
 
 

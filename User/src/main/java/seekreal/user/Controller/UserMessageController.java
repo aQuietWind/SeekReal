@@ -59,9 +59,9 @@ public class UserMessageController {
         }
     }
 
-    //更新用户个性签名
+    //更新用户详细信息（个性签名，性别，生日，展示权限）
     @PutMapping()
-    public Result updateUserSignature(String personalSignature,
+    public Result updateUserMessage(String personalSignature,
                                       Integer sex, LocalDate birthday,Integer messagePower,String token) {
         try {
             userMessageService.updateUserMessage(personalSignature
@@ -73,6 +73,17 @@ public class UserMessageController {
         }
     }
 
+
+    //获取改密码所需要的验证码
+    @GetMapping("/password")
+    public Result getUpdateUserPasswordOPT(String token) {
+        try {
+            return Result.success(userMessageService.getUpdateUserPasswordOPT(JWT.jwtCheckToLong(token)));
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
 
 }
 

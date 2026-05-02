@@ -17,6 +17,7 @@ import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.UserMessageMapper;
 import seekreal.user.Util.MQUtil;
+import seekreal.user.Util.RanmodOPT;
 import seekreal.user.Util.RedisEnum;
 
 import java.io.IOException;
@@ -172,6 +173,20 @@ public class UserMessageServiceImpl implements UserMessageService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    //获取改密码所需要的验证码
+    @Override
+    public String getUpdateUserPasswordOPT(Long userId){
+            //获取验证吗
+            String phoneNumber=userMessageMapper.getUserPhoneNumber(userId);
+            String opt=RanmodOPT.generateOPT(6);
+            //将验证码缓存于redis
+            if (!stringRedisTemplate.opsForValue().setIfAbsent(RedisEnum.userPassword(phoneNumber),
+                    opt,1,TimeUnit.MINUTES))
+            {throw new RuntimeException("已经存在验证码！！！");}
+            return opt;
+    }
+
 
 
 
