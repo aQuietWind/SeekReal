@@ -2,6 +2,7 @@ package seekreal.user.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
 import pojo.User.User;
 import seekreal.user.Service.UserMessageService;
@@ -72,7 +73,6 @@ public class UserMessageController {
         }
     }
 
-
     //获取改密码所需要的验证码
     @GetMapping("/password")
     public Result getUpdateUserPasswordOPT(String token) {
@@ -97,6 +97,18 @@ public class UserMessageController {
         }
     }
 
+    //更新头像
+    @PutMapping("/headerImage")
+    public Result updateUserHeaderImage(@RequestBody MultipartFile file, String token) {
+        try {
+            userMessageService.updateUserHeaderImage(file,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+
+    }
 }
 
 

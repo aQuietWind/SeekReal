@@ -13,9 +13,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.UserMessageMapper;
+import seekreal.user.Util.FileSave;
 import seekreal.user.Util.MQUtil;
 import seekreal.user.Util.RanmodOPT;
 import seekreal.user.Util.RedisEnum;
@@ -206,7 +208,17 @@ public class UserMessageServiceImpl implements UserMessageService {
             userMessageMapper.updateUserPassword(userId,password);
     }
 
-
+    //更改头像
+    @Override
+    public void updateUserHeaderImage(MultipartFile file,long userId){
+        try {
+            String fileName=FileSave.saveUserImage(file);
+            userMessageMapper.updateUserHeaderImage(fileName,userId);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return;
+    }
 
 
 }

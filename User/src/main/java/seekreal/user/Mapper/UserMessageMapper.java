@@ -1,6 +1,7 @@
 package seekreal.user.Mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.multipart.MultipartFile;
 import pojo.User.User;
 
 import java.time.LocalDate;
@@ -13,4 +14,5 @@ public interface UserMessageMapper {
                                   Integer sex, LocalDate birthday, Integer messagePower, Long userId);
     public String getUserPhoneNumber(Long userId);
     public void updateUserPassword(long userId, String password);
+    public void updateUserHeaderImage(String headerImageAdder, long userId);
 }

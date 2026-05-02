@@ -1,5 +1,6 @@
 package seekreal.user.Service;
 
+import org.springframework.web.multipart.MultipartFile;
 import pojo.User.ESUser;
 import pojo.User.User;
 
@@ -14,4 +15,5 @@ public interface UserMessageService {
                                   Integer sex, LocalDate birthday, Integer messagePower, Long userId);
     public String getUpdateUserPasswordOPT(Long userId);
     public void updateUserPassword(Long userId, String newPassword,String opt);
+    public void updateUserHeaderImage(MultipartFile file, long userId);
 }

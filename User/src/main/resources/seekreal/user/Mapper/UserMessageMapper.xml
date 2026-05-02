@@ -40,6 +40,9 @@
     <update id="updateUserPassword">
         update User set password=#{password} where user_id=#{userId}
     </update>
+    <update id="updateUserHeaderImage">
+        update User set header_image_adder=#{headerImageAdder} where user_id=#{userId}
+    </update>
 </mapper>
 
 
