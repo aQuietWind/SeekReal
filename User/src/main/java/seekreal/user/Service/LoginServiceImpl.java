@@ -66,6 +66,9 @@ public class LoginServiceImpl implements LoginService {
             throw new RuntimeException("请先获取验证码!!!");}
         //如果验证码一致
         if(originOPT.equals(opt)){
+            if (stringRedisTemplate.opsForValue().get(RedisEnum.userRemoveList(phoneNumber))!=null){
+                throw new RuntimeException("该手机号在注销七天内不能再注册用户");
+            }
             Long userId= userIdGenerate.IdGenerator("userId");
             User user=new User();
             //以下是对用户的初始化信息操作

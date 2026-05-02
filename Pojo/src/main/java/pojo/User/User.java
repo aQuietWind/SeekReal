@@ -18,12 +18,12 @@ public class User {
     private int collectAmount;      //收藏数
     private int messagePower;       //信息展示权限
     private LocalDate createTime;   //创建时间
-    private int isExist;            //存在状态
+
 
     public User() {
     }
 
-    public User(Long userId, String username, String password, String personalSignature, String headerImageAdder, Integer sex, LocalDate birthday, String phoneNumber, int followerAmount, int likerAmount, int writingAmount, int likeAmount, int collectAmount, int messagePower, LocalDate createTime, int isExist) {
+    public User(Long userId, String username, String password, String personalSignature, String headerImageAdder, Integer sex, LocalDate birthday, String phoneNumber, int followerAmount, int likerAmount, int writingAmount, int likeAmount, int collectAmount, int messagePower, LocalDate createTime) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -39,7 +39,6 @@ public class User {
         this.collectAmount = collectAmount;
         this.messagePower = messagePower;
         this.createTime = createTime;
-        this.isExist = isExist;
     }
 
     /**
@@ -282,23 +281,7 @@ public class User {
         this.createTime = createTime;
     }
 
-    /**
-     * 获取
-     * @return isExist
-     */
-    public int getIsExist() {
-        return isExist;
-    }
-
-    /**
-     * 设置
-     * @param isExist
-     */
-    public void setIsExist(int isExist) {
-        this.isExist = isExist;
-    }
-
     public String toString() {
-        return "User{userId = " + userId + ", username = " + username + ", password = " + password + ", personalSignature = " + personalSignature + ", headerImageAdder = " + headerImageAdder + ", sex = " + sex + ", birthday = " + birthday + ", phoneNumber = " + phoneNumber + ", followerAmount = " + followerAmount + ", likerAmount = " + likerAmount + ", writingAmount = " + writingAmount + ", likeAmount = " + likeAmount + ", collectAmount = " + collectAmount + ", messagePower = " + messagePower + ", createTime = " + createTime + ", isExist = " + isExist + "}";
+        return "User{userId = " + userId + ", username = " + username + ", password = " + password + ", personalSignature = " + personalSignature + ", headerImageAdder = " + headerImageAdder + ", sex = " + sex + ", birthday = " + birthday + ", phoneNumber = " + phoneNumber + ", followerAmount = " + followerAmount + ", likerAmount = " + likerAmount + ", writingAmount = " + writingAmount + ", likeAmount = " + likeAmount + ", collectAmount = " + collectAmount + ", messagePower = " + messagePower + ", createTime = " + createTime + "}";
     }
 }

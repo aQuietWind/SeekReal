@@ -181,12 +181,30 @@ public class UserMessageServiceImpl implements UserMessageService {
             String phoneNumber=userMessageMapper.getUserPhoneNumber(userId);
             String opt=RanmodOPT.generateOPT(6);
             //将验证码缓存于redis
-            if (!stringRedisTemplate.opsForValue().setIfAbsent(RedisEnum.userPassword(phoneNumber),
+            if (!stringRedisTemplate.opsForValue().setIfAbsent(RedisEnum.userPassword(userId),
                     opt,1,TimeUnit.MINUTES))
             {throw new RuntimeException("已经存在验证码！！！");}
             return opt;
     }
 
+    //更改密码
+    @Override
+    public void updateUserPassword(Long userId, String password,String opt){
+        //验证密码的格式
+        if (password==null||!password.matches("\\w{8,20}")){
+            logger.warn("有人以用户{}的身份试图用错误的密码格式:{}来更改密码",userId,password);
+            throw new RuntimeException("新密码的格式不正确！！！");
+        }
+        String originOPT=stringRedisTemplate.opsForValue().get(RedisEnum.userPassword(userId));
+        if (originOPT==null){
+            logger.warn("有人以用户{}的身份试图不获取验证码来更改密码",userId);
+            throw new RuntimeException("请先获得验证码！！！");
+        }
+        if (!opt.equals(originOPT)){
+            throw new RuntimeException("验证码不正确！！！");
+        }
+            userMessageMapper.updateUserPassword(userId,password);
+    }
 
 
 

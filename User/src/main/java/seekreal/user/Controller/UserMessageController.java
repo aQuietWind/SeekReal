@@ -26,7 +26,6 @@ public class UserMessageController {
                 //获取别人的信息
                 User user=userMessageService.getDetailedMessage(userId);
                 if (user.getMessagePower()==0){return Result.success(403);}       //代表无权获取详细消息
-                if (user.getIsExist()==0){return Result.success(444);}            //代表该帐号已经注销
                 return Result.success(user);
             }
         }
@@ -79,6 +78,19 @@ public class UserMessageController {
     public Result getUpdateUserPasswordOPT(String token) {
         try {
             return Result.success(userMessageService.getUpdateUserPasswordOPT(JWT.jwtCheckToLong(token)));
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //更改密码
+    @PutMapping("/password")
+    public Result updateUserPassword(String token, String password,String opt) {
+        try {
+            userMessageService.updateUserPassword(
+                    JWT.jwtCheckToLong(token),password,opt);
+            return Result.success();
         }
         catch (Exception e){
             return Result.error(e.getMessage());

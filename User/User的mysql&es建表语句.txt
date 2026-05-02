@@ -16,8 +16,7 @@ CREATE TABLE User (
     `like_amount` int DEFAULT 0 COMMENT '点赞数',
     `collect_amount` int DEFAULT 0 COMMENT '收藏数',
     `message_power` int DEFAULT 1 COMMENT '信息展示权限',
-    `create_time` DATETIME not null COMMENT '创建时间',
-    `is_exist` int DEFAULT 1 COMMENT '是否存在：1存在 0不存在'
+    `create_time` DATETIME not null COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
 create unique index phoneIndex on User (phone_number)
 

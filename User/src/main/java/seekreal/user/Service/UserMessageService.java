@@ -13,5 +13,5 @@ public interface UserMessageService {
     public void updateUserMessage(String PersonalSignature,
                                   Integer sex, LocalDate birthday, Integer messagePower, Long userId);
     public String getUpdateUserPasswordOPT(Long userId);
-
+    public void updateUserPassword(Long userId, String newPassword,String opt);
 }

@@ -12,4 +12,5 @@ public interface UserMessageMapper {
     public void updateUserMessage(String personalSignature,
                                   Integer sex, LocalDate birthday, Integer messagePower, Long userId);
     public String getUserPhoneNumber(Long userId);
+    public void updateUserPassword(long userId, String password);
 }

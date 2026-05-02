@@ -19,8 +19,7 @@
         like_amount,
         collect_amount,
         message_power,
-        create_time,
-        is_exist
+        create_time
         from User where user_id=#{userId}
     </select>
     <update id="updateUsername">
@@ -38,6 +37,9 @@
     <select id="getUserPhoneNumber" resultType="java.lang.String">
         select phone_number from User where user_id=#{userId}
     </select>
+    <update id="updateUserPassword">
+        update User set password=#{password} where user_id=#{userId}
+    </update>
 </mapper>
 
 
