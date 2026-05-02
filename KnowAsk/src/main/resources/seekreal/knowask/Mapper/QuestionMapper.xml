@@ -5,7 +5,7 @@
 <mapper namespace="seekreal.knowask.Mapper.QuestionMapper">
     <!--    新增用户-->
     <insert id="insertQuestion">
-        insert into User (
+        insert into Question (
         question_id
         ,user_id
         ,question_title

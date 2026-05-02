@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import seekreal.user.Util.UserIdGenerate;
 
 @RequestMapping("/1")
 @RestController
@@ -20,12 +19,6 @@ public class test {
     @DeleteMapping
     public void delete(String key){
         stringRedisTemplate.delete(key);
-    }
-    @Autowired
-    UserIdGenerate userIdGenerate;
-    @GetMapping("/id")
-    public long id(){
-        return userIdGenerate.IdGenerator("user");
     }
 
 

@@ -1,11 +1,15 @@
 package seekreal.knowask.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.Question;
 import seekreal.knowask.Mapper.QuestionMapper;
 import seekreal.knowask.Util.KnowAskIdGenerate;
+import seekreal.knowask.Util.MQUtil;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -15,6 +19,7 @@ public class QuestionServiceImpl implements QuestionService {
     private KnowAskIdGenerate knowAskIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     //新增提问
     @Override
@@ -35,8 +40,15 @@ public class QuestionServiceImpl implements QuestionService {
         //填充创作者id
         question.setUserId(userId);
         //写入mysql
-        questionMapper.insertQuestion(question);
-        rabbitTemplate.convertAndSend();
+        try {
+            questionMapper.insertQuestion(question);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+        //发送到mq
+        rabbitTemplate.convertAndSend("userAmountChangeExchange","question"
+        ,new AmountMqDTO(userId,"question",1), MQUtil.getCorrelation("question",logger));
     }
 
 

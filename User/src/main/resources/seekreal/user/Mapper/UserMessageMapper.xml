@@ -16,6 +16,7 @@
         follower_amount,
         liker_amount,
         writing_amount,
+        question_amount,
         like_amount,
         collect_amount,
         message_power,

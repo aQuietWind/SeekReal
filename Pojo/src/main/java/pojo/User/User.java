@@ -13,7 +13,8 @@ public class User {
     private String phoneNumber;     //手机号
     private int followerAmount;     //粉丝数
     private int likerAmount;        //关注数
-    private int writingAmount;      //作品数
+    private int writingAmount;      //文章数
+    private int questionAmount;     //提问数
     private int likeAmount;         //点赞数
     private int collectAmount;      //收藏数
     private int messagePower;       //信息展示权限
@@ -23,7 +24,7 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String username, String password, String personalSignature, String headerImageAdder, Integer sex, LocalDate birthday, String phoneNumber, int followerAmount, int likerAmount, int writingAmount, int likeAmount, int collectAmount, int messagePower, LocalDate createTime) {
+    public User(Long userId, String username, String password, String personalSignature, String headerImageAdder, Integer sex, LocalDate birthday, String phoneNumber, int followerAmount, int likerAmount, int writingAmount, int questionAmount, int likeAmount, int collectAmount, int messagePower, LocalDate createTime) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -35,6 +36,7 @@ public class User {
         this.followerAmount = followerAmount;
         this.likerAmount = likerAmount;
         this.writingAmount = writingAmount;
+        this.questionAmount = questionAmount;
         this.likeAmount = likeAmount;
         this.collectAmount = collectAmount;
         this.messagePower = messagePower;
@@ -219,6 +221,22 @@ public class User {
 
     /**
      * 获取
+     * @return questionAmount
+     */
+    public int getQuestionAmount() {
+        return questionAmount;
+    }
+
+    /**
+     * 设置
+     * @param questionAmount
+     */
+    public void setQuestionAmount(int questionAmount) {
+        this.questionAmount = questionAmount;
+    }
+
+    /**
+     * 获取
      * @return likeAmount
      */
     public int getLikeAmount() {
@@ -282,6 +300,6 @@ public class User {
     }
 
     public String toString() {
-        return "User{userId = " + userId + ", username = " + username + ", password = " + password + ", personalSignature = " + personalSignature + ", headerImageAdder = " + headerImageAdder + ", sex = " + sex + ", birthday = " + birthday + ", phoneNumber = " + phoneNumber + ", followerAmount = " + followerAmount + ", likerAmount = " + likerAmount + ", writingAmount = " + writingAmount + ", likeAmount = " + likeAmount + ", collectAmount = " + collectAmount + ", messagePower = " + messagePower + ", createTime = " + createTime + "}";
+        return "User{userId = " + userId + ", username = " + username + ", password = " + password + ", personalSignature = " + personalSignature + ", headerImageAdder = " + headerImageAdder + ", sex = " + sex + ", birthday = " + birthday + ", phoneNumber = " + phoneNumber + ", followerAmount = " + followerAmount + ", likerAmount = " + likerAmount + ", writingAmount = " + writingAmount + ", questionAmount = " + questionAmount + ", likeAmount = " + likeAmount + ", collectAmount = " + collectAmount + ", messagePower = " + messagePower + ", createTime = " + createTime + "}";
     }
 }

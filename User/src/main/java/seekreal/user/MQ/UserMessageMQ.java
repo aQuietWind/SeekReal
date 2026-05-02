@@ -9,17 +9,22 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pojo.Common.AmountMqDTO;
 import pojo.User.ESUser;
 import pojo.User.User;
+import seekreal.user.Mapper.UserMessageMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class UserMessageMQ {
     @Autowired
     private ElasticsearchClient esClient;
+    @Autowired
+    private UserMessageMapper userMessageMapper;
     private final static Logger logger = LoggerFactory.getLogger(UserMessageMQ.class);
     //监听用户名的改名
     @RabbitListener(queues = "usernameQueue")
@@ -43,7 +48,21 @@ public class UserMessageMQ {
     }
 
     //监听提问的新增或者减少
-    
+    @RabbitListener(queues = "userQuestionQueue")
+    public void updateUserQuestionAmountToMysql(AmountMqDTO dto, Channel channel, Message message){
+        if (!Objects.equals(dto.getAmountType(), "question")){
+            return;
+        }
+        try {
+            userMessageMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+        } catch (Exception e) {
+            //报错时写入日志
+            logger.error("用户{}在mq试图更新提问数于mysql时异常",dto.getId());
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 
 
 
