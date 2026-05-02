@@ -43,6 +43,9 @@
     <update id="updateUserHeaderImage">
         update User set header_image_adder=#{headerImageAdder} where user_id=#{userId}
     </update>
+    <delete id="deleteUser">
+        delete from User where user_id=#{userId}
+    </delete>
 </mapper>
 
 

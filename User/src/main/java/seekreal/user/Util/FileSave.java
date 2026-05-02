@@ -16,7 +16,7 @@ public class FileSave {
     //文件类型
     private static final List<String> ImageAllowList = Arrays.asList(".png", ".jpg", ".jpeg");
     // 限制文件大小 1MB
-    private static final long MaxFileSize = 5 * 1024 * 1024;
+    private static final long MaxFileSize = 1024 * 1024;
     public static String saveUserImage(MultipartFile file) {
         if (file==null||file.isEmpty()) {throw new RuntimeException("文件不能为空");}
         if (file.getSize() > MaxFileSize) {

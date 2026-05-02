@@ -16,4 +16,6 @@ public interface UserMessageService {
     public String getUpdateUserPasswordOPT(Long userId);
     public void updateUserPassword(Long userId, String newPassword,String opt);
     public void updateUserHeaderImage(MultipartFile file, long userId);
+    public String getDeleteUserOPT(Long userId);
+    public void deleteUser(Long userId,String opt);
 }

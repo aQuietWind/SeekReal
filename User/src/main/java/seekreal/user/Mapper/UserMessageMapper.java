@@ -15,4 +15,5 @@ public interface UserMessageMapper {
     public String getUserPhoneNumber(Long userId);
     public void updateUserPassword(long userId, String password);
     public void updateUserHeaderImage(String headerImageAdder, long userId);
+    public void deleteUser( long userId);
 }

@@ -24,6 +24,7 @@ import seekreal.user.Util.RedisEnum;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -220,6 +221,51 @@ public class UserMessageServiceImpl implements UserMessageService {
         return;
     }
 
+    //获取注销用户所需的验证码
+    @Override
+    public String getDeleteUserOPT(Long userId){
+        //获取验证码，模拟手机号
+        String phoneNumber=userMessageMapper.getUserPhoneNumber(userId);
+        String opt=RanmodOPT.generateOPT(6);
+        //将验证码缓存于redis
+        if (!stringRedisTemplate.opsForValue().setIfAbsent(RedisEnum.userDelete(userId),
+                opt,1,TimeUnit.MINUTES))
+        {throw new RuntimeException("已经存在验证码！！！");}
+        return opt;
+    }
+
+    //注销用户
+    @Override
+    public void deleteUser(Long userId,String opt) {
+        //检测验证码
+        String originOPT=stringRedisTemplate.opsForValue().get(RedisEnum.userDelete(userId));
+        //检测验证码是否存在
+        if (originOPT==null){
+            logger.warn("有人以用户{}的身份试图不获取验证码来注销用户",userId);
+            throw new RuntimeException("请先获得验证码！！！");
+        }
+        //检测验证码是否一致
+        if (!opt.equals(originOPT)){
+            throw new RuntimeException("验证码不正确！！！");
+        }
+        //获取手机号
+        String phoneNumber=userMessageMapper.getUserPhoneNumber(userId);
+        userMessageMapper.deleteUser(userId);
+        //给该手机号设置7天的无法登录
+        LocalDateTime date=LocalDateTime.now().plusDays(7);
+        stringRedisTemplate.opsForValue().set(RedisEnum.userRemoveList(phoneNumber),
+                date.toString(),7,TimeUnit.DAYS);
+        //删除用户于ES
+        try {
+            esClient.delete(d -> d
+                    .index("user")
+                    .id(""+userId)
+            );
+        } catch (IOException e) {
+            logger.error("删除用户{}于ES时，发生异常{}，需要迅速解决",userId,e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
 }
 

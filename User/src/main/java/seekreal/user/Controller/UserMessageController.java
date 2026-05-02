@@ -107,7 +107,29 @@ public class UserMessageController {
         catch (Exception e){
             return Result.error(e.getMessage());
         }
+    }
 
+    //获取注销帐号所需的验证码
+    @GetMapping("/delete")
+    public Result getDeleteUserOPT(String token) {
+        try {
+            return Result.success(userMessageService.getDeleteUserOPT(JWT.jwtCheckToLong(token)));
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //注销帐号
+    @DeleteMapping("/delete")
+    public Result deleteUser(String token,String opt) {
+        try {
+            userMessageService.deleteUser(JWT.jwtCheckToLong(token),opt);
+            return Result.success();
+        }
+        catch (Exception e){
+            return Result.error(e.getMessage());
+        }
     }
 }
 
