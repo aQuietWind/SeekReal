@@ -15,9 +15,11 @@ public class FileSave {
     private static final String KnowAskImage="/home/admin/Documents/KnowAsk/";
     //文件类型
     private static final List<String> ImageAllowList = Arrays.asList(".png", ".jpg", ".jpeg");
-    // 限制文件大小 1MB
-    private static final long MaxFileSize = 1024 * 1024;
-    public static String saveUserImage(MultipartFile file) {
+    // 限制文件大小 2MB
+    private static final long MaxFileSize = 4 * 1024 * 1024;
+
+    //检查文件是否合规，并且返回新的文件名
+    public static String checkImage(MultipartFile file) {
         if (file==null||file.isEmpty()) {throw new RuntimeException("文件不能为空");}
         if (file.getSize() > MaxFileSize) {
             throw new RuntimeException("文件大小不能超过1MB");
@@ -39,6 +41,12 @@ public class FileSave {
             throw new RuntimeException("头像类型不正确，仅支持png/jpg/jpeg");
         }
         String newFileName= UUID.randomUUID()+typeName;                 //生成一个超级随机的文件名字
+
+        return newFileName;
+    }
+
+    //根据文件名将文件保存
+    public static void saveImage(MultipartFile file,String newFileName) {
         //获取目录
         Path destDir = Paths.get(KnowAskImage);
         //如果目录不存在
@@ -58,6 +66,5 @@ public class FileSave {
         } catch (IOException e) {
             throw new RuntimeException("文件保存失败,具体问题： "+e.getMessage());
         }
-        return newFileName;
     }
 }

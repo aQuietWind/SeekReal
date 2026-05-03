@@ -1,13 +1,13 @@
 package seekreal.knowask.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
 import seekreal.knowask.Service.QuestionService;
 import util.JWT;
+
+import java.util.List;
 
 @RequestMapping("/question")
 @RestController
@@ -28,6 +28,27 @@ public class QuestionController {
             return Result.error(e.getMessage());
         }
     }
+
+    //为提问添加插图
+    @PutMapping("/image")
+    public Result updateQuestionImage(@RequestBody List<MultipartFile> files,String token,long questionId){
+        try{
+            questionService.updateQuestionImage(files, JWT.jwtCheckToLong(token),questionId);
+            return Result.success();
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
 }
 
 

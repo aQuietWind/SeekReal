@@ -1,8 +1,8 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 2MB               #这个代表最大的单个文件大小
-      max-request-size: 10MB           #这个代表最大的单次请求传输的数据大小（应对一次传输数个文件）
+      max-file-size: 4MB               #这个代表最大的单个文件大小
+      max-request-size: 16MB           #这个代表最大的单次请求传输的数据大小（应对一次传输数个文件）
   #redis的配置
   redis:
     host: 127.0.0.1
