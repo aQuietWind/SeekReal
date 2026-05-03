@@ -25,7 +25,7 @@ public class ESQuestion {
     public ESQuestion() {
     }
 
-    public ESQuestion(long question_id, long user_id, String question_title, String question_description, int writing_amount, int like_amount, int collect_amount, LocalDateTime create_time) {
+    public ESQuestion(long question_id, long user_id, String question_title, String question_description, int writing_amount, int like_amount, int collect_amount, String create_time) {
         this.question_id = question_id;
         this.user_id = user_id;
         this.question_title = question_title;
@@ -33,7 +33,7 @@ public class ESQuestion {
         this.writing_amount = writing_amount;
         this.like_amount = like_amount;
         this.collect_amount = collect_amount;
-        this.create_time = dateTimetoString(create_time);
+        this.create_time = create_time;
     }
 
     /**

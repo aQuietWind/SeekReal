@@ -20,7 +20,7 @@ CREATE TABLE `Writing` (
     `writing_id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '文章ID',
     `question_id` BIGINT default 0 comment '提问id',
     `user_id` BIGINT NOT NULL COMMENT '用户ID',
-    `writing_topic` VARCHAR(20) NOT NULL COMMENT '文章标题',
+    `writing_title` VARCHAR(20) NOT NULL COMMENT '文章标题',
     `writing_description` TEXT COMMENT '文章描述',
     `image_adder_list` VARCHAR(200) default '[]' COMMENT '插图地址列表',
     `like_amount` INT NOT NULL DEFAULT 0 COMMENT '点赞数',
@@ -50,7 +50,7 @@ CREATE TABLE `undo_log` (
 
 
 Es索引库建立
-
+提问表
 Put http://localhost:9200/question
 {
                    "settings": {
@@ -106,7 +106,64 @@ Put http://localhost:9200/question
                  }
 
 
-
+文章表
+Put http://localhost:9200/writing
+{
+                   "settings": {
+                     "number_of_shards": 1,
+                     "number_of_replicas": 1,
+                     "analysis": {
+                       "tokenizer": {
+                         "ngram_tokenizer": {
+                           "type": "ngram",
+                           "min_gram": 1,
+                           "max_gram": 2,
+                           "token_chars": ["letter", "digit"]
+                         }
+                       },
+                       "analyzer": {
+                         "ngram_analyzer": {
+                           "tokenizer": "ngram_tokenizer"
+                         }
+                       }
+                     }
+                   },
+                   "mappings": {
+                     "properties": {
+                       "writing_id":{
+                        "type":"long"
+                       }
+                        ,
+                       "question_id":{
+                        "type":"long"
+                       },
+                       "user_id":{
+                         "type":"long"
+                       },
+                       "writing_title": {
+                         "type": "text",
+                         "analyzer": "ngram_analyzer"
+                       },
+                       "writing_description": {
+                         "type": "text",
+                         "index":false
+                       },
+                       "like_amount":{
+                         "type":"integer"
+                       },
+                       "comment_amount":{
+                         "type":"integer"
+                       },
+                       "collect_amount":{
+                         "type":"integer"
+                       },
+                       "create_time":{
+                         "type":"date",
+                         "format":"yyyy-MM-dd HH:mm:ss"
+                       }
+                     }
+                   }
+                 }
 
 
 

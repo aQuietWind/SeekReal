@@ -3,18 +3,18 @@ package pojo.KnowAsk;
 import java.time.LocalDateTime;
 
 public class Writing {
-    public Long writingId;      //文章id
-    public Long questionId;     //关联的提问id
-    public Long userId;         //用户id
-    public String writingTitle;     //文章标题
-    public String writingDescription;   //文章描述
-    public String imageAdderList;       //插图地址集合
-    public Integer likeAmount;          //点赞数
-    public Integer commentAmount;       //评论数
-    public Integer collectAmount;       //收藏数
-    public Integer messagePower;        //展示权限
-    public Integer isExist;             //存在状态
-    public LocalDateTime createTime;    //创建时间
+    private Long writingId;      //文章id
+    private Long questionId;     //关联的提问id
+    private Long userId;         //用户id
+    private String writingTitle;     //文章标题
+    private String writingDescription;   //文章描述
+    private String imageAdderList;       //插图地址集合
+    private Integer likeAmount;          //点赞数
+    private Integer commentAmount;       //评论数
+    private Integer collectAmount;       //收藏数
+    private Integer messagePower;        //展示权限
+    private Integer isExist;             //存在状态
+    private LocalDateTime createTime;    //创建时间
 
 
     public Writing() {

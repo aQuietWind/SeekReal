@@ -68,7 +68,7 @@ public class UserMessageMQ {
     //监听文章的新增或者减少
     @RabbitListener(queues = "userWritingQueue")
     public void updateUserWritingAmountToMysql(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "Writing")){
+        if (!Objects.equals(dto.getAmountType(), "writing")){
             return;
         }
         try {
@@ -85,7 +85,7 @@ public class UserMessageMQ {
     //监听点赞的新增或者减少
     @RabbitListener(queues = "userLikeQueue")
     public void updateUserLikeAmountToMysql(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "Like")){
+        if (!Objects.equals(dto.getAmountType(), "like")){
             return;
         }
         try {
@@ -102,7 +102,7 @@ public class UserMessageMQ {
     //监听收藏的新增或者减少
     @RabbitListener(queues = "userCollectQueue")
     public void updateUserCollectAmountToMysql(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "Collect")){
+        if (!Objects.equals(dto.getAmountType(), "collect")){
             return;
         }
         try {
@@ -119,7 +119,7 @@ public class UserMessageMQ {
     //监听关注的新增或者减少
     @RabbitListener(queues = "userLikerQueue")
     public void updateUserLikerAmountToMysql(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "Liker")){
+        if (!Objects.equals(dto.getAmountType(), "liker")){
             return;
         }
         try {
@@ -136,7 +136,7 @@ public class UserMessageMQ {
     //监听粉丝的新增或者减少
     @RabbitListener(queues = "userFollowerQueue")
     public void updateUserFollowerAmountToMysql(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "Follower")){
+        if (!Objects.equals(dto.getAmountType(), "follower")){
             return;
         }
         try {

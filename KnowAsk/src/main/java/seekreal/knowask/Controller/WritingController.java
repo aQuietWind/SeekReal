@@ -15,10 +15,11 @@ public class WritingController {
     private WritingService writingService;
     //新增文章
     @PostMapping
-    public Result insertQuestion(String writingTitle,String writingDescription,Long questionId, String token){
+    public Result insertQuestion(String writingTitle,String writingDescription,Long questionId, String token
+            ,int messagePower){
         try{
             writingService.insertWriting(writingTitle,writingDescription,questionId
-                    , JWT.jwtCheckToLong(token));
+                    , JWT.jwtCheckToLong(token),messagePower);
             return Result.success();
         }
         catch (Exception e) {

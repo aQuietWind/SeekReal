@@ -24,10 +24,13 @@ public class QuestionServiceImpl implements QuestionService {
     //新增提问
     @Override
     public void insertQuestion(String questionTitle,String questionDescription, long userId){
+        //校验提问的格式
         if (questionTitle==null||!(questionTitle.length()<20)){
+            logger.warn("用户{}试图以错误的提问标题直接新增提问",userId);
             throw new RuntimeException("提问的标题格式不对！！！");
         }
         if (questionDescription==null||!(questionDescription.length()<15000)){
+            logger.warn("用户{}试图以错误的提问内容直接新增提问",userId);
             throw new RuntimeException("提问的文本描述内容格式不对！！！");
         }
         Question question=new Question();

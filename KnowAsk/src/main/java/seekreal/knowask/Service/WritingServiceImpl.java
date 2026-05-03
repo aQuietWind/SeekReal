@@ -23,13 +23,20 @@ public class WritingServiceImpl implements WritingService {
 
     //新增文章
     @Override
-    public void insertWriting(String writingTitle,String writingDescription,Long questionId, long userId){
+    public void insertWriting(String writingTitle,String writingDescription,Long questionId, long userId
+    ,int messagePower){
         //判断标题和内容的格式是否正确
         if (writingTitle==null||!(writingTitle.length()<20)){
+            logger.warn("用户{}试图以错误的文章标题直接新增文章",userId);
             throw new RuntimeException("文章的标题格式不对！！！");
         }
         if (writingDescription==null||!(writingDescription.length()<15000)){
+            logger.warn("用户{}试图以错误的文章内容直接新增文章",userId);
             throw new RuntimeException("文章的文本描述内容格式不对！！！");
+        }
+        if (messagePower!=1&&messagePower!=0){
+            logger.warn("用户{}试图以错误的展示权限直接新增文章",userId);
+            throw new RuntimeException("文章的信息展示权限不对！！！");
         }
         Writing writing = new Writing();
         //生成随机id
@@ -40,6 +47,8 @@ public class WritingServiceImpl implements WritingService {
         writing.setWritingDescription(writingDescription);
         //填充创作者id
         writing.setUserId(userId);
+        //填充信息展示权限
+        writing.setMessagePower(messagePower);
         //如果提问id不为null则添加提问id
         if (questionId!=null){
             writing.setQuestionId(questionId);
@@ -51,8 +60,16 @@ public class WritingServiceImpl implements WritingService {
         catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
-        //发送到mq
+        if(messagePower!=0){
+            //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
+            writing.setWritingDescription(writingDescription.substring(0,
+                    Math.min(writingDescription.length(),30)));
+            //符合权限需求则写入es
+            rabbitTemplate.convertAndSend("writingAddQueue",
+                    writing,MQUtil.getCorrelation("writingAdd",logger));
+        }
+        //发送到mq去新增用户的文章数
         rabbitTemplate.convertAndSend("userAmountChangeExchange","writing"
-                ,new AmountMqDTO(userId,"writing",1), MQUtil.getCorrelation("writing",logger));
+                ,new AmountMqDTO(userId,"writing",1), MQUtil.getCorrelation("userWriting",logger));
     }
 }
