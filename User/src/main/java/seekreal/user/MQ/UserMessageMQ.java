@@ -74,7 +74,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserWritingAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
@@ -91,7 +91,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserLikeAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
@@ -108,7 +108,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserCollectAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
@@ -125,7 +125,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserLikerAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
             logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
@@ -142,7 +142,7 @@ public class UserMessageMQ {
             return;
         }
         try {
-            mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            mqMapper.updateUserFollowerAmount(dto.getId(),dto.getStep());      //写入mysql
             //编写es自增或者自减的脚本
             UpdateRequest request= EsUtil.getUpdateRequest("user",""+dto.getId()
                     ,"follower_amount",dto.getStep());

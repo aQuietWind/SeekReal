@@ -13,6 +13,7 @@ import pojo.KnowAsk.Writing;
 import seekreal.knowask.Mapper.WritingMQMapper;
 import seekreal.knowask.Util.EsUtil;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -45,8 +46,18 @@ public class WritingMQ {
 
     }
 
-    //
-    @
+    //移除文章
+    @RabbitListener(queues = "writingRemoveQueue")
+    public void writingRemoveQueue(long writingId){
+        try {
+            esClient.delete(d -> d
+                    .index("writing")
+                    .id(""+writingId)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 

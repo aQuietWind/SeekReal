@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
+import pojo.KnowAsk.RemoveWriting;
 import pojo.KnowAsk.Writing;
 import seekreal.knowask.Mapper.WritingMapper;
 import seekreal.knowask.Util.FileSave;
@@ -124,21 +125,33 @@ public class WritingServiceImpl implements WritingService {
     //逻辑删除文章
     @Override
     public void deleteWriting(long writingId, long userId) {
-        String imageAdder=writingMapper.getWritingImage(writingId,userId);
-        if (imageAdder!=null){
+        //获取插图地址
+        RemoveWriting adderAndPower=writingMapper.getWritingImageAndPower(writingId,userId);
+        //判断插图和权限是否真的存在，不存在意味文章根本没有被插进去
+        if (adderAndPower!=null){
+            //保险起见再判断一次
             if(!writingMapper.deleteWriting(writingId,userId)){
                 throw new RuntimeException("删除失败！！！未找到该文章！！！");
             }else {
-                rabbitTemplate.convertAndSend("imageExchange","writing", imageAdder
+                //删除成功后将地址发送于mq，进行后台删除图片存储
+                rabbitTemplate.convertAndSend("imageExchange","writing"
+                        , adderAndPower.getImageAdderList()
                         ,MQUtil.getCorrelation("writingImageQueue",logger));
+                //判断权限，然后以此判断是否es中存有该文章
+                if (adderAndPower.getMessagePower()==1){
+                    rabbitTemplate.convertAndSend("writingRemoveQueue",writingId,
+                            MQUtil.getCorrelation("writingRemove",logger));
+                }
+                //发送消息至MQ，通知其减少对应用户的文章数
+                rabbitTemplate.convertAndSend("userAmountChangeExchange","writing"
+                        ,new AmountMqDTO(userId,"writing",-1),
+                        MQUtil.getCorrelation("userWriting",logger));
             }
         }else {
             logger.warn("用户{}试图删除一个不存在的文章{}",writingId,userId);
             throw new RuntimeException("删除失败！！！未找到该文章！！！");
         }
     }
-
-
 
 
 

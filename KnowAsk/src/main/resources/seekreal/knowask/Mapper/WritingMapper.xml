@@ -26,8 +26,8 @@
         where user_id=#{userId} and writing_id=#{writingId} and image_adder_list='[]' and is_exist=1
     </update>
 <!--    获取文章的图片地址-->
-    <select id="getWritingImage" resultType="java.lang.String">
-        select image_adder_list from Writing where user_id=#{userId}
+    <select id="getWritingImageAndPower" resultType="pojo.KnowAsk.RemoveWriting">
+        select image_adder_list,message_power from Writing where user_id=#{userId}
         and writing_id=#{writingId} and is_exist=1
     </select>
     <!--    删除某篇存在的文章-->
