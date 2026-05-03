@@ -1,4 +1,4 @@
-package seekreal.knowask.Util;
+package seekreal.user.Util;
 
 
 import co.elastic.clients.elasticsearch._types.Script;

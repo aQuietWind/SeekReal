@@ -1,6 +1,7 @@
 package seekreal.user.MQ;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.MQMapper;
 import seekreal.user.Mapper.UserMessageMapper;
+import seekreal.user.Util.EsUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -141,9 +143,13 @@ public class UserMessageMQ {
         }
         try {
             mqMapper.updateUserQuestionAmount(dto.getId(),dto.getStep());      //写入mysql
+            //编写es自增或者自减的脚本
+            UpdateRequest request= EsUtil.getUpdateRequest("user",""+dto.getId()
+                    ,"follower_amount",dto.getStep());
+            esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新提问数于mysql或者es时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
