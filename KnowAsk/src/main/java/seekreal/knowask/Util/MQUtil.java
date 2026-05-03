@@ -15,10 +15,10 @@ public class MQUtil {
         correlationData.getFuture().whenComplete((r,e)->{
             if (e!=null){
                 logger.error(e.getMessage());
-                logger.error("{}MQ发送消息中间发生异常",name);
+                logger.error("发送消息到{}MQ的过程中间发生异常",name);
             }
             if (!r.isAck()){
-                logger.error("{}MQ发送消息未能成功到达交换机",name);
+                logger.error("发送消息到{}MQ的过程中未能成功到达交换机",name);
             }
         });
         return correlationData;

@@ -64,6 +64,12 @@ public class WritingServiceImpl implements WritingService {
             //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
             writing.setWritingDescription(writingDescription.substring(0,
                     Math.min(writingDescription.length(),30)));
+            if (writing.getQuestionId()!=0){
+                //提问关联id不为0则同步于提问的es与mysql表
+                rabbitTemplate.convertAndSend("questionAmountChangeExchange","writing",
+                        new AmountMqDTO(writing.getQuestionId(),"writing",1)
+                        , MQUtil.getCorrelation("questionWriting",logger));
+            }
             //符合权限需求则写入es
             rabbitTemplate.convertAndSend("writingAddQueue",
                     writing,MQUtil.getCorrelation("writingAdd",logger));

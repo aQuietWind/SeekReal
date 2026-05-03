@@ -91,15 +91,20 @@ public class QuestionMQ {
     //监听文章的变化,并写入变化于es和mysql
     @RabbitListener(queues = "questionWritingQueue")
     public void questionWritingQueue(AmountMqDTO dto){
-        if (!Objects.equals(dto.getAmountType(), "writing")){
+        System.out.println(1);
+        if (!dto.getAmountType().equals("writing")){
             return;
         }
+        System.out.println(2);
         try {
+            System.out.println(3);
             questionMQMapper.updateQuestionWritingAmount(dto.getId(),dto.getStep());      //写入mysql
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
                     ,"writing_amount",dto.getStep());
+            System.out.println(4);
             esClient.update(request,void.class);        //更新于es
+            System.out.println(5);
         } catch (Exception e) {
             //报错时写入日志
             logger.error("提问{}在mq试图更新文章数于mysql或es时发生异常:{}",dto.getId(),e.getMessage());
