@@ -16,27 +16,21 @@
         ,#{questionTitle}
         ,#{questionDescription})
     </insert>
+
     <!--    添加图片地址于Mysql-->
     <update id="updateQuestionImage">
         update Question set image_adder_list=#{adder}
         where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]' and is_exist=1
     </update>
-    <!--    除了密码和权限全部获取-->
-    <select id="loginUserByPassword" resultType="pojo.User.User">
-        select
-        user_id,
-        username,
-        personal_signature,
-        header_image_adder,
-        sex,
-        birthday,
-        phone_number,
-        follower_amount,
-        liker_amount,
-        writing_amount,
-        like_amount,
-        collect_amount,
-        create_time
-        from User where phone_number=#{phoneNumber} and password=#{password}
+
+    <!--    获取文章的图片地址-->
+    <select id="getQuestionImage" resultType="java.lang.String">
+        select image_adder_list from Question where user_id=#{userId}
+        and question_id=#{questionId} and is_exist=1
     </select>
+
+    <!--    删除某篇存在的文章-->
+    <update id="deleteQuestion">
+        update Question set is_exist=0 where user_id=#{userId} and question_id=#{questionId} and is_exist=1
+    </update>
 </mapper>

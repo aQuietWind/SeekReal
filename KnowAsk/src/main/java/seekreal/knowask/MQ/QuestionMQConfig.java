@@ -21,6 +21,15 @@ public class QuestionMQConfig {
     }
 
 
+    @Bean       //声明提问删除队列
+    public Queue questionRemoveQueue(){
+        Map<String, Object> args = new HashMap<>();
+        // 设置队列模式为quorum仲裁模式，注意！！！不能和lazy模式混用
+        args.put("x-queue-type", "quorum");
+        return new Queue("questionRemoveQueue",true, false, false, args);
+    }
+
+
     @Bean       //声明提问数目交换机
     public DirectExchange questionAmountChangeExchange() {
         return new DirectExchange("questionAmountChangeExchange");

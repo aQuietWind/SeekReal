@@ -42,6 +42,17 @@ public class QuestionController {
     }
 
 
+    //删除提问
+    @DeleteMapping
+    public Result deleteQuestion(long questionId, String token){
+        try{
+            questionService.deleteQuestion(questionId,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
 
 

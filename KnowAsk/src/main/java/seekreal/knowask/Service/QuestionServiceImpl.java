@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.Question;
+import pojo.KnowAsk.RemoveWriting;
 import seekreal.knowask.Mapper.QuestionMapper;
 import seekreal.knowask.Util.FileSave;
 import seekreal.knowask.Util.KnowAskIdGenerate;
@@ -100,6 +101,35 @@ public class QuestionServiceImpl implements QuestionService {
         return;
     }
 
+    //逻辑删除提问
+    @Override
+    public void deleteQuestion(long questionId, long userId) {
+        //获取插图地址
+        String adder=questionMapper.getQuestionImage(questionId,userId);
+        //判断插图和权限是否真的存在，不存在意味文章根本没有被插进去
+        if (adder!=null){
+            //保险起见再判断一次
+            if(!questionMapper.deleteQuestion(questionId,userId)){
+                throw new RuntimeException("删除失败！！！未找到该提问！！！");
+            }else {
+                //删除成功后将地址发送于mq，进行后台删除图片存储
+                rabbitTemplate.convertAndSend("imageExchange","question"
+                        , adder
+                        ,MQUtil.getCorrelation("questionImageQueue",logger));
+                //删除es中的提问
+                    rabbitTemplate.convertAndSend("questionRemoveQueue",questionId,
+                            MQUtil.getCorrelation("questionRemove",logger));
+                //发送消息至MQ，通知其减少对应用户的提问数
+                rabbitTemplate.convertAndSend("userAmountChangeExchange","question"
+                        ,new AmountMqDTO(userId,"question",-1),
+                        MQUtil.getCorrelation("userQuestion",logger));
+            }
+        }else {
+            logger.warn("用户{}试图删除一个不存在的提问{}",questionId,userId);
+            throw new RuntimeException("删除失败！！！未找到该提问！！！");
+        }
+        return;
+    }
 
 
 

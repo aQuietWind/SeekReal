@@ -14,6 +14,7 @@ import seekreal.knowask.Mapper.QuestionMQMapper;
 import seekreal.knowask.Util.EsUtil;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -45,6 +46,22 @@ public class QuestionMQ {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    //移除提问
+    @RabbitListener(queues = "questionRemoveQueue")
+    public void questionRemoveQueue(long questionId){
+        try {
+            //删除于es
+            esClient.delete(d -> d
+                    .index("question")
+                    .id(""+questionId)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     //监听点赞的变化,并写入变化于es和mysql
     @RabbitListener(queues = "questionLikeQueue")
