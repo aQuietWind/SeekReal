@@ -19,7 +19,7 @@
     <!--    添加图片地址于Mysql-->
     <update id="updateQuestionImage">
         update Question set image_adder_list=#{adder}
-        where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]'
+        where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]' and is_exist=1
     </update>
     <!--    除了密码和权限全部获取-->
     <select id="loginUserByPassword" resultType="pojo.User.User">

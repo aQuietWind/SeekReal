@@ -40,4 +40,36 @@ public class WritingController {
             return Result.error(e.getMessage());
         }
     }
+
+
+    //删除文章
+    @DeleteMapping
+    public Result deleteWriting(long writingId, String token){
+        try{
+            writingService.deleteWriting(writingId,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -45,6 +45,9 @@ public class WritingMQ {
 
     }
 
+    //
+    @
+
 
 
     //监听点赞的变化,并写入变化于es和mysql

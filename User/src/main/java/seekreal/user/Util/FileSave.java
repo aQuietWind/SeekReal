@@ -1,6 +1,7 @@
 package seekreal.user.Util;
 
 import org.springframework.web.multipart.MultipartFile;
+import util.FileEnum;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class FileSave {
-    //头像的保存路径
-    private static final String UserImage="/home/admin/Documents/User/";
     //文件类型
     private static final List<String> ImageAllowList = Arrays.asList(".png", ".jpg", ".jpeg");
     // 限制文件大小 1MB
@@ -40,7 +39,7 @@ public class FileSave {
         }
         String newFileName= UUID.randomUUID()+typeName;                 //生成一个超级随机的文件名字
         //获取目录
-        Path destDir = Paths.get(UserImage);
+        Path destDir = Paths.get(FileEnum.User_Header_Image_Path);
         //如果目录不存在
         if (!Files.exists(destDir)) {
             //尝试创建目录

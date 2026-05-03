@@ -20,6 +20,14 @@ public class WritingMQConfig {
         return new Queue("writingAddQueue",true, false, false, args);
     }
 
+    @Bean       //声明文章删除队列
+    public Queue writingRemoveQueue(){
+        Map<String, Object> args = new HashMap<>();
+        // 设置队列模式为quorum仲裁模式，注意！！！不能和lazy模式混用
+        args.put("x-queue-type", "quorum");
+        return new Queue("writingRemoveQueue",true, false, false, args);
+    }
+
 
 
     @Bean       //声明文章数目交换机

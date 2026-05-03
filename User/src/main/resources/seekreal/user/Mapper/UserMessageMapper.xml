@@ -23,9 +23,11 @@
         create_time
         from User where user_id=#{userId}
     </select>
+<!--    更新用户名-->
     <update id="updateUsername">
         update User set username=#{username} where user_id=#{userId}
     </update>
+<!--    更新用户信息-->
     <update id="updateUserMessage">
         update User
         <set>
@@ -35,15 +37,22 @@
             <if test="messagePower!=null">message_power=#{messagePower},</if>
         </set>  where user_id=#{userId}
     </update>
+<!--    获取用户手机号-->
     <select id="getUserPhoneNumber" resultType="java.lang.String">
         select phone_number from User where user_id=#{userId}
     </select>
+<!--    更新密码-->
     <update id="updateUserPassword">
         update User set password=#{password} where user_id=#{userId}
     </update>
+<!--    更新头像-->
     <update id="updateUserHeaderImage">
         update User set header_image_adder=#{headerImageAdder} where user_id=#{userId}
     </update>
+<!--    获取用户头像地址-->
+    <select id="getUserHeaderImageAdder" resultType="java.lang.String">
+        select header_image_adder from User where user_id=#{userId}
+    </select>
     <delete id="deleteUser">
         delete from User where user_id=#{userId}
     </delete>

@@ -1,6 +1,7 @@
 package seekreal.knowask.Util;
 
 import org.springframework.web.multipart.MultipartFile;
+import util.FileEnum;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,18 +12,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class FileSave {
-    //头像的保存路径
-    private static final String KnowAskImage="/home/admin/Documents/KnowAsk/";
+
     //文件类型
     private static final List<String> ImageAllowList = Arrays.asList(".png", ".jpg", ".jpeg");
-    // 限制文件大小 2MB
-    private static final long MaxFileSize = 4 * 1024 * 1024;
 
     //检查文件是否合规，并且返回新的文件名
     public static String checkImage(MultipartFile file) {
         if (file==null||file.isEmpty()) {throw new RuntimeException("文件不能为空");}
-        if (file.getSize() > MaxFileSize) {
-            throw new RuntimeException("文件大小不能超过1MB");
+        if (file.getSize() > FileEnum.Size_Max) {
+            throw new RuntimeException("文件大小不能超过"+(FileEnum.Size_Max/(1024*1024))+"MB");
         }
         //检查文件名
         String oldFileName = file.getOriginalFilename();
@@ -48,7 +46,7 @@ public class FileSave {
     //根据文件名将文件保存
     public static void saveImage(MultipartFile file,String newFileName) {
         //获取目录
-        Path destDir = Paths.get(KnowAskImage);
+        Path destDir = Paths.get(FileEnum.KnowAsk_Image_Path);
         //如果目录不存在
         if (!Files.exists(destDir)) {
             //尝试创建目录

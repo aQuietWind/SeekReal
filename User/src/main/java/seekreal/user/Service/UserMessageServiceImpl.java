@@ -218,9 +218,18 @@ public class UserMessageServiceImpl implements UserMessageService {
     public void updateUserHeaderImage(MultipartFile file,long userId){
         try {
             String fileName=FileSave.saveUserImage(file);
+            //获取头像地址
+            String headerImageAdder=userMessageMapper.getUserHeaderImageAdder(userId);
+            //更新为新的头像地址
             userMessageMapper.updateUserHeaderImage(fileName,userId);
             //删除缓存
             stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
+            //如果不是空地址则删除
+            if(!headerImageAdder.isEmpty()){
+                //投递消息给mq，让其删除旧图片
+                rabbitTemplate.convertAndSend("imageExchange","user",headerImageAdder,
+                        MQUtil.getCorrelation("userImage",logger));
+            }
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -256,6 +265,8 @@ public class UserMessageServiceImpl implements UserMessageService {
         }
         //获取手机号
         String phoneNumber=userMessageMapper.getUserPhoneNumber(userId);
+        //获取头像地址
+        String headerImageAdder=userMessageMapper.getUserHeaderImageAdder(userId);
         userMessageMapper.deleteUser(userId);
         //给该手机号设置7天的无法登录
         LocalDateTime date=LocalDateTime.now().plusDays(7);
@@ -272,6 +283,12 @@ public class UserMessageServiceImpl implements UserMessageService {
         } catch (IOException e) {
             logger.error("删除用户{}于ES时，发生异常{}，需要迅速解决",userId,e.getMessage());
             throw new RuntimeException(e);
+        }
+        //如果不是空地址则删除
+        if(!headerImageAdder.isEmpty()){
+            //投递消息给mq，让其删除旧图片
+            rabbitTemplate.convertAndSend("imageExchange","user",headerImageAdder,
+                    MQUtil.getCorrelation("userImage",logger));
         }
     }
 

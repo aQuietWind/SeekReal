@@ -121,6 +121,23 @@ public class WritingServiceImpl implements WritingService {
         return;
     }
 
+    //逻辑删除文章
+    @Override
+    public void deleteWriting(long writingId, long userId) {
+        String imageAdder=writingMapper.getWritingImage(writingId,userId);
+        if (imageAdder!=null){
+            if(!writingMapper.deleteWriting(writingId,userId)){
+                throw new RuntimeException("删除失败！！！未找到该文章！！！");
+            }else {
+                rabbitTemplate.convertAndSend("imageExchange","writing", imageAdder
+                        ,MQUtil.getCorrelation("writingImageQueue",logger));
+            }
+        }else {
+            logger.warn("用户{}试图删除一个不存在的文章{}",writingId,userId);
+            throw new RuntimeException("删除失败！！！未找到该文章！！！");
+        }
+    }
+
 
 
 
