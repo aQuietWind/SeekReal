@@ -54,6 +54,17 @@ public class WritingController {
         }
     }
 
+    //热门的文章,1代表日，2代表周，3代表月
+    @GetMapping("/hot")
+    public Result getHotWriting(int mode){
+        try{
+            return Result.success(writingService.getHotWriting(mode));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
 }
 
 

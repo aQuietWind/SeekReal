@@ -1,21 +1,38 @@
 package seekreal.knowask.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.alibaba.nacos.common.utils.ThreadFactoryBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
+import pojo.KnowAsk.ESQuestion;
+import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.RemoveWriting;
 import pojo.KnowAsk.Writing;
 import seekreal.knowask.Mapper.WritingMapper;
 import seekreal.knowask.Util.FileSave;
 import seekreal.knowask.Util.KnowAskIdGenerate;
 import seekreal.knowask.Util.MQUtil;
+import seekreal.knowask.Util.RedisEnum;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 
 @Service
 public class WritingServiceImpl implements WritingService {
@@ -25,6 +42,19 @@ public class WritingServiceImpl implements WritingService {
     private KnowAskIdGenerate knowAskIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private ElasticsearchClient esClient;
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    //定义全局的异步线程池
+    private static final ExecutorService HOT_Writing_POOL = new ThreadPoolExecutor(
+            2, 5, 60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(100),
+            new ThreadFactoryBuilder().nameFormat("hot-question-pool-%d").build(),
+            new ThreadPoolExecutor.CallerRunsPolicy() // 队列满了主线程自己跑，避免丢任务
+    );
     private static final Logger logger = LoggerFactory.getLogger(WritingServiceImpl.class);
 
     //新增文章
@@ -154,11 +184,116 @@ public class WritingServiceImpl implements WritingService {
     }
 
 
+    //热门文章获取
+    @Override
+    public List<ESWriting> getHotWriting(int mode) {
+        if (mode != 1 && mode != 2 && mode != 3) {
+            logger.warn("有人试图以错误的mode{}来访问热门文章", mode);
+            throw new RuntimeException();
+        }
+        //用于等一会存储实体类
+        ArrayList<ESWriting> list = new ArrayList<>();
+        try {
+            //获取缓存中的json
+            String json = stringRedisTemplate.opsForValue().get(RedisEnum.writingHot(mode));
+            //判断是否存在缓存
+            if (json == null) {
+                //多线程执行业务
+                HOT_Writing_POOL.submit(() -> {
+                    updateHotWriting(mode, LocalDateTime.now());
+                });
+                return list;
+            }
+            //转化成ES实体类
+            list = (ArrayList<ESWriting>) objectMapper.readValue(json, List.class);
+        } catch (Exception e) {
+            logger.error("用户在获取热门文章mode{}时发生异常：{}", mode, e.getMessage());
+            throw new RuntimeException("服务器繁忙，请稍后再来._.");
+        }
+        //判断是否需要进行逻辑更新
+        try {
+            //获取过期时间
+            String stringTime=stringRedisTemplate.opsForValue().get(RedisEnum.writingHotExpire(mode));
+            //看看有没有到时间去更新
+            if (stringTime==null||ESWriting.stringToDate(stringTime).isBefore(LocalDateTime.now())) {
+                //多线程执行业务
+                HOT_Writing_POOL.submit(() -> {
+                    updateHotWriting(mode, LocalDateTime.now());
+                });
+            }
+        } catch (Exception e) {
+            logger.error("mode{}的文章热门逻辑更新判断出现异常: {}", mode, e.getMessage());
+            throw new RuntimeException(e);
+        }
+        //返回数据
+        return list;
+    }
 
+    //更新的逻辑（中间层），根据不同的mode选择不同的更新方式
+    private void updateHotWriting(int mode, LocalDateTime start) {
+        //获取更新锁，有条件可以更换为redison的锁
+        boolean canToUpdate=stringRedisTemplate.opsForValue().setIfAbsent(RedisEnum.writingHotExpire(mode),
+                "1", 10, TimeUnit.SECONDS);
+        if (!canToUpdate){return;}
+        //执行
+        switch (mode) {
+            //日表
+            case 1:
+                updateHotFromEs(mode,5);
+                break;
+            //周表
+            case 2:
+                updateHotFromEs(mode,30);
+                break;
+            //月表
+            case 3:
+                updateHotFromEs(mode,120);
+                break;
+        }
+        //释放锁
+        stringRedisTemplate.delete(RedisEnum.writingHotExpire(mode));
+        //看看这次更新有没有发生并发问题
+        if (LocalDateTime.now().minusSeconds(10).isAfter(start)) {
+            logger.error("在更新mode{}的热点文章时，出现业务更新超时!!!!!!!!!", mode);
+        }
+        return;
+    }
 
-
-
-
+    //具体的更新逻辑
+    private void updateHotFromEs(int mode, int nextMinutes) {
+        try {
+            //构建请求
+            SearchRequest request = new SearchRequest.Builder()
+                    .index("writing")
+                    .query(q -> q.range(r -> r
+                            .date(d -> d.field("create_time")
+                                    //只要日期大于等于24h前的数据
+                                    .gte(ESWriting.dateTimetoString(LocalDateTime.now().minusDays(1))))
+                    ))
+                    //根据点赞量排序，并且以倒序（从高到低）排序
+                    .sort(s -> s.field(f -> f.field("like_amount").order(SortOrder.Desc)))
+                    //只要10条
+                    .size(10)
+                    .build();
+            //向es发出请求
+            SearchResponse<ESWriting> response = esClient.search(request, ESWriting.class);
+            ArrayList<ESWriting> list = new ArrayList<>();
+            //将结果存储于redis
+            for (Hit<ESWriting> hit : response.hits().hits()) {
+                list.add(hit.source());
+            }
+            //存入缓存
+            stringRedisTemplate.opsForValue().set(RedisEnum.writingHot(mode),
+                    objectMapper.writeValueAsString(list));
+            //更新下次更新的时间
+            stringRedisTemplate.opsForValue().set(RedisEnum.writingHotExpire(mode),
+                    ESWriting.dateTimetoString(LocalDateTime.now().plusSeconds(nextMinutes)) );
+        } catch (Exception e) {
+            logger.error("在更新mode{}的热点文章时，出现异常:{}!!!!!!!!!", mode, e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return;
+    }
 
 
 

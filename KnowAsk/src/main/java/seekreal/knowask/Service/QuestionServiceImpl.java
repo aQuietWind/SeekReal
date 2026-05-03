@@ -183,7 +183,7 @@ public class QuestionServiceImpl implements QuestionService {
             //转化成ES实体类
             list = (ArrayList<ESQuestion>) objectMapper.readValue(json, List.class);
         } catch (Exception e) {
-            logger.error("用户在获取mode{}时发生异常：{}", mode, e.getMessage());
+            logger.error("用户在获取热门提问mode{}时发生异常：{}", mode, e.getMessage());
             throw new RuntimeException("服务器繁忙，请稍后再来._.");
         }
         //判断是否需要进行逻辑更新
@@ -263,7 +263,7 @@ public class QuestionServiceImpl implements QuestionService {
                     objectMapper.writeValueAsString(list));
             //更新下次更新的时间
             stringRedisTemplate.opsForValue().set(RedisEnum.questionHotExpire(mode),
-                    ESQuestion.dateTimetoString(LocalDateTime.now().plusSeconds(nextMinutes)) );
+                    ESQuestion.dateTimetoString(LocalDateTime.now().plusMinutes(nextMinutes)) );
         } catch (Exception e) {
             logger.error("在更新mode{}的热点提问时，出现异常:{}!!!!!!!!!", mode, e.getMessage());
             throw new RuntimeException(e);
