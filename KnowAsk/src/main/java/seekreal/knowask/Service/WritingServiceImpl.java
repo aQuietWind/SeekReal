@@ -80,7 +80,7 @@ public class WritingServiceImpl implements WritingService {
             rabbitTemplate.convertAndSend("writingAddQueue",
                     writing,MQUtil.getCorrelation("writingAdd",logger));
         }
-        //发送到mq去新增用户的文章数
+        //发送到mq去增加用户的文章数
         rabbitTemplate.convertAndSend("userAmountChangeExchange","writing"
                 ,new AmountMqDTO(userId,"writing",1), MQUtil.getCorrelation("userWriting",logger));
     }

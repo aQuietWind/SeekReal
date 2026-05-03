@@ -2,28 +2,17 @@ package seekreal.knowask.Util;
 
 
 public class RedisEnum {
-    public static final String Register="user:login:register:";
-    public static final String Login="user:login:login:";
-    public static final String UserCaffeine="user:caffeine:";
-    public static final String UserPassword="user:password:";
-    public static final String UserDelete="user:delete:";
-    public static final String UserRemoveList="user:remove:list:";
-    public static String register(String phoneNumber){
-        return Register+phoneNumber;
+    public static final String Question_Hot="knowask:question:hot:";
+    public static final String Question_Hot_Expire="knowask:question:hot:expire";
+    public static final String Question_Hot_Lock="knowask:question:hot:lock:";
+    public static String questionHot(int mode){
+        return Question_Hot+mode;
     }
-    public static String login(String phoneNumber){
-        return Login+phoneNumber;
+    public static String questionHotExpire(int mode){
+        return Question_Hot_Expire+mode;
     }
-    public static String userCaffeine(long userId) {
-        return UserCaffeine + userId;
+    public static String questionHotLock(int mode){
+        return Question_Hot_Lock+mode;
     }
-    public static String userPassword(long userId){
-        return UserPassword+userId;
-    }
-    public static String userDelete(long userId){
-        return UserDelete+userId;
-    }
-    public static String userRemoveList(String phoneNumber){
-        return UserRemoveList+phoneNumber;
-    }
+
 }

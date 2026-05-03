@@ -55,6 +55,18 @@ public class QuestionController {
     }
 
 
+    //热门的提问,1代表日，2代表周，3代表月
+    @GetMapping("/hot")
+    public Result getHotQuestion(int mode){
+        try{
+            return Result.success(questionService.getHotQuestion(mode));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
 
 
 
