@@ -1,6 +1,8 @@
 package seekreal.knowask.Service;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import org.springframework.web.multipart.MultipartFile;
+import seekreal.knowask.Util.EsPagingResult;
 import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.Writing;
 
@@ -13,4 +15,5 @@ public interface WritingService {
     public void deleteWriting(long writingId, long userId);
     public List<ESWriting> getHotWriting(int mode);
     public Writing getWritingById(long writingId,Long userId);
+    public EsPagingResult<ESWriting> getOwnWriting(long userId, int number, Object[] sort, int mode);
 }

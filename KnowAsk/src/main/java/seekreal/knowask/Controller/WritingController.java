@@ -1,5 +1,6 @@
 package seekreal.knowask.Controller;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +71,19 @@ public class WritingController {
     public Result getWriting(long writingId,String token){
         try{
             return Result.success(writingService.getWritingById(writingId,JWT.jwtCheckToLong(token)));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //获取自己的提问
+    @GetMapping("/own")
+    public Result getOwnWriting(String token, int number, Object[] sort,
+                                int mode){
+        try{
+            return Result.success(writingService.getOwnWriting(JWT.jwtCheckToLong(token)
+                    ,number,sort,mode));
         }
         catch (Exception e) {
             return Result.error(e.getMessage());
