@@ -20,10 +20,10 @@
         ,#{writingDescription}
         ,#{messagePower})
     </insert>
-    <!--    除了密码和权限全部获取-->
-    <update id="updateQuestionImage">
-        select
-        from User where phone_number=#{phoneNumber}
+    <!--    添加图片地址于Mysql-->
+    <update id="updateWritingImage">
+        update Writing set image_adder_list=#{adder}
+        where user_id=#{userId} and writing_id=#{writingId} and image_adder_list='[]'
     </update>
     <!--    除了密码和权限全部获取-->
     <select id="loginUserByPassword" resultType="pojo.User.User">

@@ -5,11 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.Writing;
 import seekreal.knowask.Mapper.WritingMapper;
+import seekreal.knowask.Util.FileSave;
 import seekreal.knowask.Util.KnowAskIdGenerate;
 import seekreal.knowask.Util.MQUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WritingServiceImpl implements WritingService {
@@ -78,4 +83,69 @@ public class WritingServiceImpl implements WritingService {
         rabbitTemplate.convertAndSend("userAmountChangeExchange","writing"
                 ,new AmountMqDTO(userId,"writing",1), MQUtil.getCorrelation("userWriting",logger));
     }
+
+
+
+    //添加插图
+    @Override
+    public void updateWritingImage(List<MultipartFile> files, long userId, long writingId){
+        if (files==null||files.isEmpty() ||files.size()>6){
+            logger.warn("用户{}在给提问{}添加插图时，传输了空或者过多的文件",userId,writingId);
+            throw new RuntimeException("不能为空或者超过6个文件传输");
+        }
+        ArrayList<String> nameList=new ArrayList<>();
+        //检查文件，并且获取其名字集
+        try {
+            for (MultipartFile file : files){
+                nameList.add(FileSave.checkImage(file));
+            }
+        }catch (Exception e){
+            logger.warn("用户{}在给提问{}添加插图时，出现：{}",userId,writingId,e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        try {
+            if (!writingMapper.updateWritingImage(nameList.toString(),userId,writingId))
+            {throw new RuntimeException("该提问已经有插图！！！或者该提问不存在！！！");}
+        } catch (Exception e){
+            logger.warn("用户{}在给提问{}添加插图进MySQL时，出现：{}",userId,writingId,e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        try {
+            for (int i = 0; i < files.size(); i++) {
+                FileSave.saveImage(files.get(i),nameList.get(i));
+            }
+        }catch (Exception e){
+            logger.warn("用户{}在给提问{}添加插图进磁盘时，出现：{}",userId,writingId,e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        return;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

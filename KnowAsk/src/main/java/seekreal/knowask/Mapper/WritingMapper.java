@@ -6,4 +6,5 @@ import pojo.KnowAsk.Writing;
 @Mapper
 public interface WritingMapper {
     public void insertWriting(Writing writing);
+    public boolean updateWritingImage(String adder,long userId,long writingId);
 }
