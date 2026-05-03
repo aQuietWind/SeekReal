@@ -10,4 +10,5 @@ public interface WritingMapper {
     public boolean updateWritingImage(String adder,long userId,long writingId);
     public RemoveWriting getWritingImageAndPower(long writingId, long userId);
     public boolean deleteWriting(long writingId,long userId);
+    public Writing getWritingById(long writingId);
 }

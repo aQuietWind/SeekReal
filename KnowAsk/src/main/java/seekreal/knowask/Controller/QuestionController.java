@@ -67,6 +67,18 @@ public class QuestionController {
     }
 
 
+    //获取详细的提问内容
+    @GetMapping
+    public Result getQuestion(long questionId){
+        try{
+            return Result.success(questionService.getQuestionById(questionId));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
 
 
 

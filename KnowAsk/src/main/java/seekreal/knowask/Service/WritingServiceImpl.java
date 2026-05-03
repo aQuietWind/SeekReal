@@ -116,7 +116,6 @@ public class WritingServiceImpl implements WritingService {
     }
 
 
-
     //添加插图
     @Override
     public void updateWritingImage(List<MultipartFile> files, long userId, long writingId){
@@ -151,6 +150,7 @@ public class WritingServiceImpl implements WritingService {
         }
         return;
     }
+
 
     //逻辑删除文章
     @Override
@@ -229,6 +229,7 @@ public class WritingServiceImpl implements WritingService {
         return list;
     }
 
+
     //更新的逻辑（中间层），根据不同的mode选择不同的更新方式
     private void updateHotWriting(int mode, LocalDateTime start) {
         //获取更新锁，有条件可以更换为redison的锁
@@ -293,6 +294,23 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException(e);
         }
         return;
+    }
+
+
+    //获取文章的详细内容
+    @Override
+    public Writing getWritingById(long writingId,Long userId) {
+        Writing writing=writingMapper.getWritingById(writingId);
+        if (writing==null){
+            logger.warn("有人请求了不存在的文章{}", writingId);
+            throw new RuntimeException("该文章不存在哦～._.");
+        }
+        if (writing.getMessagePower()==0 &&
+                (userId==null||writing.getWritingId()!=userId) ){
+            logger.warn("有人请求了无权的文章{}", writingId);
+            throw new RuntimeException("该文章不存在哦～._.");
+        }
+        return writing;
     }
 
 

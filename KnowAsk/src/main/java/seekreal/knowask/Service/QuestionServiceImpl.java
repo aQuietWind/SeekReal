@@ -270,6 +270,23 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return;
     }
+
+    @Override
+    public Question getQuestionById(long questionId){
+        Question question=questionMapper.getQuestionById(questionId);
+        if (question==null){
+            logger.warn("有人请求了不存在的提问{}", questionId);
+            throw new RuntimeException("该提问不存在哦～");
+        }
+        return question;
+    }
+
+
+
+
+
+
+
 }
 
 

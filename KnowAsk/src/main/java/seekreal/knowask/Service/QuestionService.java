@@ -12,6 +12,8 @@ public interface QuestionService {
     public void updateQuestionImage(List<MultipartFile> file, long userId, long questionId);
     public void deleteQuestion(long questionId, long userId);
     public List<ESQuestion> getHotQuestion(int mode);
+    public Question getQuestionById(long questionId);
+//    public List<ESQuestion> getOwnQuestion(String token);
 }
 
 

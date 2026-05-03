@@ -12,6 +12,7 @@ public interface QuestionMapper {
     public boolean updateQuestionImage(String adder,long userId,long questionId);
     public String getQuestionImage(long questionId, long userId);
     public boolean deleteQuestion(long questionId,long userId);
+    public Question getQuestionById(long questionId);
 }
 
 

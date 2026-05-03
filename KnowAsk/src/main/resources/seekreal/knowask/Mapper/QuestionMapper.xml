@@ -23,14 +23,29 @@
         where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]' and is_exist=1
     </update>
 
-    <!--    获取文章的图片地址-->
+    <!--    获取提问的图片地址-->
     <select id="getQuestionImage" resultType="java.lang.String">
         select image_adder_list from Question where user_id=#{userId}
         and question_id=#{questionId} and is_exist=1
     </select>
 
-    <!--    删除某篇存在的文章-->
+    <!--    删除某篇存在的提问-->
     <update id="deleteQuestion">
         update Question set is_exist=0 where user_id=#{userId} and question_id=#{questionId} and is_exist=1
     </update>
+
+<!--    获取提问的详细内容-->
+    <select id="getQuestionById" resultType="pojo.KnowAsk.Question">
+        select question_id
+        ,user_id
+        ,question_title
+        ,question_description
+        ,image_adder_list
+        ,writing_amount
+        ,like_amount
+        ,collect_amount
+        ,is_exist
+        ,create_time
+        from Question where question_id=#{questionId} and is_exist=1
+    </select>
 </mapper>

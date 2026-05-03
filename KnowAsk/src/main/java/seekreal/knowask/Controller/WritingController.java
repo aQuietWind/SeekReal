@@ -65,6 +65,24 @@ public class WritingController {
         }
     }
 
+    //获取详细的文章内容
+    @GetMapping
+    public Result getWriting(long writingId,String token){
+        try{
+            return Result.success(writingService.getWritingById(writingId,JWT.jwtCheckToLong(token)));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
 }
 
 

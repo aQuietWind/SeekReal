@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="seekreal.knowask.Mapper.WritingMapper">
+
     <!--    新增用户-->
     <insert id="insertWriting">
         insert into Writing (
@@ -20,18 +21,47 @@
         ,#{writingDescription}
         ,#{messagePower})
     </insert>
+
     <!--    添加图片地址于Mysql-->
     <update id="updateWritingImage">
         update Writing set image_adder_list=#{adder}
         where user_id=#{userId} and writing_id=#{writingId} and image_adder_list='[]' and is_exist=1
     </update>
+
 <!--    获取文章的图片地址-->
     <select id="getWritingImageAndPower" resultType="pojo.KnowAsk.RemoveWriting">
         select image_adder_list,message_power from Writing where user_id=#{userId}
         and writing_id=#{writingId} and is_exist=1
     </select>
+
     <!--    删除某篇存在的文章-->
     <update id="deleteWriting">
         update Writing set is_exist=0 where user_id=#{userId} and writing_id=#{writingId} and is_exist=1
     </update>
+
+    <select id="getWritingById" resultType="pojo.KnowAsk.Writing">
+        select writing_id
+        ,question_id
+        ,user_id
+        ,writing_title
+        ,writing_description
+        ,image_adder_list
+        ,like_amount
+        ,comment_amount
+        ,collect_amount
+        ,message_power
+        ,is_exist
+        ,create_time
+        from Writing where writing_id=#{writingId} and is_Exist=1
+    </select>
+
+
+
+
+
+
+
+
+
+
 </mapper>
