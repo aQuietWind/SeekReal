@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static seekreal.knowask.Util.EsPagingResult.getSearchRequestByUserId;
+import static seekreal.knowask.Util.EsPagingResult.getSearchRequestById;
+
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -290,7 +291,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
         //构建请求
-        SearchRequest request = getSearchRequestByUserId("question","user_id","question_id"
+        SearchRequest request = getSearchRequestById("question","user_id","question_id"
                 , userId, number, sort);
         SearchResponse<ESQuestion> response= null;
         //尝试请求es

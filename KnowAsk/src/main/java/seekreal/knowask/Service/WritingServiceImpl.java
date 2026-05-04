@@ -29,14 +29,13 @@ import seekreal.knowask.Util.RedisEnum;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static seekreal.knowask.Util.EsPagingResult.getSearchRequestByUserId;
+import static seekreal.knowask.Util.EsPagingResult.getSearchRequestById;
 
 
 @Service
@@ -327,7 +326,7 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
         //构建请求
-        SearchRequest request = getSearchRequestByUserId("writing","user_id","writing_id"
+        SearchRequest request = getSearchRequestById("writing","user_id","writing_id"
                 , userId, number, sort);
         SearchResponse<ESWriting> response= null;
         //尝试请求es
@@ -341,8 +340,28 @@ public class WritingServiceImpl implements WritingService {
         return new EsPagingResult<>(response);
     }
 
-
-
+    //获取目标提问下的文章
+    @Override
+    public EsPagingResult<ESWriting> getWritingByQuestionId(long questionId,int number, Long sort){
+        //判断number的合理性
+        if (number>20||number<0){
+            logger.warn("可疑用户以number：{}请求获取提问{}下的文章",number,questionId);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //构建请求
+        SearchRequest request = getSearchRequestById("writing","question_id","writing_id"
+                , questionId, number, sort);
+        SearchResponse<ESWriting> response= null;
+        //尝试请求es
+        try {
+            response = esClient.search(request, ESWriting.class);
+        }
+        catch (Exception e) {
+            logger.error("用户在请求获取提问{}下的文章时出现异常{}",questionId, e.getMessage());
+            throw new RuntimeException("服务器繁忙，请稍后试试呗～");
+        }
+        return new EsPagingResult<>(response);
+    }
 
 
 

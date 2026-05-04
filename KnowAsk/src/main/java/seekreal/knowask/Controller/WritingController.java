@@ -89,7 +89,16 @@ public class WritingController {
         }
     }
 
-
+    //获取提问下的文章
+    @GetMapping("/question")
+    public Result getWritingByQuestionId(long questionId,int number,Long sort){
+        try{
+            return Result.success(writingService.getWritingByQuestionId(questionId,number,sort));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
 
 

@@ -25,26 +25,28 @@ public class EsPagingResult<E> {
     }
 
     //辅助构建请求
-    public static SearchRequest getSearchRequestByUserId(String index,String searchField
-            ,String orederIdField, long userId, int number, Long sort) {
+    public static SearchRequest getSearchRequestById(String index,String searchField
+            ,String orederIdField, long id, int number, Long sort) {
         SearchRequest request;
+        //先判断这是第一次请求还是第n次请求，及有没有带上次请求的末尾参数sort
         if (sort==null){
             request = new SearchRequest.Builder()
                     .index(index)
                     //查询的关联字段和值
-                    .query(q -> q.term(t -> t.field(searchField).value(userId)))
+                    .query(q -> q.term(t -> t.field(searchField).value(id)))
                     //分页需求数
                     .size(number)
                     //排序
                     .sort(s -> s.field(f -> f.field(orederIdField).order(SortOrder.Desc)))
                     .build();
         }
+        //带了就转换成List<FieldValue>这一sortValue进行searchAfter
         else {
             List<FieldValue> sortValue = List.of(FieldValue.of(sort));
             request = new SearchRequest.Builder()
                     .index(index)
                     //查询的关联字段和值
-                    .query(q -> q.term(t -> t.field("user_id").value(userId)))
+                    .query(q -> q.term(t -> t.field(searchField).value(id)))
                     //分页需求数
                     .size(number)
                     //排序
@@ -55,6 +57,9 @@ public class EsPagingResult<E> {
         }
         return request;
     }
+
+
+
 
     //相应结果自动
     public EsPagingResult(SearchResponse response) {
