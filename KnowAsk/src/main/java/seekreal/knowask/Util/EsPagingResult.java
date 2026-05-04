@@ -25,18 +25,18 @@ public class EsPagingResult<E> {
     }
 
     //辅助构建请求
-    public static SearchRequest getSearchRequestByUserId(String index, long userId, int number
-            , Long sort) {
+    public static SearchRequest getSearchRequestByUserId(String index,String searchField
+            ,String orederIdField, long userId, int number, Long sort) {
         SearchRequest request;
         if (sort==null){
             request = new SearchRequest.Builder()
                     .index(index)
                     //查询的关联字段和值
-                    .query(q -> q.term(t -> t.field("user_id").value(userId)))
+                    .query(q -> q.term(t -> t.field(searchField).value(userId)))
                     //分页需求数
                     .size(number)
                     //排序
-                    .sort(s -> s.field(f -> f.field("writing_id").order(SortOrder.Desc)))
+                    .sort(s -> s.field(f -> f.field(orederIdField).order(SortOrder.Desc)))
                     .build();
         }
         else {
@@ -48,7 +48,7 @@ public class EsPagingResult<E> {
                     //分页需求数
                     .size(number)
                     //排序
-                    .sort(s -> s.field(f -> f.field("writing_id").order(SortOrder.Desc)))
+                    .sort(s -> s.field(f -> f.field(orederIdField).order(SortOrder.Desc)))
                     //起始点，在本业务下为上一个数据的特征id
                     .searchAfter(sortValue)
                     .build();

@@ -327,7 +327,8 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
         //构建请求
-        SearchRequest request = getSearchRequestByUserId("writing", userId, number, sort);
+        SearchRequest request = getSearchRequestByUserId("writing","user_id","writing_id"
+                , userId, number, sort);
         SearchResponse<ESWriting> response= null;
         //尝试请求es
         try {

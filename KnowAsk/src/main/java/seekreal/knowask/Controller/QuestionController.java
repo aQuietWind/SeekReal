@@ -79,6 +79,18 @@ public class QuestionController {
     }
 
 
+    //获取自己的提问
+    @GetMapping("/own")
+    public Result getOwnQuestion(String token, int number,Long sort){
+        try{
+            return Result.success(questionService.getOwnQuestion(JWT.jwtCheckToLong(token)
+                    ,number,sort));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
 
 
 

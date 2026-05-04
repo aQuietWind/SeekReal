@@ -77,7 +77,7 @@ public class WritingController {
         }
     }
 
-    //获取自己的提问
+    //获取自己的文章
     @GetMapping("/own")
     public Result getOwnWriting(String token, int number,Long sort){
         try{

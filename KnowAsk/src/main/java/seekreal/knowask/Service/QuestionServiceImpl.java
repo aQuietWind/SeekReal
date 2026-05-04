@@ -6,7 +6,6 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.alibaba.nacos.common.utils.ThreadFactoryBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +18,14 @@ import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.Question;
 import seekreal.knowask.Mapper.QuestionMapper;
-import seekreal.knowask.Util.FileSave;
-import seekreal.knowask.Util.KnowAskIdGenerate;
-import seekreal.knowask.Util.MQUtil;
-import seekreal.knowask.Util.RedisEnum;
+import seekreal.knowask.Util.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+
+import static seekreal.knowask.Util.EsPagingResult.getSearchRequestByUserId;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -279,6 +277,29 @@ public class QuestionServiceImpl implements QuestionService {
             throw new RuntimeException("该提问不存在哦～");
         }
         return question;
+    }
+
+    //获取自己的提问
+    @Override
+    public EsPagingResult<ESQuestion> getOwnQuestion(long userId, int number, Long sort){
+        //判断number的合理性
+        if (number>20||number<0){
+            logger.warn("可疑用户{}以number：{}请求自身的提问",userId,number);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //构建请求
+        SearchRequest request = getSearchRequestByUserId("question","user_id","question_id"
+                , userId, number, sort);
+        SearchResponse<ESQuestion> response= null;
+        //尝试请求es
+        try {
+            response = esClient.search(request, ESQuestion.class);
+        }
+        catch (Exception e) {
+            logger.error("用户{}在请求自身的提问时出现异常{}",userId, e.getMessage());
+            throw new RuntimeException("服务器繁忙，请稍后试试呗～");
+        }
+        return new EsPagingResult<>(response);
     }
 
 
