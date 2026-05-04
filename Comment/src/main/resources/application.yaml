@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 4MB               #这个代表最大的单个文件大小
+      max-request-size: 16MB           #这个代表最大的单次请求传输的数据大小（应对一次传输数个文件）
   #redis的配置
   redis:
     host: 127.0.0.1
@@ -61,20 +65,35 @@ feign:
         readTimeout: 3000
         retryer: feign.Retryer.Default # 开启基础重试（注意：默认只重试1次，且只针对GET请求）
 #  Seata的配置
-seata:
-  register:
-    type: nacos       #类型
-    nacos:
-      server-addr: 127.0.0.1:8848     #nacos服务地点
-      namespace: ""       #命名空间，可为空
-      group: SEATA_GROUP      #服务组名称
-      application: seata-server       #服务名称
-  tx-server-group: default_tx_group     #事务组
-  service:
-    vgroup-mapping:     #与事务组的映射关系
-      default_tx_group: default   #你的seata集群名
-    default:
-      grouplist: 127.0.0.1:8091     #你的seata地址
+#seata:
+#  register:
+#    type: nacos       #类型
+#    nacos:
+#      server-addr: 127.0.0.1:8848     #nacos服务地点
+#      namespace: ""       #命名空间，可为空
+#      group: SEATA_GROUP      #服务组名称
+#      application: seata-server       #服务名称
+#  tx-server-group: default_tx_group     #事务组
+#  service:
+#    vgroup-mapping:     #与事务组的映射关系
+#      default_tx_group: default   #你的seata集群名
+#    default:
+#      grouplist: 127.0.0.1:8091     #你的seata地址
+
 #  端口设置
 server:
   port: 8083
+  compression:
+    enabled: true        # 开启gzip
+    mime-types: text/html,text/json,application/json,text/plain
+    min-response-size: 1024  # 大于1kb才压缩
+
+
+
+
+
+
+
+
+
+

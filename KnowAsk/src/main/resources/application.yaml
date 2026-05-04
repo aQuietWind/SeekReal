@@ -79,6 +79,7 @@ feign:
 #      default_tx_group: default   #你的seata集群名
 #    default:
 #      grouplist: 127.0.0.1:8091     #你的seata地址
+
 #  端口设置
 server:
   port: 8082
