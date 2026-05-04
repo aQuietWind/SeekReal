@@ -10,4 +10,5 @@ public interface FirstCommentService {
     public void insertFirstComment(long userId, long writingId
             , String text, MultipartFile file);
     public List<FirstComment> getFirstComment(long writingId,int from,int need);
+    public void deleteFirstComment(long firstCommentId,long userId);
 }

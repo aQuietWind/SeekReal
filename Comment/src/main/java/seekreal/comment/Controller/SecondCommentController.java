@@ -37,6 +37,17 @@ public class SecondCommentController {
         }
     }
 
+    //删除二级评论
+    @DeleteMapping
+    public Result deleteSecondComment(String token, long secondCommentId) {
+        try {
+            secondCommentService.deleteSecondComment(secondCommentId,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
 
 
 

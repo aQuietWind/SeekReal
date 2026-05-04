@@ -36,6 +36,16 @@ public class FirstCommentController {
         }
     }
 
+    //删除一级评论
+    @DeleteMapping
+    public Result deleteFirstComment(String token, long firstCommentId) {
+        try {
+            firstCommentService.deleteFirstComment(firstCommentId,JWT.jwtCheckToLong(token));
+            return Result.success();
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
 
 
 

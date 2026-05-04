@@ -68,6 +68,24 @@ public class SecondCommentServiceImpl implements SecondCommentService {
         return secondCommentMapper.getSecondComment(firstCommentId,from,need);
     }
 
+    //删除二级评论
+    @Override
+    public void deleteSecondComment(long secondCommentId,long userId){
+        Long firstCommentId=secondCommentMapper.getFirstCommentIdBySecond(secondCommentId,userId);
+        if (firstCommentId==null){
+            logger.warn("用户{}试图删除二级评论{}失败",secondCommentId,userId);
+            throw new RuntimeException("删除失败！！！未找到！！！");
+        }
+        if(!secondCommentMapper.deleteSecondComment(secondCommentId,userId)){
+            logger.warn("用户{}试图删除二级评论{}失败",secondCommentId,userId);
+            throw new RuntimeException("删除失败！！！未找到！！！");
+        }
+        //写入MQ,然后同步文章的es与mysql的评论数
+        rabbitTemplate.convertAndSend("secondCommentRemoveQueue"
+                ,firstCommentId
+                , MQUtil.getCorrelation("secondCommentRemove",logger));
+        return;
+    }
 
 
 

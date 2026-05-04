@@ -9,6 +9,7 @@ import java.util.List;
 public interface SecondCommentMapper {
     public boolean insertSecondComment(long secondCommentId,long userId,
                                       long firstCommentId, String text,String respondUsername);
-
     public List<SecondComment> getSecondComment(long firstCommentId,int from,int need);
+    public boolean deleteSecondComment(long secondCommentId,long userId);
+    public Long getFirstCommentIdBySecond(long secondCommentId,long userId);
 }
