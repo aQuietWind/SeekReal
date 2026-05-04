@@ -14,6 +14,7 @@ import seekreal.user.Util.UserIdGenerate;
 import seekreal.user.Util.RanmodOPT;
 import seekreal.user.Util.RedisEnum;
 import util.JWT;
+import util.RedisCommonEnum;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -79,8 +80,12 @@ public class LoginServiceImpl implements LoginService {
             user.setCreateTime(LocalDate.now());
             user.setUsername(""+userId);        //uid取代用户名
             try {
+                //mysql新增用户
                 loginMapper.insertNewUser(user);
                 logger.trace("手机号:{}成功注册用户{}!!!",phoneNumber,userId);
+                //写入时间存储
+                stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("user",userId)
+                        ,RedisCommonEnum.getJsonByLocalDateNow());
                 //写入MQ，准备写入es
                 registerToMQ(user);
             } catch (Exception e) {

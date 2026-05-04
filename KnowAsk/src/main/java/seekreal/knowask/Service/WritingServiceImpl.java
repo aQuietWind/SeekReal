@@ -26,6 +26,7 @@ import seekreal.knowask.Util.FileSave;
 import seekreal.knowask.Util.KnowAskIdGenerate;
 import seekreal.knowask.Util.MQUtil;
 import seekreal.knowask.Util.RedisEnum;
+import util.RedisCommonEnum;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -101,6 +102,9 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException(e.getMessage());
         }
         if(messagePower!=0){
+            //写入时间存储
+            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("user",writing.getWritingId())
+                    , RedisCommonEnum.getJsonByLocalDateNow());
             //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
             writing.setWritingDescription(writingDescription.substring(0,
                     Math.min(writingDescription.length(),30)));
@@ -167,6 +171,8 @@ public class WritingServiceImpl implements WritingService {
             if(!writingMapper.deleteWriting(writingId,userId)){
                 throw new RuntimeException("删除失败！！！未找到该文章！！！");
             }else {
+                //删除时间存储
+                stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("writing",writingId));
                 //删除成功后将地址发送于mq，进行后台删除图片存储
                 rabbitTemplate.convertAndSend("imageExchange","writing"
                         , adderAndPower.getImageAdderList()

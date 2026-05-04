@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import pojo.Comment.FirstComment;
 import pojo.Comment.SecondComment;
@@ -11,11 +12,14 @@ import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.SecondCommentMapper;
 import seekreal.comment.Util.CommentIdGenerate;
 import seekreal.comment.Util.MQUtil;
+import util.RedisCommonEnum;
 
 import java.util.List;
 
 @Service
 public class SecondCommentServiceImpl implements SecondCommentService {
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private SecondCommentMapper secondCommentMapper;
     @Autowired
@@ -40,10 +44,14 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             logger.warn("用户{}以错误的关联用户名{}试图新增评论",userId,respondUsername);
             throw new RuntimeException("请正确输入关联用户名！！！");
         }
+        long secondCommentId=commentIdGenerate.IdGenerator("secondCommentId");
         //插入于mysql
         boolean canToDo=secondCommentMapper.insertSecondComment(
-                commentIdGenerate.IdGenerator("secondCommentId"),userId,firstCommentId,text,respondUsername);
+                secondCommentId,userId,firstCommentId,text,respondUsername);
         if (canToDo){
+            //写入时间存储
+            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("second:comment",secondCommentId)
+                    ,RedisCommonEnum.getJsonByLocalDateNow());
             //写入MQ,然后同步文章的es与mysql的评论数
             rabbitTemplate.convertAndSend("secondCommentAddQueue"
                     ,firstCommentId
@@ -80,6 +88,8 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             logger.warn("用户{}试图删除二级评论{}失败",secondCommentId,userId);
             throw new RuntimeException("删除失败！！！未找到！！！");
         }
+        //删除时间存储
+        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("user",userId));
         //写入MQ,然后同步文章的es与mysql的评论数
         rabbitTemplate.convertAndSend("secondCommentRemoveQueue"
                 ,firstCommentId

@@ -19,6 +19,7 @@ import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.Question;
 import seekreal.knowask.Mapper.QuestionMapper;
 import seekreal.knowask.Util.*;
+import util.RedisCommonEnum;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,6 +80,9 @@ public class QuestionServiceImpl implements QuestionService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+        //写入时间存储
+        stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("question",question.getQuestionId())
+                ,RedisCommonEnum.getJsonByLocalDateNow());
         //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
         question.setQuestionDescription(questionDescription.substring(0,
                 Math.min(questionDescription.length(), 30)));
@@ -139,6 +143,8 @@ public class QuestionServiceImpl implements QuestionService {
             if (!questionMapper.deleteQuestion(questionId, userId)) {
                 throw new RuntimeException("删除失败！！！未找到该提问！！！");
             } else {
+                //删除时间存储
+                stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("question",questionId));
                 //删除成功后将地址发送于mq，进行后台删除图片存储
                 rabbitTemplate.convertAndSend("imageExchange", "question"
                         , adder

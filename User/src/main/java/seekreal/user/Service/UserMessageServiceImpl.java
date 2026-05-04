@@ -21,6 +21,7 @@ import seekreal.user.Util.FileSave;
 import seekreal.user.Util.MQUtil;
 import seekreal.user.Util.RanmodOPT;
 import seekreal.user.Util.RedisEnum;
+import util.RedisCommonEnum;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -274,6 +275,8 @@ public class UserMessageServiceImpl implements UserMessageService {
                 date.toString(),7,TimeUnit.DAYS);
         //删除缓存
         stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
+        //删除时间存储
+        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("user",userId));
         //删除用户于ES
         try {
             esClient.delete(d -> d

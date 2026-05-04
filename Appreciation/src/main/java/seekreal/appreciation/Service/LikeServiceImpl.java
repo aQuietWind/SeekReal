@@ -1,4 +1,10 @@
 package seekreal.appreciation.Service;
 
-public class LikeServiceImpl {
+import org.springframework.stereotype.Service;
+
+@Service
+public class LikeServiceImpl implements LikeService {
+    public void likeChangeWriting(long writingId,long userId,boolean isLike){
+
+    }
 }
