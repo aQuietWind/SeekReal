@@ -89,7 +89,7 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             throw new RuntimeException("删除失败！！！未找到！！！");
         }
         //删除时间存储
-        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("user",userId));
+        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("second:comment",secondCommentId));
         //写入MQ,然后同步文章的es与mysql的评论数
         rabbitTemplate.convertAndSend("secondCommentRemoveQueue"
                 ,firstCommentId

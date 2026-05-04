@@ -103,7 +103,7 @@ public class WritingServiceImpl implements WritingService {
         }
         if(messagePower!=0){
             //写入时间存储
-            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("user",writing.getWritingId())
+            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("writing",writing.getWritingId())
                     , RedisCommonEnum.getJsonByLocalDateNow());
             //获取前30个字符串存于es，Math.min()是为了防止索引范围异常
             writing.setWritingDescription(writingDescription.substring(0,
