@@ -2,6 +2,7 @@ package seekreal.knowask.Mapper;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.query_dsl.FunctionBoostMode;
 import co.elastic.clients.elasticsearch._types.query_dsl.FunctionScoreMode;
 import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
@@ -28,8 +29,8 @@ public class CommonMapper {
     private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
     //获取随机推送的提问
-    public List<ESQuestion> getQuestions(int likeMin,String shouldTime
-    ,int minCollect,int maxCollect,double weight,long seed,int need) {
+    public List<ESQuestion> getQuestions(double likeMin,String mustTime,double weight
+    ,long seed,int need) {
         SearchRequest request=new SearchRequest.Builder()
                 .index("question")
                 .query(q -> q.functionScore(fs -> fs
@@ -38,29 +39,22 @@ public class CommonMapper {
                         .query(qb -> qb.bool(b -> b
                                 // should：应该条件，参与算分
                                 .should(f -> f.range(r -> r
-                                        .date(d-> d.field("like_amount")
-                                                .gte(""+likeMin))      //大于等于
+                                        .number(d-> d.field("like_amount")
+                                                .gte(likeMin))      //大于等于
                                 ))
                                 // filter：过滤条件（不算分）
                                 .filter(f -> f.range(r -> r
                                         .date(d-> d.field("create_time")
-                                                .gte(shouldTime))      //大于等于
+                                                .gte(mustTime))      //大于等于
                                 ))
                         ))
                         //定义重算分
                         .functions(f -> f
-                                // 这个函数只作用于满足 filter 条件的文档
-                                .filter(ff -> ff.range(r -> r
-                                        .date(d-> d.field("collect_amount")
-                                                .gte(""+minCollect)      //大于等于
-                                                .lte(""+maxCollect))     //小于等于
-                                ))
-                                // 权重值：给匹配条件的文档权重，让它在排序时更靠前
-                                .weight(weight)
+                                .weight(weight)     //权重，即种子的范围(0,weight)
                                 .randomScore(r -> r.seed(""+seed).field("question_id"))
                         )
-                        // Sum：将基础查询分数 + 所有函数的权重分数相加，作为最终分数
-                        .scoreMode(FunctionScoreMode.Sum)
+                        //必须有的以随机分+算分主导
+                        .boostMode(FunctionBoostMode.Sum)
                 ))
                 .size(need)
                 .build();
@@ -83,39 +77,31 @@ public class CommonMapper {
 
 
     //获取随机的文章
-    public List<ESWriting> getWritings(int likeMin, String shouldTime
-            , int minCollect, int maxCollect, double weight, long seed, int need) {
+    public List<ESWriting> getWritings(double likeMin, String mustTime,double weight
+            ,long seed, int need) {
         SearchRequest request=new SearchRequest.Builder()
                 .index("writing")
                 .query(q -> q.functionScore(fs -> fs
-
-                        //：基础查询
+                        //基础查询
                         .query(qb -> qb.bool(b -> b
                                 // should：应该条件，参与算分
                                 .should(f -> f.range(r -> r
-                                        .date(d-> d.field("like_amount")
-                                                .gte(""+likeMin))      //大于等于
+                                        .number(d-> d.field("like_amount")
+                                                .gte(likeMin))      //大于等于
                                 ))
                                 // filter：过滤条件（不算分）
                                 .filter(f -> f.range(r -> r
                                         .date(d-> d.field("create_time")
-                                                .gte(shouldTime))      //大于等于
+                                                .gte(mustTime))      //大于等于
                                 ))
                         ))
-                        //定义重算分机制
+                        //定义随机机制
                         .functions(f -> f
-                                // 这个函数只作用于满足 filter 条件的文档
-                                .filter(ff -> ff.range(r -> r
-                                        .date(d-> d.field("collect_amount")
-                                                .gte(""+minCollect)      //大于等于
-                                                .lte(""+maxCollect))     //小于等于
-                                ))
-                                // 权重值：给匹配条件的文档权重，让它在排序时更靠前
-                                .weight(weight)
-                                .randomScore(r -> r.seed("seed").field("writing_id"))
+                                .weight(weight)     //权重，即种子的范围(0,weight)
+                                .randomScore(r -> r.seed(""+seed).field("writing_id"))
                         )
-                        // Sum：将基础查询分数 + 所有函数的权重分数相加，作为最终分数
-                        .scoreMode(FunctionScoreMode.Sum)
+                        //必须有的以随机分+算分主导
+                        .boostMode(FunctionBoostMode.Sum)
                 ))
                 .size(need)
                 .build();
@@ -137,45 +123,33 @@ public class CommonMapper {
     }
 
 
-
-
-
-
-
     //获取搜索的提问
-    public List<ESQuestion> getQuestions(int likeMin,String shouldTime
-    ,int minCollect,int maxCollect,double weight,long seed,int need) {
+    public List<ESQuestion> getQuestionsByWord(double likeMin,String keyWord,double weight
+    ,long seed,int need) {
         SearchRequest request=new SearchRequest.Builder()
                 .index("question")
                 .query(q -> q.functionScore(fs -> fs
-
                         //基础查询
                         .query(qb -> qb.bool(b -> b
                                 // should：应该条件，参与算分
                                 .should(f -> f.range(r -> r
-                                        .date(d-> d.field("like_amount")
-                                                .gte(""+likeMin))      //大于等于
+                                        .number(d-> d.field("like_amount")
+                                                .gte(likeMin))      //大于等于
                                 ))
-                                // filter：过滤条件（不算分）
-                                .filter(f -> f.range(r -> r
-                                        .date(d-> d.field("create_time")
-                                                .gte(shouldTime))      //大于等于
-                                ))
+                                // must：必须条件，算分
+                                .must(mu -> mu.match(m -> m
+                                                .field( "question_title")
+                                                .query(keyWord)
+                                        )
+                                )
                         ))
-                        //定义重算分
+                        //定义随机机制
                         .functions(f -> f
-                                // 这个函数只作用于满足 filter 条件的文档
-                                .filter(ff -> ff.range(r -> r
-                                        .date(d-> d.field("collect_amount")
-                                                .gte(""+minCollect)      //大于等于
-                                                .lte(""+maxCollect))     //小于等于
-                                ))
-                                // 权重值：给匹配条件的文档权重，让它在排序时更靠前
-                                .weight(weight)
+                                .weight(weight)     //权重，即种子的范围(0,weight)
                                 .randomScore(r -> r.seed(""+seed).field("question_id"))
                         )
-                        // Sum：将基础查询分数 + 所有函数的权重分数相加，作为最终分数
-                        .scoreMode(FunctionScoreMode.Sum)
+                        //必须有的以随机分+算分主导
+                        .boostMode(FunctionBoostMode.Sum)
                 ))
                 .size(need)
                 .build();
@@ -184,7 +158,7 @@ public class CommonMapper {
         try {
             response = esClient.search(request, ESQuestion.class);
         } catch (Exception e) {
-            logger.error("请求提问出现异常{}！！！",e.getMessage());
+            logger.error("请求搜索提问出现异常{}！！！",e.getMessage());
             throw new RuntimeException(e);
         }
         //将结果封装进List
@@ -197,40 +171,33 @@ public class CommonMapper {
     }
 
 
-    //获取随机的文章
-    public List<ESWriting> getWritings(int likeMin, String shouldTime
-            , int minCollect, int maxCollect, double weight, long seed, int need) {
+    //获取搜索的文章
+    public List<ESWriting> getWritingsByWord(double likeMin, String keyWord,double weight,
+            long seed, int need) {
         SearchRequest request=new SearchRequest.Builder()
                 .index("writing")
                 .query(q -> q.functionScore(fs -> fs
-
-                        //：基础查询
+                        //基础查询
                         .query(qb -> qb.bool(b -> b
                                 // should：应该条件，参与算分
                                 .should(f -> f.range(r -> r
-                                        .date(d-> d.field("like_amount")
-                                                .gte(""+likeMin))      //大于等于
+                                        .number(d-> d.field("like_amount")
+                                                .gte(likeMin))      //大于等于
                                 ))
-                                // filter：过滤条件（不算分）
-                                .filter(f -> f.range(r -> r
-                                        .date(d-> d.field("create_time")
-                                                .gte(shouldTime))      //大于等于
-                                ))
+                                // must：必须条件，算分
+                                .must(mu -> mu.match(m -> m
+                                                .field("writing_title")
+                                                .query(keyWord)
+                                        )
+                                )
                         ))
                         //定义重算分机制
                         .functions(f -> f
-                                // 这个函数只作用于满足 filter 条件的文档
-                                .filter(ff -> ff.range(r -> r
-                                        .date(d-> d.field("collect_amount")
-                                                .gte(""+minCollect)      //大于等于
-                                                .lte(""+maxCollect))     //小于等于
-                                ))
-                                // 权重值：给匹配条件的文档权重，让它在排序时更靠前
-                                .weight(weight)
-                                .randomScore(r -> r.seed("seed").field("writing_id"))
+                                .weight(weight)     //权重，即种子的范围(0,weight)
+                                .randomScore(r -> r.seed(""+seed).field("writing_id"))
                         )
-                        // Sum：将基础查询分数 + 所有函数的权重分数相加，作为最终分数
-                        .scoreMode(FunctionScoreMode.Sum)
+                        //必须有的以随机分+算分主导
+                        .boostMode(FunctionBoostMode.Sum)
                 ))
                 .size(need)
                 .build();
@@ -239,7 +206,7 @@ public class CommonMapper {
         try {
             response = esClient.search(request, ESWriting.class);
         } catch (Exception e) {
-            logger.error("请求提问出现异常{}！！！",e.getMessage());
+            logger.error("请求文章出现异常{}！！！",e.getMessage());
             throw new RuntimeException(e);
         }
         //将结果封装进List

@@ -21,4 +21,13 @@ public class CommonController {
         }
     }
 
+    @GetMapping("/search")
+    public Result getCommonByWord(int number,String keyword) {
+        try {
+            return Result.success(commonService.getCommonByWord(number,keyword));
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
 }
