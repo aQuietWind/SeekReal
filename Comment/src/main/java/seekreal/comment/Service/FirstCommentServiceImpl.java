@@ -55,7 +55,7 @@ public class FirstCommentServiceImpl implements FirstCommentService {
         }
         else{
             //如果没插入数据成功
-            logger.error("用户{}在以文本{}和文件名{}给文章{}添加文本时出现问题，没能插入成功！！！"
+            logger.error("用户{}在以文本{}和文件名{}给文章{}添加一级评论时出现问题，没能插入成功！！！"
             ,userId,text,fileName,writingId);
             throw new RuntimeException("插入失败哦，等稍后再试试呗～");
         }

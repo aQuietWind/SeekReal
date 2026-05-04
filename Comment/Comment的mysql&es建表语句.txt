@@ -33,17 +33,15 @@ CREATE TABLE `undo_log` (
 CREATE TABLE Second_Comment (
     second_comment_id bigint PRIMARY KEY COMMENT '二级评论ID',
     user_id bigint NOT NULL COMMENT '用户ID',
-    writing_id bigint NOT NULL COMMENT '文章ID',
     first_comment_id bigint NOT NULL COMMENT '一级评论ID',
     text VARCHAR(200) NOT NULL COMMENT '评论内容',
-    respond_user_name varchar(16) NOT NULL COMMENT '回复的用户姓名',
-    like_amount INT NOT NULL COMMENT '拥有的点赞数',
-    create_time DATETIME NOT NULL COMMENT '创建时间',
-    respond_comment_user_name VARCHAR(10) NOT NULL COMMENT '回复的用户姓名',
-    is_exist INT NOT NULL COMMENT '是否存在',
-    INDEX idx_like_amount (`writing_id`,`like_amount`),
-    INDEX idx_create_time (`writing_id`,`create_time`)
-);
+    respond_username varchar(16) DEFAULT '' COMMENT '回复的用户姓名',
+    like_amount INT default 0 COMMENT '拥有的点赞数',
+    create_time DATETIME default CURRENT_TIMESTAMP COMMENT '创建时间',
+    is_exist INT default 1 COMMENT '是否存在',
+    INDEX idx_like_amount (`first_comment_id`,`like_amount`),
+    INDEX idx_create_time (`first_comment_id`,`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 es无需建表

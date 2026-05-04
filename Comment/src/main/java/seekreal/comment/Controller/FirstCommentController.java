@@ -13,8 +13,10 @@ import util.JWT;
 public class FirstCommentController {
     @Autowired
     private FirstCommentService firstCommentService;
+
+    //添加一级评论
     @PostMapping
-    public Result getCommonInteresting(String token, long writingId
+    public Result insertFirstComment(String token, long writingId
                 , String text, @RequestBody(required = false) MultipartFile file) {
         try {
             firstCommentService.insertFirstComment(JWT.jwtCheckToLong(token),writingId,text.trim(),file);
