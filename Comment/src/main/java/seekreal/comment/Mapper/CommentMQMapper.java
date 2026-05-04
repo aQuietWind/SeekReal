@@ -14,4 +14,12 @@ public interface CommentMQMapper {
     @Update("update First_Comment set second_comment_amount=second_comment_amount+#{step} where" +
             " first_comment_id=#{firstCommentId} and is_exist=1")
     public boolean updateFirstCommentSecondAmount(long firstCommentId,int step);
+
+    //用于修改一级评论的点赞数
+    @Update("update First_Comment set like_amount=like_amount+#{step} where first_comment_id=#{firstCommentId}")
+    public void updateFirstCommentLike(long firstCommentId,int step);
+
+    //用于修改二级评论的点赞数
+    @Update("update Second_Comment set like_amount=like_amount+#{step} where second_comment_id=#{secondCommentId}")
+    public void updateSecondCommentLike(long secondCommentId,int step);
 }

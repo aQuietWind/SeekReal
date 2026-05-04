@@ -24,4 +24,23 @@ public class CommentMQConfig {
         args.put("x-queue-type", "quorum");
         return new Queue("secondCommentRemoveQueue",true, false, false, args);
     }
+
+    @Bean       //声明一级评论添加或者减少点赞队列
+    public Queue firstCommentLikeAmountQueue(){
+        Map<String, Object> args = new HashMap<>();
+        // 设置队列模式为quorum仲裁模式，注意！！！不能和lazy模式混用
+        args.put("x-queue-type", "quorum");
+        return new Queue("firstCommentLikeAmountQueue",true, false, false, args);
+    }
+
+    @Bean       //声明二级评论添加或者减少点赞队列
+    public Queue secondCommentLikeAmountQueue(){
+        Map<String, Object> args = new HashMap<>();
+        // 设置队列模式为quorum仲裁模式，注意！！！不能和lazy模式混用
+        args.put("x-queue-type", "quorum");
+        return new Queue("secondCommentLikeAmountQueue",true, false, false, args);
+    }
+
+
+
 }

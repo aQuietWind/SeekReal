@@ -59,4 +59,31 @@ public class CommentMQ {
                 , MQUtil.getCorrelation("writingComment",logger));
         return;
     }
+
+
+    //监听一级评论的添加或者减少点赞操作
+    @RabbitListener(queues = "firstCommentLikeAmountQueue")
+    public void firstCommentLikeAmountQueue(AmountMqDTO dto){
+        if (!dto.getAmountType().equals("like")){
+            logger.error("修改一级评论出错！！！错误传递了{}",dto.getAmountType());
+        }
+        commentMQMapper.updateFirstCommentLike(dto.getId(),dto.getStep());
+        return;
+    }
+
+
+    //监听二级评论的添加或者减少点赞操作
+    @RabbitListener(queues = "secondCommentLikeAmountQueue")
+    public void secondCommentLikeAmountQueue(AmountMqDTO dto){
+        if (!dto.getAmountType().equals("like")){
+            logger.error("修改二级评论出错！！！错误传递了{}",dto.getAmountType());
+        }
+        commentMQMapper.updateSecondCommentLike(dto.getId(),dto.getStep());
+        return;
+    }
+
+
+
+
+
 }

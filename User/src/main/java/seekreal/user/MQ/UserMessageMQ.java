@@ -77,7 +77,7 @@ public class UserMessageMQ {
             mqMapper.updateUserWritingAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新文章数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -94,7 +94,7 @@ public class UserMessageMQ {
             mqMapper.updateUserLikeAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新点赞数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -111,7 +111,7 @@ public class UserMessageMQ {
             mqMapper.updateUserCollectAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新收藏数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -128,7 +128,7 @@ public class UserMessageMQ {
             mqMapper.updateUserLikerAmount(dto.getId(),dto.getStep());      //写入mysql
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新关注数于mysql时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -149,7 +149,7 @@ public class UserMessageMQ {
             esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {
             //报错时写入日志
-            logger.error("用户{}在mq试图更新提问数于mysql或者es时发生异常:{}",dto.getId(),e.getMessage());
+            logger.error("用户{}在mq试图更新粉丝数于mysql或者es时发生异常:{}",dto.getId(),e.getMessage());
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
