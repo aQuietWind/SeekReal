@@ -322,7 +322,7 @@ public class WritingServiceImpl implements WritingService {
     @Override
     public EsPagingResult<ESWriting> getOwnWriting(long userId,int number,Long sort){
         //判断number的合理性
-        if (number>20||number<0){
+        if (number>20||number<10){
             logger.warn("可疑用户{}以number：{}请求自身的文章",userId,number);
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }

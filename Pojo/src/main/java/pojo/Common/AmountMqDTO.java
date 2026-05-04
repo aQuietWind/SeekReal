@@ -1,7 +1,7 @@
 package pojo.Common;
 
 public class AmountMqDTO {
-    private long id;        //需要修改的id
+    private Long id;        //需要修改的id
     private String amountType;      //需要修改的类型
     private Integer step;       //需要修改的量
 

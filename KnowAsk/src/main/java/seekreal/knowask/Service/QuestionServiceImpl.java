@@ -269,6 +269,7 @@ public class QuestionServiceImpl implements QuestionService {
         return;
     }
 
+    //获取提问的详细内容
     @Override
     public Question getQuestionById(long questionId){
         Question question=questionMapper.getQuestionById(questionId);
@@ -279,11 +280,12 @@ public class QuestionServiceImpl implements QuestionService {
         return question;
     }
 
+
     //获取自己的提问
     @Override
     public EsPagingResult<ESQuestion> getOwnQuestion(long userId, int number, Long sort){
         //判断number的合理性
-        if (number>20||number<0){
+        if (number>20||number<10){
             logger.warn("可疑用户{}以number：{}请求自身的提问",userId,number);
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }

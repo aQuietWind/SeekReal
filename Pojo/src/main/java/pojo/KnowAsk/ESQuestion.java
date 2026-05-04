@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ESQuestion {
-    private long question_id;
-    private long user_id;
+    private Long question_id;
+    private Long user_id;
     private String question_title;
     private String question_description;
-    private int writing_amount;
-    private int like_amount;
-    private int collect_amount;
+    private Integer writing_amount;
+    private Integer like_amount;
+    private Integer collect_amount;
     private String create_time;
 
     public static String dateTimetoString(LocalDateTime dateTime) {
