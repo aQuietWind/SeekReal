@@ -1,0 +1,54 @@
+mysql建表语句
+
+create database Comment
+use Comment
+CREATE TABLE First_Comment (
+    first_comment_id bigint PRIMARY KEY COMMENT '一级评论ID',
+    user_id INT NOT NULL COMMENT '用户ID',
+    writing_id INT NOT NULL COMMENT '文章ID',
+    text VARCHAR(200) NOT NULL COMMENT '评论内容',
+    image_adder VARCHAR(50) DEFAULT '' COMMENT '插图地址',
+    second_comment_amount INT DEFAULT 0 COMMENT '拥有的二级评论数',
+    like_amount INT DEFAULT 0 COMMENT '拥有的点赞数',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    is_exist INT DEFAULT 1 COMMENT '是否存在',
+    INDEX idx_like_amount (`writing_id`,`like_amount`),
+    INDEX idx_create_time (`writing_id`,`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `undo_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) NOT NULL,
+  `context` varchar(128) NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime NOT NULL,
+  `log_modified` datetime NOT NULL,
+  `ext` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE second_comment (
+    second_comment_id INT PRIMARY KEY COMMENT '二级评论ID',
+    user_id INT NOT NULL COMMENT '用户ID',
+    writing_id INT NOT NULL COMMENT '文章ID',
+    first_comment_id INT NOT NULL COMMENT '一级评论ID',
+    text VARCHAR(200) NOT NULL COMMENT '评论内容',
+    respond_user_name varchar(16) NOT NULL COMMENT '回复的用户姓名',
+    respond_comment_id INT NOT NULL COMMENT '回复的另一二级评论ID',
+    like_amount INT NOT NULL COMMENT '拥有的点赞数',
+    create_time DATETIME NOT NULL COMMENT '创建时间',
+    respond_comment_user_name VARCHAR(10) NOT NULL COMMENT '回复的用户姓名',
+    is_exist INT NOT NULL COMMENT '是否存在',
+    INDEX idx_like_amount (`writing_id`,`like_amount`),
+    INDEX idx_create_time (`writing_id`,`create_time`)
+);
+
+es无需建表
+
+
+
+
+
