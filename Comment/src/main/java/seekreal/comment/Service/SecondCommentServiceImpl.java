@@ -5,10 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pojo.Comment.FirstComment;
+import pojo.Comment.SecondComment;
 import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.SecondCommentMapper;
 import seekreal.comment.Util.CommentIdGenerate;
 import seekreal.comment.Util.MQUtil;
+
+import java.util.List;
 
 @Service
 public class SecondCommentServiceImpl implements SecondCommentService {
@@ -52,6 +56,16 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             throw new RuntimeException("插入失败哦，等稍后再试试呗～");
         }
         return;
+    }
+
+    //获取二级评论
+    @Override
+    public List<SecondComment> getSecondComment(long firstCommentId,int from,int need){
+        if (need>20||need<10||from<0||firstCommentId<0){
+            logger.warn("有人试图以错误的参数请求获取二级评论");
+            throw new RuntimeException("请勿随意修改参数！！！o_o");
+        }
+        return secondCommentMapper.getSecondComment(firstCommentId,from,need);
     }
 
 

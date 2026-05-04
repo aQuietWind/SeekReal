@@ -38,7 +38,7 @@ spring:
     listener:
       simple:
         prefetch: 10   #设置每次消息预取的max上限，在未处理的消息达到上线时，不再获取消息
-        acknowledge-mode: manual      #设置消息确认模式
+        acknowledge-mode: auto      #设置消息确认模式
         retry:      #重试配置
           enabled: true     #开启重试
           initial-interval: 1000    #初始的重试等待时间

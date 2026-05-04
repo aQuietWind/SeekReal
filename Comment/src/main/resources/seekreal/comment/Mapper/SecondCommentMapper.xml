@@ -21,24 +21,19 @@
     </insert>
 
 
-    <!--    删除某篇存在的提问-->
-    <update id="deleteQuestion">
-        update Question set is_exist=0 where user_id=#{userId} and question_id=#{questionId} and is_exist=1
-    </update>
-
     <!--    获取提问的详细内容-->
-    <select id="getQuestionById" resultType="pojo.KnowAsk.Question">
-        select question_id
+    <select id="getSecondComment" resultType="pojo.Comment.SecondComment">
+        select
+        second_comment_id
         ,user_id
-        ,question_title
-        ,question_description
-        ,image_adder_list
-        ,writing_amount
+        ,first_comment_id
+        ,text
+        ,respond_username
         ,like_amount
-        ,collect_amount
-        ,is_exist
         ,create_time
-        from Question where question_id=#{questionId} and is_exist=1
+        ,is_exist
+        from Second_Comment where first_comment_id=#{firstCommentId} and is_exist=1 order by like_amount
+        limit #{from},#{need}
     </select>
 
 

@@ -39,8 +39,7 @@ CREATE TABLE Second_Comment (
     like_amount INT default 0 COMMENT '拥有的点赞数',
     create_time DATETIME default CURRENT_TIMESTAMP COMMENT '创建时间',
     is_exist INT default 1 COMMENT '是否存在',
-    INDEX idx_like_amount (`first_comment_id`,`like_amount`),
-    INDEX idx_create_time (`first_comment_id`,`create_time`)
+    INDEX idx_create_time (`first_comment_id`,`is_exist`,`like_amount`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

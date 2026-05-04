@@ -6,11 +6,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pojo.Comment.FirstComment;
 import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.FirstCommentMapper;
 import seekreal.comment.Util.CommentIdGenerate;
 import seekreal.comment.Util.FileSave;
 import seekreal.comment.Util.MQUtil;
+
+import java.util.List;
 
 @Service
 public class FirstCommentServiceImpl implements FirstCommentService {
@@ -60,6 +63,16 @@ public class FirstCommentServiceImpl implements FirstCommentService {
             throw new RuntimeException("插入失败哦，等稍后再试试呗～");
         }
         return;
+    }
+
+    //获取一级评论
+    @Override
+    public List<FirstComment> getFirstComment(long writingId,int from,int need){
+        if (need>20||need<10||from<0||writingId<0){
+            logger.warn("有人试图以错误的参数请求获取一级评论");
+            throw new RuntimeException("请勿随意修改参数！！！o_o");
+        }
+        return firstCommentMapper.getFirstComment(writingId,from,need);
     }
 
 

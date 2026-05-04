@@ -25,4 +25,29 @@ public class FirstCommentController {
             return Result.error(e.getMessage());
         }
     }
+
+    //获取一级评论
+    @GetMapping
+    public Result getFirstComment(long writingId,int from,int need) {
+        try {
+            return Result.success(firstCommentService.getFirstComment(writingId,from,need));
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

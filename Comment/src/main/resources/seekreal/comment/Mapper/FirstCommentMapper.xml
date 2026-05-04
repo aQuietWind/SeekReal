@@ -20,37 +20,25 @@
         )
     </insert>
 
-    <!--    添加图片地址于Mysql-->
-    <update id="updateQuestionImage">
-        update Question set image_adder_list=#{adder}
-        where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]' and is_exist=1
-    </update>
-
     <!--    获取提问的图片地址-->
-    <select id="getQuestionImage" resultType="java.lang.String">
-        select image_adder_list from Question where user_id=#{userId}
-        and question_id=#{questionId} and is_exist=1
+    <select id="getFirstComment" resultType="pojo.Comment.FirstComment">
+        select
+        first_comment_id
+        ,user_id
+        ,writing_id
+        ,text
+        ,image_adder
+        ,second_comment_amount
+        ,like_amount
+        ,create_time
+        ,is_exist
+        from First_Comment where writing_id=#{writingId} and is_exist=1 order by like_amount limit #{from},#{need}
     </select>
 
     <!--    删除某篇存在的提问-->
     <update id="deleteQuestion">
         update Question set is_exist=0 where user_id=#{userId} and question_id=#{questionId} and is_exist=1
     </update>
-
-    <!--    获取提问的详细内容-->
-    <select id="getQuestionById" resultType="pojo.KnowAsk.Question">
-        select question_id
-        ,user_id
-        ,question_title
-        ,question_description
-        ,image_adder_list
-        ,writing_amount
-        ,like_amount
-        ,collect_amount
-        ,is_exist
-        ,create_time
-        from Question where question_id=#{questionId} and is_exist=1
-    </select>
 
 
 

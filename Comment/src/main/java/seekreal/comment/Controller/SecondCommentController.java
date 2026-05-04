@@ -1,10 +1,7 @@
 package seekreal.comment.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
 import seekreal.comment.Service.FirstCommentService;
@@ -29,4 +26,29 @@ public class SecondCommentController {
             return Result.error(e.getMessage());
         }
     }
+
+    //获取二级评论
+    @GetMapping
+    public Result getSecondComment(long firstCommentId,int from,int need) {
+        try {
+            return Result.success(secondCommentService.getSecondComment(firstCommentId,from,need));
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
