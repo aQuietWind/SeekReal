@@ -36,6 +36,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static seekreal.knowask.Util.EsPagingResult.getSearchRequestByUserId;
+
 
 @Service
 public class WritingServiceImpl implements WritingService {
@@ -318,21 +320,14 @@ public class WritingServiceImpl implements WritingService {
 
     //获取自己的文章
     @Override
-    public EsPagingResult<ESWriting> getOwnWriting(long userId,int number,Object[] sort,int mode){
+    public EsPagingResult<ESWriting> getOwnWriting(long userId,int number,Long sort){
         //判断number的合理性
-        if (number>20||number<0||(mode!=1&&mode!=2)){
+        if (number>20||number<0){
             logger.warn("可疑用户{}以number：{}请求自身的文章",userId,number);
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
-
-        SearchRequest request;
         //构建请求
-        if (mode==1) {
-            request = getSearchRequestByUserId("writing", userId, number, sort,"create_time");
-        }
-        else {
-            request = getSearchRequestByUserId("writing", userId, number, sort,"like_amount");
-        }
+        SearchRequest request = getSearchRequestByUserId("writing", userId, number, sort);
         SearchResponse<ESWriting> response= null;
         //尝试请求es
         try {
@@ -342,54 +337,11 @@ public class WritingServiceImpl implements WritingService {
             logger.error("用户{}在请求自身的文章时出现异常{}",userId, e.getMessage());
             throw new RuntimeException("服务器繁忙，请稍后试试呗～");
         }
-        //将结果封装进List
-        List<ESWriting> result=new ArrayList<>();
-        //获取实际数据
-        List<Hit<ESWriting>> hits = response.hits().hits();
-        //获取分页值
-        List<FieldValue> lastSortValues = hits.getLast().sort();
-        //封装
-        for (Hit<ESWriting> hit:hits) {
-            result.add(hit.source());
-        }
-        //获得总数额
-        long esTotal=response.hits().total().value();
-        if (esTotal==0|| result.isEmpty()){return null;}
-            return new EsPagingResult<ESWriting>(result,esTotal,lastSortValues.stream()
-                    .map(FieldValue::longValue).toArray());
+        return new EsPagingResult<>(response);
     }
 
 
-    private SearchRequest getSearchRequestByUserId(String index,long userId,int number
-            ,Object[] sort,String sortField) {
-        SearchRequest request;
-        if (sort==null||sort.length==0){
-            request = new SearchRequest.Builder()
-                    .index(index)
-                    .query(q -> q.term(t -> t.field("user_id").value(userId)))
-                    .size(number)
-                    //排序
-                    .sort(s -> s.field(f -> f.field(sortField).order(SortOrder.Desc)))
-                    .build();
-        }
-        else {
-            List<FieldValue> sortValue = null;
-            try {
-                sortValue = Arrays.stream(sort).map(FieldValue::of).toList();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            request = new SearchRequest.Builder()
-                    .index(index)
-                    .query(q -> q.term(t -> t.field("user_id").value(userId)))
-                    .size(number)
-                    //排序
-                    .sort(s -> s.field(f -> f.field(sortField).order(SortOrder.Desc)))
-                .searchAfter(sortValue)
-                    .build();
-        }
-        return request;
-    }
+
 
 
 

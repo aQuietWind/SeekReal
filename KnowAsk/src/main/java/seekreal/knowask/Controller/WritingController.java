@@ -79,11 +79,10 @@ public class WritingController {
 
     //获取自己的提问
     @GetMapping("/own")
-    public Result getOwnWriting(String token, int number, Object[] sort,
-                                int mode){
+    public Result getOwnWriting(String token, int number,Long sort){
         try{
-            return Result.success(writingService.getOwnWriting(JWT.jwtCheckToLong(token)
-                    ,number,sort,mode));
+                return Result.success(writingService.getOwnWriting(JWT.jwtCheckToLong(token)
+                        ,number,sort));
         }
         catch (Exception e) {
             return Result.error(e.getMessage());

@@ -15,5 +15,5 @@ public interface WritingService {
     public void deleteWriting(long writingId, long userId);
     public List<ESWriting> getHotWriting(int mode);
     public Writing getWritingById(long writingId,Long userId);
-    public EsPagingResult<ESWriting> getOwnWriting(long userId, int number, Object[] sort, int mode);
+    public EsPagingResult<ESWriting> getOwnWriting(long userId, int number, Long sort);
 }
