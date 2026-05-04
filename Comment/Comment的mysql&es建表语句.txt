@@ -4,8 +4,8 @@ create database Comment
 use Comment
 CREATE TABLE First_Comment (
     first_comment_id bigint PRIMARY KEY COMMENT '一级评论ID',
-    user_id INT NOT NULL COMMENT '用户ID',
-    writing_id INT NOT NULL COMMENT '文章ID',
+    user_id bigint NOT NULL COMMENT '用户ID',
+    writing_id bigint NOT NULL COMMENT '文章ID',
     text VARCHAR(200) NOT NULL COMMENT '评论内容',
     image_adder VARCHAR(50) DEFAULT '' COMMENT '插图地址',
     second_comment_amount INT DEFAULT 0 COMMENT '拥有的二级评论数',
@@ -30,14 +30,13 @@ CREATE TABLE `undo_log` (
   UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE second_comment (
-    second_comment_id INT PRIMARY KEY COMMENT '二级评论ID',
-    user_id INT NOT NULL COMMENT '用户ID',
-    writing_id INT NOT NULL COMMENT '文章ID',
-    first_comment_id INT NOT NULL COMMENT '一级评论ID',
+CREATE TABLE Second_Comment (
+    second_comment_id bigint PRIMARY KEY COMMENT '二级评论ID',
+    user_id bigint NOT NULL COMMENT '用户ID',
+    writing_id bigint NOT NULL COMMENT '文章ID',
+    first_comment_id bigint NOT NULL COMMENT '一级评论ID',
     text VARCHAR(200) NOT NULL COMMENT '评论内容',
     respond_user_name varchar(16) NOT NULL COMMENT '回复的用户姓名',
-    respond_comment_id INT NOT NULL COMMENT '回复的另一二级评论ID',
     like_amount INT NOT NULL COMMENT '拥有的点赞数',
     create_time DATETIME NOT NULL COMMENT '创建时间',
     respond_comment_user_name VARCHAR(10) NOT NULL COMMENT '回复的用户姓名',
@@ -45,6 +44,7 @@ CREATE TABLE second_comment (
     INDEX idx_like_amount (`writing_id`,`like_amount`),
     INDEX idx_create_time (`writing_id`,`create_time`)
 );
+
 
 es无需建表
 

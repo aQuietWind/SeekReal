@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.comment.Mapper.FirstCommentMapper">
+    <!--    新增用户-->
+    <insert id="insertFirstComment">
+        insert into First_Comment (
+        first_comment_id
+        ,writing_id
+        ,user_id
+        ,text
+        ,image_adder
+        ) values(
+        #{firstCommentId}
+        ,#{writingId}
+        ,#{userId}
+        ,#{text}
+        ,#{imageAdder}
+        )
+    </insert>
+
+    <!--    添加图片地址于Mysql-->
+    <update id="updateQuestionImage">
+        update Question set image_adder_list=#{adder}
+        where user_id=#{userId} and question_id=#{questionId} and image_adder_list='[]' and is_exist=1
+    </update>
+
+    <!--    获取提问的图片地址-->
+    <select id="getQuestionImage" resultType="java.lang.String">
+        select image_adder_list from Question where user_id=#{userId}
+        and question_id=#{questionId} and is_exist=1
+    </select>
+
+    <!--    删除某篇存在的提问-->
+    <update id="deleteQuestion">
+        update Question set is_exist=0 where user_id=#{userId} and question_id=#{questionId} and is_exist=1
+    </update>
+
+    <!--    获取提问的详细内容-->
+    <select id="getQuestionById" resultType="pojo.KnowAsk.Question">
+        select question_id
+        ,user_id
+        ,question_title
+        ,question_description
+        ,image_adder_list
+        ,writing_amount
+        ,like_amount
+        ,collect_amount
+        ,is_exist
+        ,create_time
+        from Question where question_id=#{questionId} and is_exist=1
+    </select>
+
+
+
+
+</mapper>

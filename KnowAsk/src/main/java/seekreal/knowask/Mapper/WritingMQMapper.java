@@ -8,15 +8,15 @@ public interface WritingMQMapper {
 
     //用于MQ进行点赞Amount的增减操作
     @Update("update Writing set like_amount=like_amount+#{step} where writing_id=#{writingId}")
-    public void updateWritingLikeAmount(long writingId,int step);
+    public boolean updateWritingLikeAmount(long writingId,int step);
 
     //用于MQ进行收藏Amount的增减操作
     @Update("update Writing set collect_amount=collect_amount+#{step} where writing_id=#{writingId}")
-    public void updateWritingCollectAmount(long writingId,int step);
+    public boolean updateWritingCollectAmount(long writingId,int step);
 
     //用于MQ进行评论Amount的增减操作
     @Update("update Writing set comment_amount=comment_amount+#{step} where writing_id=#{writingId}")
-    public void updateWritingCommentAmount(long writingId,int step);
+    public boolean updateWritingCommentAmount(long writingId,int step);
 
 
 }

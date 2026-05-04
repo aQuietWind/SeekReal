@@ -46,7 +46,7 @@ public class FileSave {
     //根据文件名将文件保存
     public static void saveImage(MultipartFile file,String newFileName) {
         //获取目录
-        Path destDir = Paths.get(FileEnum.KnowAsk_Image_Path);
+        Path destDir = Paths.get(FileEnum.Comment_Image_Path);
         //如果目录不存在
         if (!Files.exists(destDir)) {
             //尝试创建目录

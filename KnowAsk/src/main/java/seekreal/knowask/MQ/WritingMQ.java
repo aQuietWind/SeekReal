@@ -68,7 +68,11 @@ public class WritingMQ {
             return;
         }
         try {
-            writingMQMapper.updateWritingLikeAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!writingMQMapper.updateWritingLikeAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的文章{}，不能被找到于mysql去自增{}点赞数", dto.getId(),dto.getStep());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request= EsUtil.getUpdateRequest("writing",""+dto.getId()
                     ,"like_amount",dto.getStep());
@@ -89,7 +93,11 @@ public class WritingMQ {
             return;
         }
         try {
-            writingMQMapper.updateWritingCollectAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!writingMQMapper.updateWritingCollectAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的文章{}，不能被找到于mysql去自增{}收藏数", dto.getId(),dto.getStep());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("writing",""+dto.getId()
                     ,"collect_amount",dto.getStep());
@@ -110,7 +118,11 @@ public class WritingMQ {
             return;
         }
         try {
-            writingMQMapper.updateWritingCommentAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!writingMQMapper.updateWritingCommentAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的文章{}，不能被找到于mysql去自增{}评论数", dto.getId(),dto.getStep());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("writing",""+dto.getId()
                     ,"comment_amount",dto.getStep());

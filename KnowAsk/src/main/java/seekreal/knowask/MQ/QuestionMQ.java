@@ -70,7 +70,11 @@ public class QuestionMQ {
             return;
         }
         try {
-            questionMQMapper.updateQuestionLikeAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!questionMQMapper.updateQuestionLikeAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的提问{}，不能被找到于mysql去自增点赞数", dto.getId());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
                     ,"like_amount",dto.getStep());
@@ -91,7 +95,11 @@ public class QuestionMQ {
             return;
         }
         try {
-            questionMQMapper.updateQuestionCollectAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!questionMQMapper.updateQuestionCollectAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的提问{}，不能被找到于mysql去自增收藏数", dto.getId());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
                     ,"collect_amount",dto.getStep());
@@ -112,7 +120,11 @@ public class QuestionMQ {
             return;
         }
         try {
-            questionMQMapper.updateQuestionWritingAmount(dto.getId(),dto.getStep());      //写入mysql
+            //自增于mysql
+            if(!questionMQMapper.updateQuestionWritingAmount(dto.getId(),dto.getStep())){
+                logger.warn("错误的提问{}，不能被找到于mysql去自增文章数", dto.getId());
+                return;
+            }
             //编写es自增或者自减的脚本
             UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
                     ,"writing_amount",dto.getStep());

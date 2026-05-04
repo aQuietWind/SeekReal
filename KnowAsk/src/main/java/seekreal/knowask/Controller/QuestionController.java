@@ -20,7 +20,7 @@ public class QuestionController {
     @PostMapping
     public Result insertQuestion(String questionTitle,String questionDescription, String token){
         try{
-            questionService.insertQuestion(questionTitle,questionDescription
+            questionService.insertQuestion(questionTitle.trim(),questionDescription.trim()
                     , JWT.jwtCheckToLong(token));
             return Result.success();
         }

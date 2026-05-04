@@ -20,7 +20,7 @@ public class WritingController {
     public Result insertQuestion(String writingTitle,String writingDescription,Long questionId, String token
             ,int messagePower){
         try{
-            writingService.insertWriting(writingTitle,writingDescription,questionId
+            writingService.insertWriting(writingTitle.trim(),writingDescription.trim(),questionId
                     , JWT.jwtCheckToLong(token),messagePower);
             return Result.success();
         }

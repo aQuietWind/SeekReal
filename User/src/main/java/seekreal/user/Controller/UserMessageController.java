@@ -64,7 +64,7 @@ public class UserMessageController {
     public Result updateUserMessage(String personalSignature,
                                       Integer sex, LocalDate birthday,Integer messagePower,String token) {
         try {
-            userMessageService.updateUserMessage(personalSignature
+            userMessageService.updateUserMessage(personalSignature.trim()
                     ,sex, birthday,messagePower,JWT.jwtCheckToLong(token));
             return Result.success();
         }

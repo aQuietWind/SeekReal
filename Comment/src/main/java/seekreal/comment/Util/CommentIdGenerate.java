@@ -10,7 +10,7 @@ import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class KnowAskIdGenerate {
+public class CommentIdGenerate {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     private static final long DECREASE_STAMP = 4391761234L;        //用于时间戳减小

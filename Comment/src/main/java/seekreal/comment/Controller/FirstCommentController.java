@@ -17,7 +17,7 @@ public class FirstCommentController {
     public Result getCommonInteresting(String token, long writingId
                 , String text, @RequestBody(required = false) MultipartFile file) {
         try {
-            firstCommentService.insertFirstComment(JWT.jwtCheckToLong(token),writingId,text,file)
+            firstCommentService.insertFirstComment(JWT.jwtCheckToLong(token),writingId,text.trim(),file);
             return Result.success();
         }catch (Exception e){
             return Result.error(e.getMessage());
