@@ -1,12 +1,11 @@
 package util;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class RedisCommonEnum{
     private static final String Time_Record="common:time:";
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     public static String getTimeKey(String type,long id){
         return Time_Record+type+":"+id;
     }

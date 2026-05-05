@@ -13,8 +13,9 @@ import util.JWT;
 public class LikeController {
     @Autowired
     private LikeService likeService;
-    @PutMapping
-    public Result likeChangeWriting(long writingId,String token,boolean isLike){
+
+    @PutMapping("/writing")
+    public Result likeChangeWriting(long writingId,String token,int isLike){
         try {
             likeService.likeChangeWriting(writingId,JWT.jwtCheckToLong(token),isLike);
             return Result.success();

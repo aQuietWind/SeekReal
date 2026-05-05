@@ -1,6 +1,16 @@
 mysql建表语句
 
-
+create database Appreciation
+use Appreciation
+create table Like_Writing(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    writing_id bigint not null comment '文章的id',
+    is_like int not null comment '点赞状态',
+    unique key uk_writing_user (user_id,writing_id),
+    index idx_user (user_id),
+    index idx_writing (writing_id)
+)
 
 
 
