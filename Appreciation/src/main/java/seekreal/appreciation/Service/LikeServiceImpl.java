@@ -14,6 +14,9 @@ import util.Collection;
 import util.RedisCommonEnum;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class LikeServiceImpl implements LikeService {
@@ -87,6 +90,22 @@ public class LikeServiceImpl implements LikeService {
                     MQUtil.getCorrelation("userToLike"+type,logger));
         }
         return;
+    }
+
+
+    @Override
+    //获取点赞列表
+    public List<Long> getLike(long userId, String date, String redisEnumName){
+        Set<String> set=stringRedisTemplate.opsForSet().members(redisEnumName+userId+":"+date);
+        if (set != null) {
+            List<Long> result=new ArrayList<>();
+            set.forEach(x->{
+                result.add(Long.parseLong(x));
+            });
+            return result;
+        }else {
+            return null;
+        }
     }
 
 

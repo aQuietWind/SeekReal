@@ -1,6 +1,7 @@
 package seekreal.appreciation.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,4 +59,34 @@ public class LikeController {
             return Result.error(e.getMessage());
         }
     }
+
+    @GetMapping("/writing")
+    public Result getLikeWriting(String date,String token){
+        try {
+            return Result.success(likeService.getLike(JWT.jwtCheckToLong(token),date, RedisEnum.Like_Writing));
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
