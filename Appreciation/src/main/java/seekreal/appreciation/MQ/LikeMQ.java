@@ -27,6 +27,10 @@ public class LikeMQ {
             rabbitTemplate.convertAndSend("writingAmountChangeExchange", "like"
                     , new AmountMqDTO(dto.getId(),"like",dto.getToChange())
                     , MQUtil.getCorrelation("writingLike", logger));
+            //然后再通知另外一个mq去同步用户的点赞数
+            rabbitTemplate.convertAndSend("userAmountChangeExchange", "like"
+                    , new AmountMqDTO(dto.getUserId(),"like",dto.getToChange())
+                    , MQUtil.getCorrelation("userLike", logger));
         }
         else {
             logger.error("用户{}点赞文章{}时错误！！！无法在MQ回写MySQL", dto.getUserId(), dto.getId());
@@ -43,6 +47,10 @@ public class LikeMQ {
             rabbitTemplate.convertAndSend("questionAmountChangeExchange", "like"
                     , new AmountMqDTO(dto.getId(),"like",dto.getToChange())
                     , MQUtil.getCorrelation("questionLike", logger));
+            //然后再通知另外一个mq去同步用户的点赞数
+            rabbitTemplate.convertAndSend("userAmountChangeExchange", "like"
+                    , new AmountMqDTO(dto.getUserId(),"like",dto.getToChange())
+                    , MQUtil.getCorrelation("userLike", logger));
         }
         else {
             logger.error("用户{}点赞提问{}时错误！！！无法在MQ回写MySQL", dto.getUserId(), dto.getId());

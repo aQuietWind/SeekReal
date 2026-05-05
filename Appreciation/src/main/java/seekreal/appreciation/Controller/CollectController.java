@@ -40,7 +40,7 @@ public class CollectController {
         }
     }
 
-    //获取文章的点赞情况
+    //获取文章的收藏情况
     @GetMapping("/writing")
     public Result getLikeWriting(String date, String token){
         try {
@@ -51,7 +51,7 @@ public class CollectController {
         }
     }
 
-    //获取提问的点赞情况
+    //获取提问的收藏情况
     @GetMapping("/question")
     public Result getLikeQuestion(String date,String token){
         try {

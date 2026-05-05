@@ -58,21 +58,21 @@ public class CollectServiceImpl implements CollectService {
             ,String redisEnumName){
         Long result=null;
         try {
-            //如果是1就点赞
+            //如果是1就收藏
             if(isCollect==1){
-                //添加点赞于Redis
+                //添加收藏于Redis
                 result=(Long) stringRedisTemplate.execute(addScript,         //执行脚本,并且获得result结果
                         Collection.toCollect(      //KEYS参数
                                 RedisCommonEnum.getTimeKey(type,id)     //redis用来查时间的
-                                , redisEnumName+userId+":"),        //用户的点赞列表的key名字
+                                , redisEnumName+userId+":"),        //用户的收藏列表的key名字
                         ""+id);//ARGV参数
-                //是-1就代表取消点赞
+                //是-1就代表取消收藏
             }else if(isCollect==-1){
-                //去除点赞于Redis
+                //去除收藏于Redis
                 result=(Long) stringRedisTemplate.execute(removeScript,         //执行脚本,并且获得result结果
                         Collection.toCollect(      //KEYS参数
                                 RedisCommonEnum.getTimeKey(type,id)     //redis用来查时间的
-                                , redisEnumName+userId+":"),        //用户的点赞列表的key名字
+                                , redisEnumName+userId+":"),        //用户的收藏列表的key名字
                         ""+id);//ARGV参数
             }
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class CollectServiceImpl implements CollectService {
         }
         //结果为1代表这是一次有效更新，不再是重复操作
         if (result!=null&&result == 1){
-            //发送消息至MQ，同步该点赞于MySQL
+            //发送消息至MQ，同步该收藏于MySQL
             rabbitTemplate.convertAndSend("collectChangeExchange",type     //通过type动态决定MQ的routingKey
                     ,new ChangeDTO(userId,id,isCollect),
                     MQUtil.getCorrelation("userToCollect"+type,logger));

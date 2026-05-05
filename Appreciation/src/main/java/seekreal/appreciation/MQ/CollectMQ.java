@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import pojo.Appreciation.ChangeDTO;
 import pojo.Common.AmountMqDTO;
 import seekreal.appreciation.Mapper.CollectMapperMQ;
-import seekreal.appreciation.Mapper.LikeMapperMQ;
 import seekreal.appreciation.Util.MQUtil;
 
 @Component
@@ -28,6 +27,10 @@ public class CollectMQ {
             rabbitTemplate.convertAndSend("writingAmountChangeExchange", "collect"
                     , new AmountMqDTO(dto.getId(),"collect",dto.getToChange())
                     , MQUtil.getCorrelation("writingCollect", logger));
+            //顺便通知另外一个mq同步用户的收藏数
+            rabbitTemplate.convertAndSend("userAmountChangeExchange", "collect"
+                    , new AmountMqDTO(dto.getUserId(),"collect",dto.getToChange())
+                    , MQUtil.getCorrelation("userCollect", logger));
         }
         else {
             logger.error("用户{}收藏文章{}时错误！！！无法在MQ回写MySQL", dto.getUserId(), dto.getId());
@@ -44,6 +47,10 @@ public class CollectMQ {
             rabbitTemplate.convertAndSend("questionAmountChangeExchange", "collect"
                     , new AmountMqDTO(dto.getId(),"collect",dto.getToChange())
                     , MQUtil.getCorrelation("questionCollect", logger));
+            //顺便通知另外一个mq同步用户的收藏数
+            rabbitTemplate.convertAndSend("userAmountChangeExchange", "collect"
+                    , new AmountMqDTO(dto.getUserId(),"collect",dto.getToChange())
+                    , MQUtil.getCorrelation("userCollect", logger));
         }
         else {
             logger.error("用户{}收藏提问{}时错误！！！无法在MQ回写MySQL", dto.getUserId(), dto.getId());
