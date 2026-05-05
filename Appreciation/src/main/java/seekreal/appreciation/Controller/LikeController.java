@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pojo.Common.Result;
 import seekreal.appreciation.Service.LikeService;
+import seekreal.appreciation.Util.RedisEnum;
 import util.JWT;
 
 @RequestMapping("/like")
@@ -17,7 +18,8 @@ public class LikeController {
     @PutMapping("/writing")
     public Result likeChangeWriting(long writingId,String token,int isLike){
         try {
-            likeService.likeChangeWriting(writingId,JWT.jwtCheckToLong(token),isLike);
+            likeService.likeChange(writingId,JWT.jwtCheckToLong(token),isLike
+            ,"writing", RedisEnum.Like_Writing);
             return Result.success();
         }catch (Exception e){
             return Result.error(e.getMessage());
