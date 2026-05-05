@@ -5,6 +5,8 @@ public class RedisEnum {
     public static final String Like_First_Comment="like:first:comment:";
     public static final String Like_Second_Comment="like:second:comment:";
     public static final String Like_Question="like:question:";
+    public static final String Collect_Writing="collect:writing:";
+    public static final String Collect_Question="collect:question:";
     public static String likeWritingWithDate(long userId,String Date){
         return Like_Writing+userId+":"+Date;
     }

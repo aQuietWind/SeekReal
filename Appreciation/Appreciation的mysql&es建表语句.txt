@@ -38,5 +38,52 @@ create table Like_Second_Comment(
     index idx_user (user_id),
     index idx_second_comment (second_comment_id)
 )
+create table Collect_Writing(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    writing_id bigint not null comment '文章的id',
+    is_collect int not null comment '收藏状态',
+    unique key uk_writing_user (user_id,writing_id),
+    index idx_user (user_id),
+    index idx_writing (writing_id)
+)
+create table Collect_Question(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    question_id bigint not null comment '文章的id',
+    is_collect int not null comment '收藏状态',
+    unique key uk_question_user (user_id,question_id),
+    index idx_user (user_id),
+    index idx_question (question_id)
+)
+
+//可有可无，用于seata进行回滚
+CREATE TABLE `undo_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) NOT NULL,
+  `context` varchar(128) NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime NOT NULL,
+  `log_modified` datetime NOT NULL,
+  `ext` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
