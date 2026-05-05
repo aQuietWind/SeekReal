@@ -25,4 +25,37 @@ public class LikeController {
             return Result.error(e.getMessage());
         }
     }
+
+    @PutMapping("/question")
+    public Result likeChangeQuestion(long qusetionId,String token,int isLike){
+        try {
+            likeService.likeChange(qusetionId,JWT.jwtCheckToLong(token),isLike
+                    ,"question", RedisEnum.Like_Question);
+            return Result.success();
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PutMapping("/firstComment")
+    public Result likeChangeFirstComment(long firstCommentId,String token,int isLike){
+        try {
+            likeService.likeChange(firstCommentId,JWT.jwtCheckToLong(token),isLike
+                    ,"firstComment", RedisEnum.Like_First_Comment);
+            return Result.success();
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PutMapping("/secondComment")
+    public Result likeChangeSecondComment(long secondCommentId,String token,int isLike){
+        try {
+            likeService.likeChange(secondCommentId,JWT.jwtCheckToLong(token),isLike
+                    ,"secondComment", RedisEnum.Like_Second_Comment);
+            return Result.success();
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
 }

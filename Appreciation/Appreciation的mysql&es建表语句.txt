@@ -11,6 +11,32 @@ create table Like_Writing(
     index idx_user (user_id),
     index idx_writing (writing_id)
 )
-
+create table Like_Question(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    question_id bigint not null comment '提问的id',
+    is_like int not null comment '点赞状态',
+    unique key uk_question_user (user_id,question_id),
+    index idx_user (user_id),
+    index idx_question (question_id)
+)
+create table Like_First_Comment(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    first_comment_id bigint not null comment '一级评论的id',
+    is_like int not null comment '点赞状态',
+    unique key uk_first_comment_user (user_id,first_comment_id),
+    index idx_user (user_id),
+    index idx_first_comment (first_comment_id)
+)
+create table Like_Second_Comment(
+    id bigint primary key auto_increment comment '纯主键id',
+    user_id bigint not null comment '用户id',
+    second_comment_id bigint not null comment '二级评论的id',
+    is_like int not null comment '点赞状态',
+    unique key uk_second_comment_user (user_id,second_comment_id),
+    index idx_user (user_id),
+    index idx_second_comment (second_comment_id)
+)
 
 

@@ -52,7 +52,7 @@ public class FirstCommentServiceImpl implements FirstCommentService {
                 ,userId,writingId,text,fileName);
         if (canToDo){
             //写入时间存储
-            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("first:comment",firstCommentId)
+            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("firstComment",firstCommentId)
                     ,RedisCommonEnum.getJsonByLocalDateNow());
             //写入MQ,然后同步文章的es与mysql的评论数
             rabbitTemplate.convertAndSend("writingAmountChangeExchange","comment"
@@ -96,7 +96,7 @@ public class FirstCommentServiceImpl implements FirstCommentService {
             throw new RuntimeException("删除失败！！！未找到！！！");
         }
         //删除时间存储
-        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("first:comment",firstCommentId));
+        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("firstComment",firstCommentId));
         //写入MQ,然后同步文章的es与mysql的评论数
         rabbitTemplate.convertAndSend("writingAmountChangeExchange","comment"
                 ,new AmountMqDTO(writingId,"comment",-1)

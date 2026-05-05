@@ -50,7 +50,7 @@ public class SecondCommentServiceImpl implements SecondCommentService {
                 secondCommentId,userId,firstCommentId,text,respondUsername);
         if (canToDo){
             //写入时间存储
-            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("second:comment",secondCommentId)
+            stringRedisTemplate.opsForValue().set(RedisCommonEnum.getTimeKey("secondComment",secondCommentId)
                     ,RedisCommonEnum.getJsonByLocalDateNow());
             //写入MQ,然后同步文章的es与mysql的评论数
             rabbitTemplate.convertAndSend("secondCommentAddQueue"
@@ -89,7 +89,7 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             throw new RuntimeException("删除失败！！！未找到！！！");
         }
         //删除时间存储
-        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("second:comment",secondCommentId));
+        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("secondComment",secondCommentId));
         //写入MQ,然后同步文章的es与mysql的评论数
         rabbitTemplate.convertAndSend("secondCommentRemoveQueue"
                 ,firstCommentId
