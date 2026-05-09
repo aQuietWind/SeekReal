@@ -36,8 +36,8 @@ public class CollectServiceImpl implements CollectService {
     private UserClient userClient;
     private static final Logger logger = LoggerFactory.getLogger(LikeServiceImpl.class);
 
-    private static final DefaultRedisScript<Object> addScript;      //添加点赞的Lua脚本
-    private static final DefaultRedisScript<Object> removeScript;      //去除点赞的Lua脚本
+    private static final DefaultRedisScript<Object> addScript;      //添加收藏的Lua脚本
+    private static final DefaultRedisScript<Object> removeScript;      //去除收藏的Lua脚本
     static {
         //初始化脚本对象
         addScript = new DefaultRedisScript<>();     //获取脚本对象

@@ -6,7 +6,7 @@ create table Social_Follow(
     id bigint primary key auto_increment comment '纯主键id',
     user_id bigint not null comment '用户id',
     liker_id bigint not null comment '被关注方的用户id',
-    is_like int not null comment '收藏状态',
+    is_follow int not null comment '收藏状态',
     unique key uk_liker_user (user_id,liker_id),
     index idx_user (user_id),
     index idx_liker (liker_id)
