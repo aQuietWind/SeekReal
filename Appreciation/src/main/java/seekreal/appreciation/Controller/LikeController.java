@@ -107,6 +107,16 @@ public class LikeController {
     //获取某个人的点赞文章列表
     @GetMapping("/writing/list")
     public Result getLikeWritingList(String token,Long userId,int start,int number){
+        try {
+            if (userId == null) {
+                return Result.success(likeService.getLikeWritingList(JWT.jwtCheckToLong(token),start
+                ,number,true));
+            }else {
+                return Result.success(likeService.getLikeWritingList(userId,start,number,false));
+            }
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
     }
 
 

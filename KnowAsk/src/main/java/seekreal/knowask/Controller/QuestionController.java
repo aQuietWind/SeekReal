@@ -106,7 +106,7 @@ public class QuestionController {
 
     //通过多个questionId获取es中的简单数据
     @GetMapping("/list")
-    public Result getQuestionByQuestionIdList(List<Long> questionIdList){
+    public Result getQuestionByQuestionIdList(@RequestParam("questionIdList") List<Long> questionIdList){
         try{
             return Result.success(questionService.getQuestionByQuestionIdList(questionIdList));
         }

@@ -15,6 +15,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
 import seekreal.knowask.Util.EsPagingResult;
@@ -383,9 +384,9 @@ public class WritingServiceImpl implements WritingService {
 
     //获取多个es简单文章通过文章id集合
     @Override
-    public List<ESWriting> getWritingByWritingIdList(List<Long> writingIdList){
+    public List<ESWriting> getWritingByWritingIdList( List<Long> writingIdList){
         //判断大小的合理性
-        if (writingIdList.size()>20||writingIdList.size()<10){
+        if (writingIdList.size()>20){
                 logger.warn("可疑用户以number：{}请求获取文章通过文章id集合",writingIdList.size());
                 throw new RuntimeException("请勿随意更改请求参数！！！");
         }

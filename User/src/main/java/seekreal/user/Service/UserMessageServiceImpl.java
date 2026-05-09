@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.KnowAsk.ESQuestion;
 import pojo.User.ESUser;
@@ -274,8 +275,6 @@ public class UserMessageServiceImpl implements UserMessageService {
         LocalDateTime date=LocalDateTime.now().plusDays(7);
         stringRedisTemplate.opsForValue().set(RedisEnum.userRemoveList(phoneNumber),
                 date.toString(),7,TimeUnit.DAYS);
-        //删除时间存储
-        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("user",userId));
         //删除用户于ES
         try {
             esClient.delete(d -> d
@@ -294,11 +293,11 @@ public class UserMessageServiceImpl implements UserMessageService {
         }
     }
 
-    //获取多个es简单提问通过提问id集合
+    //获取多个es简单用户通过用户id集合
     @Override
-    public List<ESUser> getUserByUserIdList(List<Long> userIdList){
+    public List<ESUser> getUserByUserIdList(@RequestParam("userIdList") List<Long> userIdList){
         //判断大小的合理性
-        if (userIdList.size()>20||userIdList.size()<10){
+        if (userIdList.size()>20){
             logger.warn("可疑用户以number：{}请求获取用户自es中通过用户id集合",userIdList.size());
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }

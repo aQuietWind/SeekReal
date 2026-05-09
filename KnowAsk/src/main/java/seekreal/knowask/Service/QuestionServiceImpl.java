@@ -316,7 +316,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<ESQuestion> getQuestionByQuestionIdList(List<Long> questionIdList){
         //判断大小的合理性
-        if (questionIdList.size()>20||questionIdList.size()<10){
+        if (questionIdList.size()>20){
             logger.warn("可疑用户以number：{}请求获取提问通过提问id集合",questionIdList.size());
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }

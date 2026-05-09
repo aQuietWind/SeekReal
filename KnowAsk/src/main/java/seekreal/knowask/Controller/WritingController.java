@@ -128,7 +128,7 @@ public class WritingController {
 
     //通过多个writingId获取es中的简单数据
     @GetMapping("/list")
-    public Result getWritingByWritingIdList(List<Long> writingIdList){
+    public Result getWritingByWritingIdList(@RequestParam("writingIdList") List<Long> writingIdList){
         try{
             return Result.success(writingService.getWritingByWritingIdList(writingIdList));
         }
