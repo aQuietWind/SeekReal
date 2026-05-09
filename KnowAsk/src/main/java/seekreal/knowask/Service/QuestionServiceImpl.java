@@ -100,9 +100,9 @@ public class QuestionServiceImpl implements QuestionService {
     //添加插图
     @Override
     public void updateQuestionImage(List<MultipartFile> files, long userId, long questionId) {
-        if (files == null || files.isEmpty() || files.size() > 6) {
+        if (files == null || files.isEmpty() || files.size() > 4) {
             logger.warn("用户{}在给提问{}添加插图时，传输了空或者过多的文件", userId, questionId);
-            throw new RuntimeException("不能为空或者超过6个文件传输");
+            throw new RuntimeException("不能为空或者超过4个文件传输");
         }
         ArrayList<String> nameList = new ArrayList<>();
         //for循环检查文件，并且获取其新的文件名字

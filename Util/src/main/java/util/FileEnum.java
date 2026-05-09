@@ -7,6 +7,6 @@ public class FileEnum {
     public static final String KnowAsk_Image_Path="/home/admin/Documents/KnowAsk/";
     //评论插图的保存路径
     public static final String Comment_Image_Path="/home/admin/Documents/Comment/";
-    // 限制文件大小 2MB
-    public static final long Size_Max = 4 * 1024 * 1024;
+    // 限制文件大小 3MB
+    public static final long Size_Max = 3 * 1024 * 1024;
 }
