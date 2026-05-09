@@ -83,7 +83,7 @@ public class QuestionController {
     @GetMapping("/own")
     public Result getOwnQuestion(String token, int number,Long sort){
         try{
-            return Result.success(questionService.getOwnQuestion(JWT.jwtCheckToLong(token)
+            return Result.success(questionService.getQuestion(JWT.jwtCheckToLong(token)
                     ,number,sort));
         }
         catch (Exception e) {
@@ -93,7 +93,27 @@ public class QuestionController {
 
 
 
+    //获取自己的提问
+    @GetMapping("/other")
+    public Result getOtherQuestion(long userId, int number,Long sort){
+        try{
+            return Result.success(questionService.getQuestion(userId,number,sort));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
+    //通过多个questionId获取es中的简单数据
+    @GetMapping("/list")
+    public Result getQuestionByQuestionIdList(List<Long> questionIdList){
+        try{
+            return Result.success(questionService.getQuestionByQuestionIdList(questionIdList));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
 
 

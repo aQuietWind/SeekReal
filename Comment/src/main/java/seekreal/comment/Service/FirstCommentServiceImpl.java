@@ -95,8 +95,6 @@ public class FirstCommentServiceImpl implements FirstCommentService {
             logger.warn("用户{}试图删除一级评论{}失败", firstCommentId, userId);
             throw new RuntimeException("删除失败！！！未找到！！！");
         }
-        //删除时间存储
-        stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("firstComment",firstCommentId));
         //写入MQ,然后同步文章的es与mysql的评论数
         rabbitTemplate.convertAndSend("writingAmountChangeExchange","comment"
                 ,new AmountMqDTO(writingId,"comment",-1)

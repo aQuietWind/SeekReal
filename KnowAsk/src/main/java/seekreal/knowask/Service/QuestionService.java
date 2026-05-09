@@ -15,7 +15,8 @@ public interface QuestionService {
     public void deleteQuestion(long questionId, long userId);
     public List<ESQuestion> getHotQuestion(int mode);
     public Question getQuestionById(long questionId);
-    public EsPagingResult<ESQuestion> getOwnQuestion(long userId, int number, Long sort);
+    public EsPagingResult<ESQuestion> getQuestion(long userId, int number, Long sort);
+    public List<ESQuestion> getQuestionByQuestionIdList(List<Long> questionIdList);
 }
 
 

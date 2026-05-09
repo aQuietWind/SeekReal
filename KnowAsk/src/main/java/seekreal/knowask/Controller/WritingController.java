@@ -66,7 +66,7 @@ public class WritingController {
         }
     }
 
-    //获取详细的文章内容
+    //获取详细的文章内容,包含权限的检测
     @GetMapping
     public Result getWriting(long writingId,String token){
         try{
@@ -81,7 +81,7 @@ public class WritingController {
     @GetMapping("/own")
     public Result getOwnWriting(String token, int number,Long sort){
         try{
-                return Result.success(writingService.getOwnWriting(JWT.jwtCheckToLong(token)
+                return Result.success(writingService.getWriting(JWT.jwtCheckToLong(token)
                         ,number,sort));
         }
         catch (Exception e) {
@@ -89,11 +89,48 @@ public class WritingController {
         }
     }
 
+    //获取仅自己可见的文章
+    @GetMapping("/ownSee")
+    public Result getOwnSeeWriting(String token, int start,int number){
+        try{
+            return Result.success(writingService.getOwnSeeWriting(JWT.jwtCheckToLong(token),start
+                    ,number));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
+    //获取别人的文章
+    @GetMapping("/other")
+    public Result getOtherWriting(long userId, int number,Long sort){
+        try{
+            return Result.success(writingService.getWriting(userId
+                    ,number,sort));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+
     //获取提问下的文章
     @GetMapping("/question")
     public Result getWritingByQuestionId(long questionId,int number,Long sort){
         try{
             return Result.success(writingService.getWritingByQuestionId(questionId,number,sort));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //通过多个writingId获取es中的简单数据
+    @GetMapping("/list")
+    public Result getWritingByWritingIdList(List<Long> writingIdList){
+        try{
+            return Result.success(writingService.getWritingByWritingIdList(writingIdList));
         }
         catch (Exception e) {
             return Result.error(e.getMessage());

@@ -104,6 +104,11 @@ public class LikeController {
         }
     }
 
+    //获取某个人的点赞文章列表
+    @GetMapping("/writing/list")
+    public Result getLikeWritingList(String token,Long userId,int start,int number){
+    }
+
 
 
 

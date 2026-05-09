@@ -1,6 +1,7 @@
 package seekreal.user.Service;
 
 import org.springframework.web.multipart.MultipartFile;
+import pojo.Common.Result;
 import pojo.User.ESUser;
 import pojo.User.User;
 
@@ -18,4 +19,5 @@ public interface UserMessageService {
     public void updateUserHeaderImage(MultipartFile file, long userId);
     public String getDeleteUserOPT(Long userId);
     public void deleteUser(Long userId,String opt);
+    public List<ESUser> getUserByUserIdList(List<Long> userIdList);
 }

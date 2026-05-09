@@ -131,6 +131,17 @@ public class UserMessageController {
             return Result.error(e.getMessage());
         }
     }
+
+    //获取从es中获取用户通过id集合
+    @GetMapping("/list")
+    public Result getUserByUserIdList(List<Long> userIdList) {
+            try{
+                return Result.success(userMessageService.getUserByUserIdList(userIdList));
+            }
+            catch (Exception e) {
+                return Result.error(e.getMessage());
+            }
+    }
 }
 
 

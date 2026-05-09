@@ -28,9 +28,11 @@ import seekreal.knowask.Util.MQUtil;
 import seekreal.knowask.Util.RedisEnum;
 import util.RedisCommonEnum;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -171,8 +173,6 @@ public class WritingServiceImpl implements WritingService {
             if(!writingMapper.deleteWriting(writingId,userId)){
                 throw new RuntimeException("删除失败！！！未找到该文章！！！");
             }else {
-                //删除时间存储
-                stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("writing",writingId));
                 //删除成功后将地址发送于mq，进行后台删除图片存储
                 rabbitTemplate.convertAndSend("imageExchange","writing"
                         , adderAndPower.getImageAdderList()
@@ -316,16 +316,16 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException("该文章不存在哦～._.");
         }
         if (writing.getMessagePower()==0 &&
-                (userId==null||writing.getWritingId()!=userId) ){
+                (userId==null|| !Objects.equals(writing.getUserId(), userId)) ){
             logger.warn("有人请求了无权的文章{}", writingId);
             throw new RuntimeException("该文章不存在哦～._.");
         }
         return writing;
     }
 
-    //获取自己的文章
+    //获取某一个个人的可见文章
     @Override
-    public EsPagingResult<ESWriting> getOwnWriting(long userId,int number,Long sort){
+    public EsPagingResult<ESWriting> getWriting(long userId,int number,Long sort){
         //判断number的合理性
         if (number>20||number<10){
             logger.warn("可疑用户{}以number：{}请求自身的文章",userId,number);
@@ -345,6 +345,18 @@ public class WritingServiceImpl implements WritingService {
         }
         return new EsPagingResult<>(response);
     }
+
+    //获取仅个人可见的文章
+    @Override
+    public List<Writing> getOwnSeeWriting(long userId,int start,int number){
+        //判断number的合理性
+        if (number>20||number<0){
+            logger.warn("可疑用户{}以number：{}请求自身的可见文章",userId,number);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        return writingMapper.getOwnSeeWriting(userId,start,number);
+    }
+
 
     //获取目标提问下的文章
     @Override
@@ -367,6 +379,43 @@ public class WritingServiceImpl implements WritingService {
             throw new RuntimeException("服务器繁忙，请稍后试试呗～");
         }
         return new EsPagingResult<>(response);
+    }
+
+    //获取多个es简单文章通过文章id集合
+    @Override
+    public List<ESWriting> getWritingByWritingIdList(List<Long> writingIdList){
+        //判断大小的合理性
+        if (writingIdList.size()>20||writingIdList.size()<10){
+                logger.warn("可疑用户以number：{}请求获取文章通过文章id集合",writingIdList.size());
+                throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //创建一个List存放查询需要的参数
+        List<FieldValue> idList=new ArrayList<>();
+        for (Long id:writingIdList){
+            idList.add(FieldValue.of(id));
+        }
+        SearchRequest request=new SearchRequest.Builder()
+                .index("writing")
+                .query(q -> q.terms(t -> t
+                        .field("writing_id")
+                        .terms(ts -> ts.value(idList ))    //同时匹配List内部的多个值
+                ))
+                .build();
+        //根据搜索请求的模板来发送请求
+        SearchResponse<ESWriting> response= null;
+        try {
+            response = esClient.search(request, ESWriting.class);
+        } catch (IOException e) {
+            logger.error("es在请求获取文章通过id集合时出现错误!!!");
+            throw new RuntimeException("服务器繁忙，稍候再试～");
+        }
+        //将结果封装进List
+        List<ESWriting> result=new ArrayList<>();
+        for (Hit<ESWriting> hit:response.hits().hits()) {
+            result.add(hit.source());
+        }
+        //返回结果
+        return result;
     }
 
 

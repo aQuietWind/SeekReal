@@ -16,9 +16,10 @@ public interface WritingService {
     public void deleteWriting(long writingId, long userId);
     public List<ESWriting> getHotWriting(int mode);
     public Writing getWritingById(long writingId,Long userId);
-    public EsPagingResult<ESWriting> getOwnWriting(long userId, int number, Long sort);
+    public EsPagingResult<ESWriting> getWriting(long userId, int number, Long sort);
     public EsPagingResult<ESWriting> getWritingByQuestionId(long questionId,int number, Long sort);
-
+    public List<Writing> getOwnSeeWriting(long userId,int start,int number);
+    public List<ESWriting> getWritingByWritingIdList(List<Long> writingIdList);
 
 
 }

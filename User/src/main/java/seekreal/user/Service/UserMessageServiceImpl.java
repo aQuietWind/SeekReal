@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pojo.KnowAsk.ESQuestion;
 import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.UserMessageMapper;
@@ -273,8 +274,6 @@ public class UserMessageServiceImpl implements UserMessageService {
         LocalDateTime date=LocalDateTime.now().plusDays(7);
         stringRedisTemplate.opsForValue().set(RedisEnum.userRemoveList(phoneNumber),
                 date.toString(),7,TimeUnit.DAYS);
-        //删除缓存
-        stringRedisTemplate.delete(RedisEnum.userCaffeine(userId));
         //删除时间存储
         stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("user",userId));
         //删除用户于ES
@@ -293,6 +292,43 @@ public class UserMessageServiceImpl implements UserMessageService {
             rabbitTemplate.convertAndSend("imageExchange","user",headerImageAdder,
                     MQUtil.getCorrelation("userImage",logger));
         }
+    }
+
+    //获取多个es简单提问通过提问id集合
+    @Override
+    public List<ESUser> getUserByUserIdList(List<Long> userIdList){
+        //判断大小的合理性
+        if (userIdList.size()>20||userIdList.size()<10){
+            logger.warn("可疑用户以number：{}请求获取用户自es中通过用户id集合",userIdList.size());
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //创建一个List存放查询需要的参数
+        List<FieldValue> idList=new ArrayList<>();
+        for (Long id:userIdList){
+            idList.add(FieldValue.of(id));
+        }
+        SearchRequest request=new SearchRequest.Builder()
+                .index("user")
+                .query(q -> q.terms(t -> t
+                        .field("user_id")
+                        .terms(ts -> ts.value(idList ))    //同时匹配List内部的多个值
+                ))
+                .build();
+        //根据搜索请求的模板来发送请求
+        SearchResponse<ESUser> response= null;
+        try {
+            response = esClient.search(request, ESUser.class);
+        } catch (IOException e) {
+            logger.error("es在请求获取用户通过id集合时出现错误!!!");
+            throw new RuntimeException("服务器繁忙，稍候再试～");
+        }
+        //将结果封装进List
+        List<ESUser> result=new ArrayList<>();
+        for (Hit<ESUser> hit:response.hits().hits()) {
+            result.add(hit.source());
+        }
+        //返回结果
+        return result;
     }
 
 }

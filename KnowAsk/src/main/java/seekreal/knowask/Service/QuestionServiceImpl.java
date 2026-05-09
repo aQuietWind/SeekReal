@@ -1,6 +1,7 @@
 package seekreal.knowask.Service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.ESQuestion;
+import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.Question;
 import seekreal.knowask.Mapper.QuestionMapper;
 import seekreal.knowask.Util.*;
 import util.RedisCommonEnum;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,8 +146,6 @@ public class QuestionServiceImpl implements QuestionService {
             if (!questionMapper.deleteQuestion(questionId, userId)) {
                 throw new RuntimeException("删除失败！！！未找到该提问！！！");
             } else {
-                //删除时间存储
-                stringRedisTemplate.delete(RedisCommonEnum.getTimeKey("question",questionId));
                 //删除成功后将地址发送于mq，进行后台删除图片存储
                 rabbitTemplate.convertAndSend("imageExchange", "question"
                         , adder
@@ -288,9 +289,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
-    //获取自己的提问
+    //获取多个个人的提问
     @Override
-    public EsPagingResult<ESQuestion> getOwnQuestion(long userId, int number, Long sort){
+    public EsPagingResult<ESQuestion> getQuestion(long userId, int number, Long sort){
         //判断number的合理性
         if (number>20||number<10){
             logger.warn("可疑用户{}以number：{}请求自身的提问",userId,number);
@@ -309,6 +310,43 @@ public class QuestionServiceImpl implements QuestionService {
             throw new RuntimeException("服务器繁忙，请稍后试试呗～");
         }
         return new EsPagingResult<>(response);
+    }
+
+    //获取多个es简单提问通过提问id集合
+    @Override
+    public List<ESQuestion> getQuestionByQuestionIdList(List<Long> questionIdList){
+        //判断大小的合理性
+        if (questionIdList.size()>20||questionIdList.size()<10){
+            logger.warn("可疑用户以number：{}请求获取提问通过提问id集合",questionIdList.size());
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //创建一个List存放查询需要的参数
+        List<FieldValue> idList=new ArrayList<>();
+        for (Long id:questionIdList){
+            idList.add(FieldValue.of(id));
+        }
+        SearchRequest request=new SearchRequest.Builder()
+                .index("question")
+                .query(q -> q.terms(t -> t
+                        .field("question_id")
+                        .terms(ts -> ts.value(idList ))    //同时匹配List内部的多个值
+                ))
+                .build();
+        //根据搜索请求的模板来发送请求
+        SearchResponse<ESQuestion> response= null;
+        try {
+            response = esClient.search(request, ESQuestion.class);
+        } catch (IOException e) {
+            logger.error("es在请求获取提问通过id集合时出现错误!!!");
+            throw new RuntimeException("服务器繁忙，稍候再试～");
+        }
+        //将结果封装进List
+        List<ESQuestion> result=new ArrayList<>();
+        for (Hit<ESQuestion> hit:response.hits().hits()) {
+            result.add(hit.source());
+        }
+        //返回结果
+        return result;
     }
 
 
