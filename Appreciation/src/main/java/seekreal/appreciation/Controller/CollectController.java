@@ -61,4 +61,36 @@ public class CollectController {
             return Result.error(e.getMessage());
         }
     }
+
+    //获取某个人的收藏文章列表
+    @GetMapping("/writing/list")
+    public Result getLikeWritingList(String token,Long userId,int start,int number){
+        try {
+            if (userId == null) {
+                return Result.success(collectService.getCollectWritingList(JWT.jwtCheckToLong(token),start
+                        ,number,true));
+            }else {
+                return Result.success(collectService.getCollectWritingList(userId,start,number,false));
+            }
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //获取某个人的收藏提问列表
+    @GetMapping("/question/list")
+    public Result getLikeQuestionList(String token,Long userId,int start,int number){
+        try {
+            if (userId == null) {
+                return Result.success(collectService.getCollectQuestionList(JWT.jwtCheckToLong(token),start
+                        ,number,true));
+            }else {
+                return Result.success(collectService.getCollectQuestionList(userId,start,number,false));
+            }
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+
 }
