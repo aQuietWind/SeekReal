@@ -1,5 +1,6 @@
 package seekreal.appreciation.Service;
 
+import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.ESWriting;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface LikeService {
             ,String typeRedisKeyName);
     public List<Long> getLike(long userId,String date,String typeRedisKeyName);
     public List<ESWriting> getLikeWritingList(long userId,int start,int number,boolean isOwn);
+    public List<ESQuestion> getLikeQuestionList(long userId, int start, int number, boolean isOwn);
 }

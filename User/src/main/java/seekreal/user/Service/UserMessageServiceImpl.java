@@ -330,6 +330,12 @@ public class UserMessageServiceImpl implements UserMessageService {
         return result;
     }
 
+    //获取用户信息展示权限
+    @Override
+    public Integer getUserPower(long userId){
+        return userMessageMapper.getUserPower(userId);
+    }
+
 }
 
 

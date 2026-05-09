@@ -53,9 +53,14 @@
     <select id="getUserHeaderImageAdder" resultType="java.lang.String">
         select header_image_adder from User where user_id=#{userId}
     </select>
+<!--    注销用户-->
     <delete id="deleteUser">
         delete from User where user_id=#{userId}
     </delete>
+<!--    获取用户的信息展示权限-->
+    <select id="getUserPower" resultType="java.lang.Integer">
+        select message_power from User where user_id=#{userId}
+    </select>
 </mapper>
 
 

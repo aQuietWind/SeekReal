@@ -9,17 +9,16 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import pojo.Appreciation.ChangeDTO;
 import pojo.Common.Result;
+import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.ESWriting;
 import pojo.User.User;
 import seekreal.appreciation.Feign.KnowAskClient;
 import seekreal.appreciation.Feign.UserClient;
 import seekreal.appreciation.Mapper.LikeMapper;
 import seekreal.appreciation.Util.MQUtil;
-import seekreal.appreciation.Util.RedisEnum;
 import util.Collection;
 import util.RedisCommonEnum;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -127,14 +126,14 @@ public class LikeServiceImpl implements LikeService {
         //如果不是查自己的信息，则进行权限检验
         if (!isOwn){
             //通过feign获取目标用户的信息
-            User user=(User) userClient.getDetailedMessage(userId,null).getData();
+            Integer power=(Integer) userClient.getUserPower(userId).getData();
             //检验用户是否存在
-            if (user==null){
+            if (power==null){
                 logger.warn("有人试图查询不存在的用户{}的点赞文章列表",userId);
                 throw new RuntimeException("该用户不存在哦！！！");
             }
             //检验是否权限符合
-            else if (user.getMessagePower()==0){
+            else if (power==0){
                 logger.warn("有人试图查询高权限的用户{}的点赞文章列表",userId);
                 throw new RuntimeException("无权查询该用户的点赞列表哦！！！");
             }
@@ -146,7 +145,9 @@ public class LikeServiceImpl implements LikeService {
         }
         //获取点赞列表的一定数量id
         List<Long> writingIdList=likeMapper.getLikeWritingIdList(userId,start,start+number);
+        //通过feign发送请求获取数据
         Result result=knowAskClient.getWritingByWritingIdList(writingIdList);
+        //验证数据的合理性
         if (result.getCode()==500){
             throw new RuntimeException(result.getMessage());
         }
@@ -154,7 +155,43 @@ public class LikeServiceImpl implements LikeService {
             return null;
         }
         return (List<ESWriting>) result.getData();
+    }
 
+    //获取点赞的提问列表
+    @Override
+    public List<ESQuestion> getLikeQuestionList(long userId, int start, int number, boolean isOwn){
+        //如果不是查自己的信息，则进行权限检验
+        if (!isOwn){
+            //通过feign获取目标用户的信息
+            Integer power= (Integer) userClient.getUserPower(userId).getData();
+            //检验用户是否存在
+            if (power==null){
+                logger.warn("有人试图查询不存在的用户{}的点赞提问列表",userId);
+                throw new RuntimeException("该用户不存在哦！！！");
+            }
+            //检验是否权限符合
+            else if (power==0){
+                logger.warn("有人试图查询高权限的用户{}的点赞提问列表",userId);
+                throw new RuntimeException("无权查询该用户的点赞列表哦！！！");
+            }
+        }
+        //检查需求量的合理性
+        if (number>20||number<10){
+            logger.warn("可疑用户以number：{}请求获取点赞列表",number);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //获取点赞列表的一定数量id
+        List<Long> questionIdList=likeMapper.getLikeQuestionIdList(userId,start,start+number);
+        //通过feign发送请求获取数据
+        Result result=knowAskClient.getQuestionByQuestionIdList(questionIdList);
+        //验证数据的合理性
+        if (result.getCode()==500){
+            throw new RuntimeException(result.getMessage());
+        }
+        if (result.getData()==null){
+            return null;
+        }
+        return (List<ESQuestion>) result.getData();
     }
 
 

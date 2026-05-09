@@ -19,6 +19,7 @@ public interface UserMessageMapper {
     public void updateUserHeaderImage(String headerImageAdder, long userId);
     public String getUserHeaderImageAdder(long userId);
     public void deleteUser( long userId);
+    public Integer getUserPower(long userId);
 
 
 }

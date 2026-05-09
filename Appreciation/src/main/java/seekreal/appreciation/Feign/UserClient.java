@@ -9,8 +9,38 @@ import java.util.List;
 
 @FeignClient("User")
 public interface UserClient {
-    @GetMapping("/user")
-    public Result getDetailedMessage(@RequestParam("userId") Long userId,@RequestParam("token") String token);
+    @GetMapping("/user/power")
+    public Result getUserPower(@RequestParam("userId") long userId);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @GetMapping("/user/list")
     public Result getUserByUserIdList(@RequestParam("userIdList") List<Long> userIdList);
 }

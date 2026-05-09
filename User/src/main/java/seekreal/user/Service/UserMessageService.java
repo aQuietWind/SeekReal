@@ -20,4 +20,5 @@ public interface UserMessageService {
     public String getDeleteUserOPT(Long userId);
     public void deleteUser(Long userId,String opt);
     public List<ESUser> getUserByUserIdList(List<Long> userIdList);
+    public Integer getUserPower(long userId);
 }

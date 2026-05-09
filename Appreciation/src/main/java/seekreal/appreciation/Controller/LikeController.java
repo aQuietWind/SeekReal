@@ -119,6 +119,21 @@ public class LikeController {
         }
     }
 
+    //获取某个人的点赞提问列表
+    @GetMapping("/question/list")
+    public Result getLikeQuestionList(String token,Long userId,int start,int number){
+        try {
+            if (userId == null) {
+                return Result.success(likeService.getLikeQuestionList(JWT.jwtCheckToLong(token),start
+                        ,number,true));
+            }else {
+                return Result.success(likeService.getLikeQuestionList(userId,start,number,false));
+            }
+        }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
 
 
 

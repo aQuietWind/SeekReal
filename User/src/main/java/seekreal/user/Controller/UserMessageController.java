@@ -25,9 +25,7 @@ public class UserMessageController {
                 return Result.success(userMessageService.getDetailedMessage(JWT.jwtCheckToLong(token)));
             }else {
                 //获取别人的信息
-                User user=userMessageService.getDetailedMessage(userId);
-                if (user.getMessagePower()==0){return Result.success(403);}       //代表无权获取详细消息
-                return Result.success(user);
+                return Result.success(userMessageService.getDetailedMessage(userId));
             }
         }
         catch (Exception e){
@@ -135,12 +133,23 @@ public class UserMessageController {
     //获取从es中获取用户通过id集合
     @GetMapping("/list")
     public Result getUserByUserIdList(List<Long> userIdList) {
-            try{
-                return Result.success(userMessageService.getUserByUserIdList(userIdList));
-            }
-            catch (Exception e) {
-                return Result.error(e.getMessage());
-            }
+        try{
+            return Result.success(userMessageService.getUserByUserIdList(userIdList));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    //获取用户信息展示权限
+    @GetMapping("/power")
+    public Result getUserPower(long userId) {
+        try{
+            return Result.success(userMessageService.getUserPower(userId));
+        }
+        catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
     }
 }
 

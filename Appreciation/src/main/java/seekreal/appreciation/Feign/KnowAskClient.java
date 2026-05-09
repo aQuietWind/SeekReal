@@ -11,4 +11,6 @@ import java.util.List;
 public interface KnowAskClient {
     @GetMapping("writing/list")
     public Result getWritingByWritingIdList(@RequestParam("writingIdList") List<Long> writingIdList);
+    @GetMapping("question/list")
+    public Result getQuestionByQuestionIdList(@RequestParam("questionIdList") List<Long> questionIdList);
 }
