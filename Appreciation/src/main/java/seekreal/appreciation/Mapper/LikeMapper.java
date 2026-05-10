@@ -6,6 +6,6 @@ import java.util.List;
 
 @Mapper
 public interface LikeMapper {
-    public List<Long> getLikeWritingIdList(long userId,int start,int end);
-    public List<Long> getLikeQuestionIdList(long userId,int start,int end);
+    public List<Long> getLikeWritingIdList(long userId,int start,int number);
+    public List<Long> getLikeQuestionIdList(long userId,int start,int number);
 }

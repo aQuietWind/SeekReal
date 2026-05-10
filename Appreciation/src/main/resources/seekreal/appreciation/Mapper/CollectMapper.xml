@@ -5,10 +5,10 @@
 <mapper namespace="seekreal.appreciation.Mapper.CollectMapper">
     <!--    查询用户收藏列表的文章id-->
     <select id="getCollectWritingIdList" resultType="java.lang.Long">
-        select writing_id from Collect_Writing where user_id=#{userId} and is_collect=1 limit #{start},#{end}
+        select writing_id from Collect_Writing where user_id=#{userId} and is_collect=1 limit #{start},#{number}
     </select>
     <!--    查询用户收藏列表的提问id-->
     <select id="getCollectQuestionIdList" resultType="java.lang.Long">
-        select question_id from Collect_Question where user_id=#{userId} and is_collect=1 limit #{start},#{end}
+        select question_id from Collect_Question where user_id=#{userId} and is_collect=1 limit #{start},#{number}
     </select>
 </mapper>

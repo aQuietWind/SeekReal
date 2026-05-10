@@ -118,7 +118,7 @@ public class CollectServiceImpl implements CollectService {
         }
     }
 
-    //获取点赞的文章列表
+    //获取收藏的文章列表
     @Override
     public List<ESWriting> getCollectWritingList(long userId, int start, int number, boolean isOwn){
         //如果不是查自己的信息，则进行权限检验
@@ -127,22 +127,22 @@ public class CollectServiceImpl implements CollectService {
             Integer power=(Integer) userClient.getUserPower(userId).getData();
             //检验用户是否存在
             if (power==null){
-                logger.warn("有人试图查询不存在的用户{}的点赞文章列表",userId);
+                logger.warn("有人试图查询不存在的用户{}的收藏文章列表",userId);
                 throw new RuntimeException("该用户不存在哦！！！");
             }
             //检验是否权限符合
             else if (power==0){
-                logger.warn("有人试图查询高权限的用户{}的点赞文章列表",userId);
-                throw new RuntimeException("无权查询该用户的点赞列表哦！！！");
+                logger.warn("有人试图查询高权限的用户{}的收藏文章列表",userId);
+                throw new RuntimeException("无权查询该用户的收藏列表哦！！！");
             }
         }
         //检查需求量的合理性
         if (number>20||number<10){
-            logger.warn("可疑用户以number：{}请求获取点赞列表",number);
+            logger.warn("可疑用户以number：{}请求获取收藏列表",number);
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
-        //获取点赞列表的一定数量id
-        List<Long> writingIdList=collectMapper.getCollectWritingIdList(userId,start,start+number);
+        //获取收藏列表的一定数量id
+        List<Long> writingIdList=collectMapper.getCollectWritingIdList(userId,start,number);
         //通过feign发送请求获取数据
         Result result=knowAskClient.getWritingByWritingIdList(writingIdList);
         //验证数据的合理性
@@ -155,7 +155,7 @@ public class CollectServiceImpl implements CollectService {
         return (List<ESWriting>) result.getData();
     }
 
-    //获取点赞的提问列表
+    //获取收藏的提问列表
     @Override
     public List<ESQuestion> getCollectQuestionList(long userId, int start, int number, boolean isOwn){
         //如果不是查自己的信息，则进行权限检验
@@ -164,22 +164,22 @@ public class CollectServiceImpl implements CollectService {
             Integer power= (Integer) userClient.getUserPower(userId).getData();
             //检验用户是否存在
             if (power==null){
-                logger.warn("有人试图查询不存在的用户{}的点赞提问列表",userId);
+                logger.warn("有人试图查询不存在的用户{}的收藏提问列表",userId);
                 throw new RuntimeException("该用户不存在哦！！！");
             }
             //检验是否权限符合
             else if (power==0){
-                logger.warn("有人试图查询高权限的用户{}的点赞提问列表",userId);
-                throw new RuntimeException("无权查询该用户的点赞列表哦！！！");
+                logger.warn("有人试图查询高权限的用户{}的收藏提问列表",userId);
+                throw new RuntimeException("无权查询该用户的收藏列表哦！！！");
             }
         }
         //检查需求量的合理性
         if (number>20||number<10){
-            logger.warn("可疑用户以number：{}请求获取点赞列表",number);
+            logger.warn("可疑用户以number：{}请求获取收藏列表",number);
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
-        //获取点赞列表的一定数量id
-        List<Long> questionIdList=collectMapper.getCollectQuestionIdList(userId,start,start+number);
+        //获取收藏列表的一定数量id
+        List<Long> questionIdList=collectMapper.getCollectQuestionIdList(userId,start,number);
         //通过feign发送请求获取数据
         Result result=knowAskClient.getQuestionByQuestionIdList(questionIdList);
         //验证数据的合理性

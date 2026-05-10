@@ -144,7 +144,7 @@ public class LikeServiceImpl implements LikeService {
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
         //获取点赞列表的一定数量id
-        List<Long> writingIdList=likeMapper.getLikeWritingIdList(userId,start,start+number);
+        List<Long> writingIdList=likeMapper.getLikeWritingIdList(userId,start,number);
         //通过feign发送请求获取数据
         Result result=knowAskClient.getWritingByWritingIdList(writingIdList);
         //验证数据的合理性
@@ -181,7 +181,7 @@ public class LikeServiceImpl implements LikeService {
             throw new RuntimeException("请勿随意更改请求参数！！！");
         }
         //获取点赞列表的一定数量id
-        List<Long> questionIdList=likeMapper.getLikeQuestionIdList(userId,start,start+number);
+        List<Long> questionIdList=likeMapper.getLikeQuestionIdList(userId,start,number);
         //通过feign发送请求获取数据
         Result result=knowAskClient.getQuestionByQuestionIdList(questionIdList);
         //验证数据的合理性

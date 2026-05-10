@@ -8,7 +8,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import pojo.Appreciation.ChangeDTO;
+import pojo.Common.Result;
+import pojo.KnowAsk.ESQuestion;
+import pojo.User.ESUser;
 import seekreal.social.Feign.UserClient;
+import seekreal.social.Mapper.FollowMapper;
 import seekreal.social.Util.MQUtil;
 import seekreal.social.Util.RedisEnum;
 import util.Collection;
@@ -27,6 +31,8 @@ public class FollowServiceImpl implements FollowService{
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private UserClient userClient;
+    @Autowired
+    private FollowMapper followMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(FollowServiceImpl.class);
 
@@ -111,4 +117,105 @@ public class FollowServiceImpl implements FollowService{
             return null;
         }
     }
+
+
+    //获取用户的关注列表
+    @Override
+    public List<ESUser> getLikerUserList(long userId, int start, int number, boolean isOwn){
+        //如果不是查自己的信息，则进行权限检验
+        if (!isOwn){
+            //通过feign获取目标用户的信息
+            Integer power= (Integer) userClient.getUserPower(userId).getData();
+            //检验用户是否存在
+            if (power==null){
+                logger.warn("有人试图查询不存在的用户{}的关注列表",userId);
+                throw new RuntimeException("该用户不存在哦！！！");
+            }
+            //检验是否权限符合
+            else if (power==0){
+                logger.warn("有人试图查询高权限的用户{}的关注列表",userId);
+                throw new RuntimeException("无权查询该用户的关注列表哦！！！");
+            }
+        }
+        //检查需求量的合理性
+        if (number>20||number<10){
+            logger.warn("可疑用户以number：{}请求获取关注列表",number);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //获取关注列表的一定数量id
+        List<Long> questionIdList=followMapper.getLikerIdList(userId,start,number);
+        //通过feign发送请求获取数据
+        Result result=userClient.getUserByUserIdList(questionIdList);
+        //验证数据的合理性
+        if (result.getCode()==500){
+            throw new RuntimeException(result.getMessage());
+        }
+        if (result.getData()==null){
+            return null;
+        }
+        return (List<ESUser>) result.getData();
+    }
+
+
+    //获取用户的粉丝列表
+    @Override
+    public List<ESUser> getFollowerUserList(long userId, int start, int number, boolean isOwn){
+        //如果不是查自己的信息，则进行权限检验
+        if (!isOwn){
+            //通过feign获取目标用户的信息
+            Integer power= (Integer) userClient.getUserPower(userId).getData();
+            //检验用户是否存在
+            if (power==null){
+                logger.warn("有人试图查询不存在的用户{}的粉丝列表",userId);
+                throw new RuntimeException("该用户不存在哦！！！");
+            }
+            //检验是否权限符合
+            else if (power==0){
+                logger.warn("有人试图查询高权限的用户{}的粉丝列表",userId);
+                throw new RuntimeException("无权查询该用户的粉丝列表哦！！！");
+            }
+        }
+        //检查需求量的合理性
+        if (number>20||number<10){
+            logger.warn("可疑用户以number：{}请求获取粉丝列表",number);
+            throw new RuntimeException("请勿随意更改请求参数！！！");
+        }
+        //获取粉丝列表的一定数量id
+        List<Long> questionIdList=followMapper.getFollowerIdList(userId,start,number);
+        //通过feign发送请求获取数据
+        Result result=userClient.getUserByUserIdList(questionIdList);
+        //验证数据的合理性
+        if (result.getCode()==500){
+            throw new RuntimeException(result.getMessage());
+        }
+        if (result.getData()==null){
+            return null;
+        }
+        return (List<ESUser>) result.getData();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

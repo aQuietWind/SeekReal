@@ -132,7 +132,7 @@ public class UserMessageController {
 
     //获取从es中获取用户通过id集合
     @GetMapping("/list")
-    public Result getUserByUserIdList(List<Long> userIdList) {
+    public Result getUserByUserIdList(@RequestParam("userIdList") List<Long> userIdList) {
         try{
             return Result.success(userMessageService.getUserByUserIdList(userIdList));
         }

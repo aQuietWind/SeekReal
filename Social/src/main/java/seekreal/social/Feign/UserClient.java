@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserClient {
     @GetMapping("/user/list")
     public Result getUserByUserIdList(@RequestParam("userIdList") List<Long> userIdList);
+    @GetMapping("/user/power")
+    public Result getUserPower(@RequestParam("userId") long userId);
 }
