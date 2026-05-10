@@ -22,9 +22,9 @@ spring:
 #            - StripPrefix=1   #去除掉第一段路径
           routes:
             - id: user   #路由标识,必须唯一
-              uri: lb://user   #路由地址，lb代表负载均衡，user代表模块服务名。该项可以直接用ip地址代替
+              uri: lb://User   #路由地址，lb代表负载均衡，user代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
-                - Path=/user/**    #路径断言，代表将路径为user的都转发
+                - Path=/User/**    #路径断言，代表将路径为user的都转发
             - id: KnowAsk   #路由标识,必须唯一
               uri: lb://KnowAsk   #路由地址，lb代表负载均衡，KnowAsk代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
