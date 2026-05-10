@@ -108,14 +108,14 @@ public class LikeServiceImpl implements LikeService {
     //获取点赞列表
     public List<Long> getLike(long userId, String date, String redisEnumName){
         Set<String> set=stringRedisTemplate.opsForSet().members(redisEnumName+userId+":"+date);
+        List<Long> result=new ArrayList<>();
         if (set != null) {
-            List<Long> result=new ArrayList<>();
             set.forEach(x->{
                 result.add(Long.parseLong(x));
             });
             return result;
         }else {
-            return null;
+            return result;
         }
     }
 

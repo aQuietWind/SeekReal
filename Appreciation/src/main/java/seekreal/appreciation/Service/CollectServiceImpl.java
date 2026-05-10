@@ -107,14 +107,14 @@ public class CollectServiceImpl implements CollectService {
     //获取收藏列表
     public List<Long> getCollect(long userId, String date, String redisEnumName){
         Set<String> set=stringRedisTemplate.opsForSet().members(redisEnumName+userId+":"+date);
+        List<Long> result=new ArrayList<>();
         if (set!=null) {
-            List<Long> result=new ArrayList<>();
             set.forEach(x->{
                 result.add(Long.parseLong(x));
             });
             return result;
         }else {
-            return null;
+            return result;
         }
     }
 
