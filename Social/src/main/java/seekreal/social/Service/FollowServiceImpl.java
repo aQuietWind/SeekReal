@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
-import pojo.Appreciation.ChangeDTO;
+import pojo.Common.ChangeDTO;
 import pojo.Common.Result;
-import pojo.KnowAsk.ESQuestion;
 import pojo.User.ESUser;
 import seekreal.social.Feign.UserClient;
 import seekreal.social.Mapper.FollowMapper;
 import seekreal.social.Util.MQUtil;
 import seekreal.social.Util.RedisEnum;
 import util.Collection;
-import util.JWT;
 import util.RedisCommonEnum;
 
 import java.util.ArrayList;
@@ -65,11 +63,9 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public void followChange(long userId, long ownUserId,int isFollow){
         Long result=null;
-        System.out.println(1);
         try {
             //如果是1就关注
             if(isFollow==1){
-                System.out.println(2);
                 //添加关注于Redis
                 result=(Long) stringRedisTemplate.execute(addScript,         //执行脚本,并且获得result结果
                         Collection.toCollect(      //KEYS参数
@@ -79,7 +75,6 @@ public class FollowServiceImpl implements FollowService{
                 //是-1就代表取消点赞
             }else if(isFollow==-1){
                 //去除关注于Redis
-                System.out.println(-1);
                 result=(Long) stringRedisTemplate.execute(removeScript,         //执行脚本,并且获得result结果
                         Collection.toCollect(      //KEYS参数
                                 RedisCommonEnum.getTimeKey("user",userId)     //redis用来查时间的
@@ -91,7 +86,6 @@ public class FollowServiceImpl implements FollowService{
             logger.warn("用户{}试图关注不存在的{}",ownUserId,userId);
             throw new RuntimeException("关注失败！！！该用户不存在!!!");
         }
-        System.out.println(result);
         //结果为1代表这是一次有效更新，不再是重复操作
         if (result!=null&&result == 1){
             //发送消息至MQ，同步该点赞于MySQL

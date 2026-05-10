@@ -6,7 +6,7 @@
 
     <groupId>SeekReal</groupId>
     <artifactId>SeekReal</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${self.version}</version>
     <packaging>pom</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -35,6 +35,7 @@
         <springCloud.version>2025.0.2</springCloud.version>
         <springCloudAlibaba.version>2023.0.1.0</springCloudAlibaba.version>
         <es.version>9.3.2</es.version>
+        <jvmCaffeine.version>3.1.8</jvmCaffeine.version>
         <self.version>1.0-SNAPSHOT</self.version>
     </properties>
 <!--    依赖版本管理-->
@@ -72,6 +73,11 @@
                 <groupId>org.elasticsearch.client</groupId>
                 <artifactId>elasticsearch-rest-client</artifactId>
                 <version>${es.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${jvmCaffeine.version}</version>
             </dependency>
             <dependency>
                 <groupId>SeekReal</groupId>

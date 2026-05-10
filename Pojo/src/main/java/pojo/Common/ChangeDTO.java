@@ -1,4 +1,4 @@
-package pojo.Appreciation;
+package pojo.Common;
 
 public class ChangeDTO {
     private long userId;

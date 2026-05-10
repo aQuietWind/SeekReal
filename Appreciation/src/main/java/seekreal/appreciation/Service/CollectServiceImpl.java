@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
-import pojo.Appreciation.ChangeDTO;
+import pojo.Common.ChangeDTO;
 import pojo.Common.Result;
 import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.ESWriting;
