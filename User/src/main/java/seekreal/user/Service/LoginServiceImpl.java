@@ -36,7 +36,7 @@ public class LoginServiceImpl implements LoginService {
     public String registerOPT(String phoneNumber){
         //验证手机号格式
         if (!phoneNumber.matches("\\d{11}")){
-            logger.warn("有错误的手机号格式试图获取注册验证码!!!");
+            logger.warn("有错误的手机号格式{}试图获取注册验证码!!!",phoneNumber);
             throw new RuntimeException("手机号格式不对!!!");
         }
         //生成验证码

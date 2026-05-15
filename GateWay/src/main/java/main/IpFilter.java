@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Order(1)       //过滤器的顺序，越小就越先执行
-@Component      //使其被扫描到
+//@Component      //使其被扫描到
 public class IpFilter implements GlobalFilter, ApplicationContextAware {      //实现接口
     //token模拟处理拦截
     @Autowired

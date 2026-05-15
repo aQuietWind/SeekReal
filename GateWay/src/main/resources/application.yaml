@@ -2,7 +2,7 @@ server:
   port: 10010     #网关端口
 spring:
   application:
-    name: gateway
+    name: Gateway
   cloud:
     nacos:
       server-addr: localhost:8848   #nacos地址
@@ -19,9 +19,9 @@ spring:
           default-filters:
             # 给所有响应添加统一请求头标识
             - AddRequestHeader=origin,gateway
-#            - StripPrefix=1   #去除掉第一段路径
+            - StripPrefix=1   #去除掉第一段路径
           routes:
-            - id: user   #路由标识,必须唯一
+            - id: User   #路由标识,必须唯一
               uri: lb://User   #路由地址，lb代表负载均衡，user代表模块服务名。该项可以直接用ip地址代替
               predicates:       #断言，判断是否转发给该路由
                 - Path=/User/**    #路径断言，代表将路径为user的都转发

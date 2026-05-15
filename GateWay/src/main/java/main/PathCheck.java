@@ -12,6 +12,6 @@ public class PathCheck {
                 return true;
             }
         }
-        return false;
+        return true;
     }
 }
