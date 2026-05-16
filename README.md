@@ -1,42 +1,46 @@
-一个较为简单的java微服务型后端项目，用于学习以及技术提升。
-# 🚀 UserApplication - Java 微服务后端项目
+# 🚀 SeekReal - Java 微服务后端项目
 
-一个用于学习与技术提升的轻量级 Java 微服务后端项目，涵盖主流微服务技术栈，目前处于前后端联调阶段。
+一个用于学习与技术提升的轻量级 Java 微服务后端项目，涵盖主流微服务技术栈。
+
+本篇基本涵盖了大部分的实用技术栈，并不仅仅只是停留于使用层面，更多的还有对中间件和数据库性能与一致性之间的考虑。
+
 
 ---
 
 ## 📚 技术栈
 
-| 技术 | 用途 |
-| :--- | :--- |
-| **Spring Boot** | 项目基础框架 |
-| **Spring Cloud Alibaba / Nacos** | 服务注册与配置中心 |
-| **MySQL** | 关系型数据库存储 |
-| **Redis** | 缓存与分布式锁 |
-| **Elasticsearch (ES)** | 全文检索与日志分析 |
-| **RabbitMQ** | 消息队列/异步解耦 |
-| **MyBatis** | ORM 数据持久化 |
-| **Feign** | 服务间远程调用 |
+| 技术                 |      版本      | 说明               | 必要性                                |
+|--------------------|:------------:|------------------|------------------------------------|
+| Spring Boot        |    3.3.0     | 容器 + MVC 框架      | 必须（你说呢）|
+| MyBatis            |    3.5.9     | ORM 框架           | 必须（你说呢） |                                     
+| Caffeine           |    3.1.0     | JVM本地缓存支持        | 少量使用|
+| Redis              |     7.0      | 分布式缓存支持          | 许多场景使用，且作用难以替换|
+| MySQL              |     8.0      | 数据库服务            | 必须（你说呢） |  
+| Elasticsearch      |    8.2.0     | 搜索引擎服务           |  必须|
+| RabbitMQ           |    3.10.2    | 消息中间件            | 几乎不可消除|                               
+| Sentinel           |    1.8.4     | 流量控制工具 | 可有可无，但系统有一定依赖性<small>（指的是配置文档的配置和Config类）</small> |
+| Springdoc-openapi  |    2.0.0     | Swagger 3 接口文档自动生成 | 可有可无，不需要了直接去除依赖就行                  |
+| Docker             |      -       | 快速容器部署工具         | 自己用来部署|
+
 
 ---
 
 ## ✨ 项目特点
 
-- ✅ 基于主流微服务架构，模块化拆分清晰
-- ✅ 集成 Nacos 实现服务发现与配置管理
-- ✅ 引入 Redis 缓存，提升系统响应性能
-- ✅ 使用 RabbitMQ 实现异步任务与解耦
-- ✅ 接入 Elasticsearch 实现高效全文检索
-- ✅ 已完成核心业务模块开发，支持基础联调
+- 有良好的可学习基底，每个方法每行代码都尽量做到有充足的注释进行解释，如果注释太少看不懂，我后续也会回来继续补充的
+- 有可行的工程化基础，对于redis的key名尽量使用一个专门的类来管理</small>（虽然不够全面推行）</small>
+- 除了必须的以外，可以确保几乎没有别的依赖了，大部分也都是自己实现的，
+- 有很多额外的扩展知识，实用但是从来没有学过的</small>（说实话很多我自己也是第一次才学到）</small>
 
-> ⚠️ 说明：项目目前处于前后端联调阶段，核心业务逻辑已实现，但可能存在未发现的 Bug 或业务漏洞，可作为学习参考与二次开发基础。
+> ⚠️ 说明：项目目前还未有完整的前端呈现，所以可能存在对于前端人员不友好的问题，望原谅<small>（因为我实在不喜欢写前端qwq）</small>，
+> 虽然核心业务逻辑已实现，但不排除仍然可能会遇见一些麻烦的问题，比如一些未发现的 Bug 或业务漏洞，不过应该还可作为学习参考
+> 与二次开发基础。
 
 ---
 
-## 📁 项目结构（示例）
+## 📁 项目结构
 
-```text
-UserApplication
+SeekReal
 ├── user-common          # 公共模块（工具类、常量、异常）
 ├── user-service         # 核心业务服务模块
 ├── user-api             # Feign 接口模块
@@ -47,49 +51,51 @@ UserApplication
     └── mysql&es建表语句.sql   # 数据库初始化脚本
 
  
-🚀 快速启动
+## 🚀 快速启动
  
-1. 环境要求
+1. 环境要求<small>（低一点也没事）</small>
  
 - JDK 21+
 - Maven 3.6+
 - MySQL 8.0+
-- Redis 5.0+
-- Elasticsearch 9.3.2
+- Redis 8.0+
+- Elasticsearch 9.3.2  <small>（硬性要求）</small>
 - RabbitMQ 3.8+
-- Nacos 2.x
+- Nacos 2.x+
  
-2. 启动步骤
+启动步骤
   
-# 1. 克隆项目
-git clone <你的项目地址>
-cd UserApplication
+ 1. 克隆项目
+git clone https://github.com/aQuietWind/SeekReal
 
-# 2. 导入 MySQL 脚本
-# 打开你的 MySQL 客户端，执行 quickStart.sql
+ 2. 导入 MySQL 脚本
+ 打开你的 MySQL 客户端，执行 quickStart.sql
 
-# 3. 通过请求工具，如Postman，APIfox等进行es索引库建立（代码在esQuickStart中）
+ 3. 通过请求工具，如Postman，APIfox等，进行es索引库建立<small>（代码在esQuickStart中）</small>
 
-# 4. 修改配置文件
-# 修改 application.yml 中的数据库、Redis、Nacos、ES、RabbitMQ 地址
+ 4. 修改配置文件
+ 修改 application.yml 中的数据库、Redis、Nacos、ES、RabbitMQ 地址和密码
 
-# 5. 启动 Nacos、Redis、MySQL、RabbitMQ、Elasticsearch
-# 6. 启动项目
+ 5. 启动 Nacos、Redis、MySQL、RabbitMQ、Elasticsearch
+
+ 6. 启动项目
 mvn clean install
 mvn spring-boot:run
 
+
+## 📌 后续计划
  
-📌 后续计划
- 
-完善单元测试
-修复联调阶段发现的 Bug
-补充接口文档（Swagger/OpenAPI）
-加入限流、熔断、降级（Sentinel）
-可能补充Seata的使用
-工程化和简便化不够完善
-接入日志收集与链路追踪
- 
- 
+1. 完善单元测试 <small>（那真的要等很久了）</small>
+2. 修复未来将会修复联调阶段（遥遥无期）发现的 Bug
+3. 补充接口文档<small>（快了快了）</small>
+4. 可能补充Seata的使用
+5. 工程化和简便化不够完善,日后会对类与类之间的依赖关系进行优化
+6. 存在注释空缺，可能会对各位参考造成一定麻烦，日后也会进行相应的优化
+7. 接入日志收集与链路追踪<small>（等我学到那里再说）</small>
+8. 性能上有所进步空间，没有大量使用Caffine缓存和Redis缓存<small>（尤其是对于网关层ip封锁那个过滤器，性能更是差）</small>
+9. 部分功能不齐，比如说关注之后的粉丝消息推送，又如文章和提问打标签等等问题</small>（相信一定哪位能人可以优化和做的比我更好）</small>
+10. 缺少docker快速部署的docker composed文件<small>（这个也快了）</small>
+---
 
 
 

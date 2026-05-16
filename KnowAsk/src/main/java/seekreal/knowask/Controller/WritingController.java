@@ -1,6 +1,5 @@
 package seekreal.knowask.Controller;
 
-import co.elastic.clients.elasticsearch._types.FieldValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
