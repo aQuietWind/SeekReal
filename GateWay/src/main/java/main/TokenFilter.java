@@ -21,7 +21,6 @@ public class TokenFilter implements GlobalFilter {      //实现接口
         //实现方法，其中exchange用于获取和设置请求头、响应头。chain用于放行
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
-        System.out.println("path:"+path);
         //检查该路径是否需要直接放行
         if(PathCheck.checkPath(path)){
             return chain.filter(exchange);      //放行，或者自动交由下一个全局过滤器

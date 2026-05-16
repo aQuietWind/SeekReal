@@ -1,0 +1,170 @@
+
+用户表
+Put http://localhost:9200/user
+                 {
+                   "settings": {
+                     "number_of_shards": 1,
+                     "number_of_replicas": 1,
+                     "analysis": {
+                       "tokenizer": {
+                         "ngram_tokenizer": {
+                           "type": "ngram",
+                           "min_gram": 1,
+                           "max_gram": 2,
+                           "token_chars": ["letter", "digit"]
+                         }
+                       },
+                       "analyzer": {
+                         "ngram_analyzer": {
+                           "tokenizer": "ngram_tokenizer"
+                         }
+                       }
+                     }
+                   },
+                   "mappings": {
+                     "properties": {
+                       "user_id":{
+                         "type":"long"
+                       },
+                       "username": {
+                         "type": "text",
+                         "analyzer": "ngram_analyzer"
+                       },
+                       "follower_amount": {
+                         "type": "integer"
+                       },
+                       "header_image_adder":{
+                         "type":"keyword"
+                       }
+                     }
+                   }
+                 }
+
+
+提问表
+Put http://localhost:9200/question
+{
+                   "settings": {
+                     "number_of_shards": 1,
+                     "number_of_replicas": 1,
+                     "analysis": {
+                       "tokenizer": {
+                         "ngram_tokenizer": {
+                           "type": "ngram",
+                           "min_gram": 1,
+                           "max_gram": 2,
+                           "token_chars": ["letter", "digit"]
+                         }
+                       },
+                       "analyzer": {
+                         "ngram_analyzer": {
+                           "tokenizer": "ngram_tokenizer"
+                         }
+                       }
+                     }
+                   },
+                   "mappings": {
+                     "properties": {
+                       "question_id":{
+                        "type":"long"
+                       },
+                       "user_id":{
+                         "type":"long"
+                       },
+                       "question_title": {
+                         "type": "text",
+                         "analyzer": "ngram_analyzer"
+                       },
+                       "question_description": {
+                         "type": "text",
+                         "index":false
+                       },
+                       "writing_amount":{
+                         "type":"integer"
+                       },
+                       "like_amount":{
+                         "type":"integer"
+                       },
+                       "collect_amount":{
+                         "type":"integer"
+                       },
+                       "create_time":{
+                         "type":"date",
+                         "format":"yyyy-MM-dd HH:mm:ss"
+                       }
+                     }
+                   }
+                 }
+
+
+文章表
+Put http://localhost:9200/writing
+{
+                   "settings": {
+                     "number_of_shards": 1,
+                     "number_of_replicas": 1,
+                     "analysis": {
+                       "tokenizer": {
+                         "ngram_tokenizer": {
+                           "type": "ngram",
+                           "min_gram": 1,
+                           "max_gram": 2,
+                           "token_chars": ["letter", "digit"]
+                         }
+                       },
+                       "analyzer": {
+                         "ngram_analyzer": {
+                           "tokenizer": "ngram_tokenizer"
+                         }
+                       }
+                     }
+                   },
+                   "mappings": {
+                     "properties": {
+                       "writing_id":{
+                        "type":"long"
+                       }
+                        ,
+                       "question_id":{
+                        "type":"long"
+                       },
+                       "user_id":{
+                         "type":"long"
+                       },
+                       "writing_title": {
+                         "type": "text",
+                         "analyzer": "ngram_analyzer"
+                       },
+                       "writing_description": {
+                         "type": "text",
+                         "index":false
+                       },
+                       "like_amount":{
+                         "type":"integer"
+                       },
+                       "comment_amount":{
+                         "type":"integer"
+                       },
+                       "collect_amount":{
+                         "type":"integer"
+                       },
+                       "create_time":{
+                         "type":"date",
+                         "format":"yyyy-MM-dd HH:mm:ss"
+                       }
+                     }
+                   }
+                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
