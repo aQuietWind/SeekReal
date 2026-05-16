@@ -46,14 +46,14 @@
 ## 📁 项目结构
 
 SeekReal
-├── user-common          # 公共模块（工具类、常量、异常）
-├── user-service         # 核心业务服务模块
-├── user-api             # Feign 接口模块
-├── user-es              # Elasticsearch 检索模块
-├── user-redis           # Redis 缓存模块
-├── user-mq              # RabbitMQ 消息模块
-└── sql/
-    └── mysql&es建表语句.sql   # 数据库初始化脚本
+├── GateWay          # 网关模块，进行请求过滤
+├── User             # 用户模块，进行对用户的相关操作
+├── KnowAsk          # 提问与文章模块
+├── Comment          # 评论模块
+├── Appreciation     # 点赞收藏模块
+├── Social           # 社交模块，主要是公告，通知，关注等功能
+├── Pojo             # 实体类模块，专门存放实体类
+└──Util             # 工具模块，专门存放统一使用的工具类
 
  
 ## 🚀 快速启动
