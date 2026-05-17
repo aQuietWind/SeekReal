@@ -91,17 +91,23 @@ git clone https://github.com/aQuietWind/SeekReal
 mvn clean install
 mvn spring-boot:run
 
+## 接口文档
+将GateWay,KnowAsk,Social,User,Comment,Appreciation模块启动后，进入 http://localhost:80xx/swagger/index.html 即可
+<small>（根据模块的启动端口号填写即可）</small>
+如 <img src=./Image/showSwagger.png>
+少量有些接口的参数是可选的，可能会对各位造成麻烦,至于存储照片的前端获取，我则到时候会放到nginx做静态托管
+
 
 ## 📌 后续计划
  
 1. 完善单元测试 <small>（那真的要等很久了）</small>
 2. 修复未来将会修复联调阶段（遥遥无期）发现的 Bug
-3. 补充接口文档<small>（快了快了）</small>
+3. 该项目可能存在一些短板问题，以及性能问题，还望谅解
 4. 可能补充Seata的使用
 5. 对于MQ队列和交换机的命名没有用Enum类进行统一管理，对后续维护和更新可能有较大麻烦
 6. 存在注释空缺，可能会对各位参考造成一定麻烦，日后也会进行相应的优化
 7. 接入日志收集与链路追踪<small>（等我学到那里再说）</small>
-8. 性能上有所进步空间，没有大量使用Caffine缓存和Redis缓存<small>（尤其是对于网关层ip封锁那个过滤器，性能更是差,也许可以改进为 定时任务+jvm缓存）</small>
+8. 性能上还有进步空间，没有大量使用Caffine缓存和Redis缓存<small>（尤其是对于网关层ip封锁那个过滤器，性能更是差,也许可以改进为 定时任务+jvm缓存）</small>
 9. 部分功能不齐，比如说关注之后的粉丝消息推送，又如文章和提问打标签等等问题</small>（相信一定有哪位能人可以优化和做的比我更好）</small>
 10. 缺少docker快速部署的docker composed文件<small>（这个也快了）</small>
 ---
