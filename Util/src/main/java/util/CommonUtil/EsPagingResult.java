@@ -74,7 +74,7 @@ public class EsPagingResult<E> {
         //获得总数额
         this.esTotal = response.hits().total().value();
         //从实际数据中获取并且封装分页值
-        this.sort=hits.getLast().sort().getFirst().longValue();
+        this.sort=hits.get(hits.size()-1).sort().get(0).longValue();
     }
 
 

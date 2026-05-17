@@ -28,6 +28,11 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
+        <!--        springboot依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <!--        自己的实体类依赖-->
         <dependency>
             <groupId>SeekReal</groupId>

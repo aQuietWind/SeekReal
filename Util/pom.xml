@@ -16,7 +16,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-<!--将作为每一个Spring模块的依赖传递的链条进行依赖传递-->
+<!--将作为每一个Spring模块的依赖传递的链条进行依赖传递,但是注意有些地方需要进行依赖排除-->
     <dependencies>
         <!--        redis依赖-->
         <dependency>
@@ -34,11 +34,6 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-        </dependency>
-        <!--        springboot依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!--        mybatis依赖-->
         <dependency>

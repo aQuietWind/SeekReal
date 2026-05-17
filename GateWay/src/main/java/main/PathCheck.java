@@ -5,6 +5,7 @@ public class PathCheck {
     private static final String[] pathArray={
             "/User/login/register",
             "/User/login/phone",
+            "/User/login/loginOpt",
             "/User/login",
     };
     public static boolean checkPath(String path){
