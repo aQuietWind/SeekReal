@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import pojo.User.OwnUser;
 import pojo.User.User;
 import seekreal.user.Mapper.LoginMapper;
-import seekreal.user.Util.UserIdGenerate;
-import seekreal.user.Util.RanmodOPT;
-import seekreal.user.Util.RedisEnum;
-import util.JWT;
-import util.RedisCommonEnum;
+import util.CommonUtil.IdUtil;
+import util.CommonUtil.RanmodOPT;
+import seekreal.user.Enum.RedisEnum;
+import util.CommonUtil.JWT;
+import util.Enum.RedisCommonEnum;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -27,8 +27,6 @@ public class LoginServiceImpl implements LoginService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private LoginMapper loginMapper;
-    @Autowired
-    private UserIdGenerate userIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     //验证格式，并且生成验证码
@@ -70,7 +68,7 @@ public class LoginServiceImpl implements LoginService {
             if (stringRedisTemplate.opsForValue().get(RedisEnum.userRemoveList(phoneNumber))!=null){
                 throw new RuntimeException("该手机号在注销七天内不能再注册用户");
             }
-            Long userId= userIdGenerate.IdGenerator("userId");
+            Long userId= IdUtil.IdGenerate("userId",stringRedisTemplate);
             User user=new User();
             //以下是对用户的初始化信息操作
             user.setPhoneNumber(phoneNumber);

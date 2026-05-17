@@ -1,8 +1,9 @@
-package util;
+package util.Enum;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+//管理作品，评论，用户的创建时间
 public class RedisCommonEnum{
     private static final String Time_Record="common:time:";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");

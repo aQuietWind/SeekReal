@@ -3,6 +3,7 @@ package seekreal.appreciation.Config;
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.RequestOriginParser;
 import jakarta.servlet.http.HttpServletRequest;
 
+//未启用的请求头判别，用于sentinel的请求过滤
 //@Component
 public class HeaderOriginParser implements RequestOriginParser {
     @Override

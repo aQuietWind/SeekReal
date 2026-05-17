@@ -3,10 +3,8 @@ package seekreal.user.MQ;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
-import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,10 +12,8 @@ import pojo.Common.AmountMqDTO;
 import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.MQMapper;
-import seekreal.user.Mapper.UserMessageMapper;
-import seekreal.user.Util.EsUtil;
+import util.CommonUtil.EsUtil;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -144,7 +140,7 @@ public class UserMessageMQ {
         try {
             mqMapper.updateUserFollowerAmount(dto.getId(),dto.getStep());      //写入mysql
             //编写es自增或者自减的脚本
-            UpdateRequest request= EsUtil.getUpdateRequest("user",""+dto.getId()
+            UpdateRequest request= EsUtil.getUpdateStepRequest("user",""+dto.getId()
                     ,"follower_amount",dto.getStep());
             esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {

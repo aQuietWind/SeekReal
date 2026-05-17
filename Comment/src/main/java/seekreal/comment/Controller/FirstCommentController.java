@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
 import seekreal.comment.Service.FirstCommentService;
-import util.JWT;
+import util.CommonUtil.JWT;
 
 @RestController
 @RequestMapping("/first")

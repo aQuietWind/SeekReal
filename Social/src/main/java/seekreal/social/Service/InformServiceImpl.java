@@ -1,6 +1,5 @@
 package seekreal.social.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import pojo.Social.PublicInformation;
 import seekreal.social.Util.JvmCacheUtil;
-import seekreal.social.Util.RootEnum;
+import seekreal.social.Enum.RootEnum;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

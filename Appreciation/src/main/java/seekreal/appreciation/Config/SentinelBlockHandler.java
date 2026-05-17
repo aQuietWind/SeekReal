@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
+//用于请求被Sentinel拒绝时返回可视化信息
 @Component
 public class SentinelBlockHandler implements BlockExceptionHandler {
     @Override

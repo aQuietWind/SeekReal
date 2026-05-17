@@ -14,9 +14,9 @@ import pojo.KnowAsk.ESWriting;
 import seekreal.appreciation.Feign.KnowAskClient;
 import seekreal.appreciation.Feign.UserClient;
 import seekreal.appreciation.Mapper.CollectMapper;
-import seekreal.appreciation.Util.MQUtil;
-import util.Collection;
-import util.RedisCommonEnum;
+import util.CommonUtil.MQUtil;
+import util.CommonUtil.Collection;
+import util.Enum.RedisCommonEnum;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.CommentMQMapper;
-import seekreal.comment.Util.MQUtil;
+import util.CommonUtil.MQUtil;
 
 @Component
 public class CommentMQ {

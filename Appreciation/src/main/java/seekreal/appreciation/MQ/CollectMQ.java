@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import pojo.Common.ChangeDTO;
 import pojo.Common.AmountMqDTO;
 import seekreal.appreciation.Mapper.CollectMapperMQ;
-import seekreal.appreciation.Util.MQUtil;
+import util.CommonUtil.MQUtil;
 
 @Component
 public class CollectMQ {

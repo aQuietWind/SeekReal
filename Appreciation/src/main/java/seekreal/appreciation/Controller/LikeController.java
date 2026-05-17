@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pojo.Common.Result;
 import seekreal.appreciation.Service.LikeService;
-import seekreal.appreciation.Util.RedisEnum;
-import util.JWT;
+import seekreal.appreciation.Enum.RedisEnum;
+import util.CommonUtil.JWT;
 
 @RequestMapping("/like")
 @RestController

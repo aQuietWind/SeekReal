@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
 import seekreal.knowask.Service.QuestionService;
-import util.JWT;
+import util.CommonUtil.JWT;
 
 import java.util.List;
 

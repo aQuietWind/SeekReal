@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
-import pojo.User.User;
 import seekreal.user.Service.UserMessageService;
-import util.JWT;
+import util.CommonUtil.JWT;
 
 import java.time.LocalDate;
 import java.util.List;

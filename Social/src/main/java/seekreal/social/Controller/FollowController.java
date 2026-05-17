@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pojo.Common.Result;
-import seekreal.social.Mapper.FollowMapper;
 import seekreal.social.Service.FollowService;
-import seekreal.social.Util.RedisEnum;
-import util.JWT;
+import util.CommonUtil.JWT;
 
 @RestController
 @RequestMapping("/follow")

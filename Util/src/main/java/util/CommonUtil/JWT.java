@@ -1,4 +1,4 @@
-package util;
+package util.CommonUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

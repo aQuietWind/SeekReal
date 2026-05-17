@@ -10,10 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import pojo.Comment.FirstComment;
 import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.FirstCommentMapper;
-import seekreal.comment.Util.CommentIdGenerate;
-import seekreal.comment.Util.FileSave;
-import seekreal.comment.Util.MQUtil;
-import util.RedisCommonEnum;
+import util.Enum.FileEnum;
+import util.FileUtil.FileSave;
+import util.CommonUtil.MQUtil;
+import util.Enum.RedisCommonEnum;
+import util.CommonUtil.IdUtil;
 
 import java.util.List;
 
@@ -23,8 +24,6 @@ public class FirstCommentServiceImpl implements FirstCommentService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private FirstCommentMapper firstCommentMapper;
-    @Autowired
-    private CommentIdGenerate commentIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -46,7 +45,7 @@ public class FirstCommentServiceImpl implements FirstCommentService {
             //检查图片的格式
             fileName = FileSave.checkImage(file);
         }
-        long firstCommentId=commentIdGenerate.IdGenerator("firstCommentId");
+        long firstCommentId=IdUtil.IdGenerate("firstCommentId",stringRedisTemplate);
         //插入于mysql
         boolean canToDo=firstCommentMapper.insertFirstComment(firstCommentId
                 ,userId,writingId,text,fileName);
@@ -60,7 +59,7 @@ public class FirstCommentServiceImpl implements FirstCommentService {
                     , MQUtil.getCorrelation("writingComment",logger));
             if(!fileName.isEmpty()) {
                 //保存照片
-                FileSave.saveImage(file, fileName);
+                FileSave.saveImage(file, fileName, FileEnum.Comment_Image_Path);
             }
         }
         else{

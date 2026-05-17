@@ -15,15 +15,14 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import pojo.KnowAsk.ESQuestion;
 import pojo.User.ESUser;
 import pojo.User.User;
 import seekreal.user.Mapper.UserMessageMapper;
-import seekreal.user.Util.FileSave;
-import seekreal.user.Util.MQUtil;
-import seekreal.user.Util.RanmodOPT;
-import seekreal.user.Util.RedisEnum;
-import util.RedisCommonEnum;
+import util.Enum.FileEnum;
+import util.FileUtil.FileSave;
+import util.CommonUtil.MQUtil;
+import util.CommonUtil.RanmodOPT;
+import seekreal.user.Enum.RedisEnum;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -220,7 +219,7 @@ public class UserMessageServiceImpl implements UserMessageService {
     @Override
     public void updateUserHeaderImage(MultipartFile file,long userId){
         try {
-            String fileName=FileSave.saveUserImage(file);
+            String fileName=FileSave.saveImage(file, FileEnum.User_Header_Image_Path);
             //获取头像地址
             String headerImageAdder=userMessageMapper.getUserHeaderImageAdder(userId);
             //更新为新的头像地址

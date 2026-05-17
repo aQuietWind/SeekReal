@@ -1,4 +1,4 @@
-package seekreal.appreciation.Util;
+package seekreal.appreciation.Enum;
 
 public class RedisEnum {
     public static final String Like_Writing="like:writing:";

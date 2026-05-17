@@ -6,13 +6,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import pojo.Comment.FirstComment;
 import pojo.Comment.SecondComment;
-import pojo.Common.AmountMqDTO;
 import seekreal.comment.Mapper.SecondCommentMapper;
-import seekreal.comment.Util.CommentIdGenerate;
-import seekreal.comment.Util.MQUtil;
-import util.RedisCommonEnum;
+import util.CommonUtil.MQUtil;
+import util.Enum.RedisCommonEnum;
+import util.CommonUtil.IdUtil;
 
 import java.util.List;
 
@@ -22,8 +20,6 @@ public class SecondCommentServiceImpl implements SecondCommentService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private SecondCommentMapper secondCommentMapper;
-    @Autowired
-    private CommentIdGenerate commentIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -44,7 +40,8 @@ public class SecondCommentServiceImpl implements SecondCommentService {
             logger.warn("用户{}以错误的关联用户名{}试图新增评论",userId,respondUsername);
             throw new RuntimeException("请正确输入关联用户名！！！");
         }
-        long secondCommentId=commentIdGenerate.IdGenerator("secondCommentId");
+        //生成id
+        long secondCommentId=IdUtil.IdGenerate("secondCommentId",stringRedisTemplate);
         //插入于mysql
         boolean canToDo=secondCommentMapper.insertSecondComment(
                 secondCommentId,userId,firstCommentId,text,respondUsername);

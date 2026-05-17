@@ -17,27 +17,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.ESQuestion;
-import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.Question;
+import seekreal.knowask.Enum.RedisEnum;
 import seekreal.knowask.Mapper.QuestionMapper;
-import seekreal.knowask.Util.*;
-import util.RedisCommonEnum;
+import util.CommonUtil.MQUtil;
+import util.CommonUtil.EsPagingResult;
+import util.Enum.FileEnum;
+import util.Enum.RedisCommonEnum;
+import util.FileUtil.FileSave;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import util.CommonUtil.IdUtil;
 
-import static seekreal.knowask.Util.EsPagingResult.getSearchRequestById;
+import static util.CommonUtil.EsPagingResult.getSearchRequestById;
 
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
-    @Autowired
-    private KnowAskIdGenerate knowAskIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
@@ -70,7 +72,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
         Question question = new Question();
         //生成随机id
-        question.setQuestionId(knowAskIdGenerate.IdGenerator("question"));
+        question.setQuestionId(IdUtil.IdGenerate("question",stringRedisTemplate));
         //填充标题
         question.setQuestionTitle(questionTitle);
         //填充内容
@@ -126,7 +128,7 @@ public class QuestionServiceImpl implements QuestionService {
         try {
             //保存文件至本地
             for (int i = 0; i < files.size(); i++) {
-                FileSave.saveImage(files.get(i), nameList.get(i));
+                FileSave.saveImage(files.get(i), nameList.get(i), FileEnum.KnowAsk_Image_Path);
             }
         } catch (Exception e) {
             logger.warn("用户{}在给提问{}添加插图进磁盘时，出现：{}", userId, questionId, e.getMessage());

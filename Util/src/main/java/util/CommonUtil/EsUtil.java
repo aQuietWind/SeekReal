@@ -1,4 +1,4 @@
-package seekreal.user.Util;
+package util.CommonUtil;
 
 
 import co.elastic.clients.elasticsearch._types.Script;
@@ -9,7 +9,8 @@ import co.elastic.clients.json.JsonData;
 import java.util.Map;
 
 public class EsUtil {
-    public static UpdateRequest getUpdateRequest(String index,String id
+    //返回一个对某一字段自行自增自减的请求
+    public static UpdateRequest getUpdateStepRequest(String index,String id
     ,String field,int step){
         // 1. 构建 ScriptSource
         ScriptSource scriptSource = ScriptSource.of(s -> s

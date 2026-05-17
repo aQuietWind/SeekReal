@@ -1,4 +1,4 @@
-package seekreal.user.Util;
+package seekreal.user.Enum;
 
 
 public class RedisEnum {

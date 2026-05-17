@@ -2,11 +2,9 @@ package seekreal.comment.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.Result;
-import seekreal.comment.Service.FirstCommentService;
 import seekreal.comment.Service.SecondCommentService;
-import util.JWT;
+import util.CommonUtil.JWT;
 
 @RestController
 @RequestMapping("/second")

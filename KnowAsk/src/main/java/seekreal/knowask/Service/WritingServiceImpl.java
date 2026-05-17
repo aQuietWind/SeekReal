@@ -7,7 +7,6 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.alibaba.nacos.common.utils.ThreadFactoryBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,19 +14,19 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Common.AmountMqDTO;
-import seekreal.knowask.Util.EsPagingResult;
+import util.CommonUtil.EsPagingResult;
 import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.RemoveWriting;
 import pojo.KnowAsk.Writing;
 import seekreal.knowask.Mapper.WritingMapper;
-import seekreal.knowask.Util.FileSave;
-import seekreal.knowask.Util.KnowAskIdGenerate;
-import seekreal.knowask.Util.MQUtil;
-import seekreal.knowask.Util.RedisEnum;
-import util.RedisCommonEnum;
+import util.Enum.FileEnum;
+import util.FileUtil.FileSave;
+import util.CommonUtil.MQUtil;
+import seekreal.knowask.Enum.RedisEnum;
+import util.Enum.RedisCommonEnum;
+import util.CommonUtil.IdUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -39,15 +38,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static seekreal.knowask.Util.EsPagingResult.getSearchRequestById;
+import static util.CommonUtil.EsPagingResult.getSearchRequestById;
 
 
 @Service
 public class WritingServiceImpl implements WritingService {
     @Autowired
     private WritingMapper writingMapper;
-    @Autowired
-    private KnowAskIdGenerate knowAskIdGenerate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
@@ -84,7 +81,7 @@ public class WritingServiceImpl implements WritingService {
         }
         Writing writing = new Writing();
         //生成随机id
-        writing.setWritingId(knowAskIdGenerate.IdGenerator("writing"));
+        writing.setWritingId(IdUtil.IdGenerate("writing",stringRedisTemplate));
         //填充标题
         writing.setWritingTitle(writingTitle);
         //填充内容
@@ -153,7 +150,7 @@ public class WritingServiceImpl implements WritingService {
         }
         try {
             for (int i = 0; i < files.size(); i++) {
-                FileSave.saveImage(files.get(i),nameList.get(i));
+                FileSave.saveImage(files.get(i),nameList.get(i), FileEnum.KnowAsk_Image_Path);
             }
         }catch (Exception e){
             logger.warn("用户{}在给提问{}添加插图进磁盘时，出现：{}",userId,writingId,e.getMessage());

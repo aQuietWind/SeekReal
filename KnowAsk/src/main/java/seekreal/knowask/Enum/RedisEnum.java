@@ -1,4 +1,4 @@
-package seekreal.knowask.Util;
+package seekreal.knowask.Enum;
 
 
 public class RedisEnum {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import pojo.Common.ChangeDTO;
 import pojo.Common.AmountMqDTO;
 import seekreal.social.Mapper.FollowMapperMQ;
-import seekreal.social.Util.MQUtil;
+import util.CommonUtil.MQUtil;
 
 @Component
 public class FollowMQ {

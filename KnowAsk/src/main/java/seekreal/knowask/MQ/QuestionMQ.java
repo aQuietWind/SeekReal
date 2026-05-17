@@ -11,7 +11,7 @@ import pojo.Common.AmountMqDTO;
 import pojo.KnowAsk.ESQuestion;
 import pojo.KnowAsk.Question;
 import seekreal.knowask.Mapper.QuestionMQMapper;
-import seekreal.knowask.Util.EsUtil;
+import util.CommonUtil.EsUtil;
 
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class QuestionMQ {
                 return;
             }
             //编写es自增或者自减的脚本
-            UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
+            UpdateRequest request=EsUtil.getUpdateStepRequest("question",""+dto.getId()
                     ,"like_amount",dto.getStep());
             esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class QuestionMQ {
                 return;
             }
             //编写es自增或者自减的脚本
-            UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
+            UpdateRequest request=EsUtil.getUpdateStepRequest("question",""+dto.getId()
                     ,"collect_amount",dto.getStep());
             esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {
@@ -126,7 +126,7 @@ public class QuestionMQ {
                 return;
             }
             //编写es自增或者自减的脚本
-            UpdateRequest request=EsUtil.getUpdateRequest("question",""+dto.getId()
+            UpdateRequest request=EsUtil.getUpdateStepRequest("question",""+dto.getId()
                     ,"writing_amount",dto.getStep());
             esClient.update(request,void.class);        //更新于es
         } catch (Exception e) {

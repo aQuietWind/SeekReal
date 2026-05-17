@@ -1,4 +1,7 @@
-package util;
+package util.Enum;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FileEnum {
     //头像的保存路径
@@ -7,6 +10,8 @@ public class FileEnum {
     public static final String KnowAsk_Image_Path="/home/admin/Documents/KnowAsk/";
     //评论插图的保存路径
     public static final String Comment_Image_Path="/home/admin/Documents/Comment/";
+    //文件类型
+    public static final List<String> ImageAllowList = Arrays.asList(".png", ".jpg", ".jpeg");
     // 限制文件大小 3MB
     public static final long Size_Max = 3 * 1024 * 1024;
 }

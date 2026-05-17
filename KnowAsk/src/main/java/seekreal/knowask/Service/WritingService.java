@@ -1,9 +1,7 @@
 package seekreal.knowask.Service;
 
-import co.elastic.clients.elasticsearch._types.FieldValue;
 import org.springframework.web.multipart.MultipartFile;
-import pojo.Common.Result;
-import seekreal.knowask.Util.EsPagingResult;
+import util.CommonUtil.EsPagingResult;
 import pojo.KnowAsk.ESWriting;
 import pojo.KnowAsk.Writing;
 

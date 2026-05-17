@@ -1,4 +1,4 @@
-package seekreal.social.Util;
+package seekreal.social.Enum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +13,7 @@ public class RootEnum {
     public static String getLockTime(){
         return LocalDateTime.now().plusMinutes(Lock_Minutes).format(Time_Formatter);
     }
+    //检查是否上锁
     public static boolean isLocked(String time){
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lockTime = LocalDateTime.parse(time,Time_Formatter);

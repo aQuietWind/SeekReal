@@ -1,4 +1,4 @@
-package seekreal.user.Util;
+package util.CommonUtil;
 
 import java.util.Random;
 

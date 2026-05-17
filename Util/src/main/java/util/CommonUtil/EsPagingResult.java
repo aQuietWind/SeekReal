@@ -1,11 +1,10 @@
-package seekreal.knowask.Util;
+package util.CommonUtil;
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import pojo.KnowAsk.ESWriting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class EsPagingResult<E> {
 
 
 
-    //相应结果自动
+    //相应结果自动封装
     public EsPagingResult(SearchResponse response) {
         //将结果封装进List
         List<E> result=new ArrayList<>();

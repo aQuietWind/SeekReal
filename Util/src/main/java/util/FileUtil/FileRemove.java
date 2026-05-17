@@ -1,11 +1,11 @@
-package util;
+package util.FileUtil;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 
 public class FileRemove {
+    //传输完整路径下来
     public static void removeFile(String adder) {
         Path path = Paths.get(adder);
         //检查路径是否存在

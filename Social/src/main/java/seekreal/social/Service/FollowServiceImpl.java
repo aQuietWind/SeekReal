@@ -12,10 +12,10 @@ import pojo.Common.Result;
 import pojo.User.ESUser;
 import seekreal.social.Feign.UserClient;
 import seekreal.social.Mapper.FollowMapper;
-import seekreal.social.Util.MQUtil;
-import seekreal.social.Util.RedisEnum;
-import util.Collection;
-import util.RedisCommonEnum;
+import util.CommonUtil.MQUtil;
+import seekreal.social.Enum.RedisEnum;
+import util.CommonUtil.Collection;
+import util.Enum.RedisCommonEnum;
 
 import java.util.ArrayList;
 import java.util.List;
