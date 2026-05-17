@@ -1,9 +1,4 @@
 spring:
-  #redis的配置
-  redis:
-    host: 127.0.0.1
-    port: 6379      #端口号
-    password: 123456    #密码
   #mysql的配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

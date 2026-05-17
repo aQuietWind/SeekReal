@@ -110,6 +110,10 @@ mvn spring-boot:run
 8. 性能上还有进步空间，没有大量使用Caffine缓存和Redis缓存<small>（尤其是对于网关层ip封锁那个过滤器，性能更是差,也许可以改进为 定时任务+jvm缓存）</small>
 9. 部分功能不齐，比如说关注之后的粉丝消息推送，又如文章和提问打标签等等问题</small>（相信一定有哪位能人可以优化和做的比我更好）</small>
 10. 缺少docker快速部署的docker composed文件<small>（这个也快了）</small>
+
+## 提示点
+1. 我的yaml配置文档中没有redis的配置,而是放到了Config中手动配置，这是因为我无法使用lettuce进行redis连接，
+只能用jedis，所以你们如果要更改redis的配置地点的话，就需要到各个模块的RedisConfig中更改
 ---
 
 

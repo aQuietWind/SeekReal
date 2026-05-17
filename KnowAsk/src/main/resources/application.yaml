@@ -3,11 +3,6 @@ spring:
     multipart:
       max-file-size: 3MB               #这个代表最大的单个文件大小
       max-request-size: 12MB           #这个代表最大的单次请求传输的数据大小（应对一次传输数个文件）
-  #redis的配置
-  redis:
-    host: 127.0.0.1
-    port: 6379      #端口号
-    password: 123456    #密码
   #mysql的配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
