@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.user.Mapper.UserMessageMapper">
+    <!--    除了密码全部获取-->
+    <select id="getDetailedMessage" resultType="pojo.User.User">
+        select
+        user_id,
+        username,
+        personal_signature,
+        header_image_adder,
+        sex,
+        birthday,
+        phone_number,
+        follower_amount,
+        liker_amount,
+        writing_amount,
+        question_amount,
+        like_amount,
+        collect_amount,
+        message_power,
+        create_time
+        from User where user_id=#{userId}
+    </select>
+<!--    更新用户名-->
+    <update id="updateUsername">
+        update User set username=#{username} where user_id=#{userId}
+    </update>
+<!--    更新用户信息-->
+    <update id="updateUserMessage">
+        update User
+        <set>
+            <if test="personalSignature!=null">personal_signature=#{personalSignature},</if>
+            <if test="sex!=null">sex=#{sex},</if>
+            <if test="birthday!=null">birthday=#{birthday},</if>
+            <if test="messagePower!=null">message_power=#{messagePower},</if>
+        </set>  where user_id=#{userId}
+    </update>
+<!--    获取用户手机号-->
+    <select id="getUserPhoneNumber" resultType="java.lang.String">
+        select phone_number from User where user_id=#{userId}
+    </select>
+<!--    更新密码-->
+    <update id="updateUserPassword">
+        update User set password=#{password} where user_id=#{userId}
+    </update>
+<!--    更新头像-->
+    <update id="updateUserHeaderImage">
+        update User set header_image_adder=#{headerImageAdder} where user_id=#{userId}
+    </update>
+<!--    获取用户头像地址-->
+    <select id="getUserHeaderImageAdder" resultType="java.lang.String">
+        select header_image_adder from User where user_id=#{userId}
+    </select>
+<!--    注销用户-->
+    <delete id="deleteUser">
+        delete from User where user_id=#{userId}
+    </delete>
+<!--    获取用户的信息展示权限-->
+    <select id="getUserPower" resultType="java.lang.Integer">
+        select message_power from User where user_id=#{userId}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

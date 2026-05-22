@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="seekreal.comment.Mapper.FirstCommentMapper">
+    <!--    新增一级评论-->
+    <insert id="insertFirstComment">
+        insert into First_Comment (
+        first_comment_id
+        ,writing_id
+        ,user_id
+        ,text
+        ,image_adder
+        ) values(
+        #{firstCommentId}
+        ,#{writingId}
+        ,#{userId}
+        ,#{text}
+        ,#{imageAdder}
+        )
+    </insert>
+
+    <!--    获取一级评论的详细信息-->
+    <select id="getFirstComment" resultType="pojo.Comment.FirstComment">
+        select
+        first_comment_id
+        ,user_id
+        ,writing_id
+        ,text
+        ,image_adder
+        ,second_comment_amount
+        ,like_amount
+        ,create_time
+        ,is_exist
+        from First_Comment where writing_id=#{writingId} and is_exist=1 order by like_amount limit #{from},#{need}
+    </select>
+
+    <!--    删除存在的一级评论-->
+    <update id="deleteFirstComment">
+        update First_Comment set is_exist=0 where first_comment_id=#{firstCommentId} and is_exist=1
+        and user_id=#{userId}
+    </update>
+
+    <!--    获取文章id的操作-->
+    <select id="getWritingIdByFirst" resultType="java.lang.Long">
+        select writing_id from First_Comment where first_comment_id=#{firstCommentId} and is_exist=1
+        and user_id=#{userId}
+    </select>
+
+
+
+
+</mapper>
